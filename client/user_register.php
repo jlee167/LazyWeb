@@ -40,7 +40,7 @@
 	$access_token = $_POST["token_kakao"];
 
 	// Execute if Kakao authentication token is delivered
-	if ($access_token !== "") {
+	if (!empty($access_token)) {
 		$authorization = 'Authorization: Bearer ' . $access_token;
 		
 		/*
@@ -56,11 +56,13 @@
 		
 		// Get http response
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		echo "access_token: " . $access_token . "\n";
 		echo 'http code: ' . $http_code . "\n";
 		
 		
 		if (!$result) {
 			echo 'No response from Kakao Auth Server \n';
+			
 			exit;
 		 }
 		 else {
@@ -93,7 +95,7 @@
 	  // Invalid ID token
 	}
 	
-	if (($token_google !== "") && ($verified == 1)) {		
+	if ((!empty($token_google)) && ($verified == 1)) {		
 		$streampath=md5(email);
 		$sql = "USE USERS;";
 		$result = mysqli_query($conn, $sql);
@@ -102,7 +104,7 @@
 		if(mysqli_num_rows($result) > 0){	
 			$row = mysqli_fetch_assoc($result);
 			$sendObj->streamPath=$row["path_stream"];
-			echo $row["path_stream"];
+			//echo $row["path_stream"];
 			$myjson = json_encode(sendObj);
 			//echo $myjson;
 		}

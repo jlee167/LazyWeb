@@ -38,8 +38,8 @@
 			};
 	
 			xhr.send('idtoken=' + id_token);
-			document.cookie = 'GoogleToken=' + id_token + ';';
-			document.cookie = 'LazyWeb Signature = Google;';		
+			document.cookie = 'AccessToken=' + id_token + ';';
+			document.cookie = 'Authenticator = Google;';		
 			console.log(document.cookie);
 			
 			document.getElementById('signBtn').innerHTML= "Sign Out";
@@ -132,8 +132,9 @@
 												console.log(text);
 											};
 											xhttp.send("token_kakao="  + token_kakao);		
-											
-											
+											document.cookie = 'AccessToken=' + token_kakao + ';';
+											document.cookie = 'Authenticator = Kakao;';	
+																		
 											
 											document.getElementById('signBtn').innerHTML= "Sign Out";
 											Kakao.API.request({

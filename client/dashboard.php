@@ -30,9 +30,6 @@
 		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-		
-	
 	</head>
 	
 	<body>		
@@ -108,41 +105,44 @@
 				<?php
 					$sql = "use dashboard";
 					$result0 = mysqli_query($conn, $sql);
-					$sql = "SELECT * FROM mainboard ORDER BY no DESC";
-					$result = mysqli_query($conn, $sql);
 					
-					$query = $_SERVER['QUERY_STRING'];
-					$num_pages = intval(mysqli_num_rows($result)/10) + 1;
+					$num_rows_query = "SELECT COUNT(*) as post_count FROM mainboard";
+					$result = mysqli_query($conn, $num_rows_query);
+					$result = mysqli_fetch_assoc($result);
+					$num_rows = $result["post_count"];
+					$num_pages = intval($num_rows/10) + 1;  
+					
+					$query = $_SERVER['QUERY_STRING'];					
 					if ($query > $num_pages)
 							$curr_page = $num_pages;
 					else
 						$curr_page = $query;
 					
+					$lower_limit = strval(($curr_page-1) * 10);
+					$upper_limit = strval($curr_page + 9);
+					$sql = "SELECT * FROM mainboard ORDER BY no DESC LIMIT " . $lower_limit . ','  . $upper_limit;
+					$result = mysqli_query($conn, $sql);
 					
 					if (mysqli_num_rows($result) > 0)
 					{
 						while($row = mysqli_fetch_assoc($result)) 
 						{
-							
-							if (intval($row["no"])) {
-								//echo $curr_page;
-							}
-							
-							if ( ( intval($row["no"]) <= (intval($curr_page) * 10))  && (intval($row["no"]) > ((intval($curr_page) -1) * 10) )) {
-								$table_posts = $table_posts . "<tr><td style='width:10%;'>" . $row["no"]  .  "</td><td style='width:50%;'>" .  $row["title"]  .  "</td><td style='width:20%;'>" .  $row["author"]  .  "</td><td style='width:20%;'>" .  $row["date"]  .  "</td><td style='width:10%;'>" . $row["hit_cnt"]  . "</td></tr>";
-							}
+								$table_posts =  $table_posts . "<tr><td style='width:10%;'>" . $row["no"]  .  "</td><td style='width:50%;'>" .  $row["title"]  .  "</td><td style='width:20%;'>" .  
+																					$row["author"]  .  "</td><td style='width:20%;'>" .  $row["date"]  .  "</td><td style='width:10%;'>" . $row["hit_cnt"]  . "</td></tr>";
 						}
 					}		
 					echo $table_posts;
-				?>
+			?>	
 			</table>	
 			
+			<?php
+				//echo $sql;
+			?>
 
 			<nav aria-label="Page navigation example" style="margin:auto; margin-top:20px;">
 				<ul class="pagination justify-content-center">
 					<li class="page-item"><a class="page-link" href="dashboard.php?<?php echo $query-1; ?>">Previous</a></li>
 					<?php				
-						
 						if (($query+4) > $num_pages)
 							$page_ceiling = $num_pages;
 						else
