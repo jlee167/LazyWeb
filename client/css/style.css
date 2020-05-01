@@ -1,0 +1,114 @@
+.lazyboynav {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0;
+	width: 100%;
+	height: auto;
+}
+
+
+.contents {
+	top: 0px;
+	left: 0px;
+	margin: 0;
+	width: 100%;
+	height: auto;
+}
+
+
+.aboutarea {
+	top: 0px;
+	left: 0px;
+	margin: 0;
+	width: 100%;
+	height: auto;
+	
+	  
+}
+
+
+.aboutarea2 {
+	top: 0px;
+	left: 0px;
+	margin: 0;
+	width: 100%;
+	height: auto;
+	max-height:500px;
+}
+
+
+#login {
+	top: 0px;
+	left: 0px;
+	display: flex;	
+	align-items: center;
+	margin: 25vh auto;
+	border: 3px;
+	background-color:white;
+	border-radius:25px;
+	width:25%; 
+	padding:10px;
+}
+
+
+.btn {
+	text-align: left;
+	width: 100%;
+	padding: 12px;
+	border: none;
+	border-radius: 4px;
+	margin: 5px 0;
+	opacity: 0.85;
+	display: inline-block;
+	font-size: 17px;
+	line-height: 20px;
+	text-decoration: none; 
+}
+
+
+.col_login {
+  float: left;
+  width: 50%;
+  min-width:200px;
+  margin: auto;
+  padding: 0 50px;
+  margin-top: 6px;
+}
+
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+
+html, body {
+	height:100%;
+	overflow:hidden;
+}
+
+
+.area_contents{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height:100%;
+}
+
+
+span {
+	display:inline-block;
+	width:120px;
+}
+
+.nav-item {
+	padding:15px;
+	display:flex;
+	justify-content:center;
+}

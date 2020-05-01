@@ -1,0 +1,121 @@
+<!doctype html>
+
+<html>
+	<head>
+		<!-- Import Bootstrap CDN -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<!-- Import Custom stylesheets -->
+		<link rel="stylesheet" href="css/style.css">	
+		
+		<meta charset="utf-8">
+		
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</head>
+	
+	<body>
+		<!-- Top Navigation Bar -->
+		<div class="continer" id="main_nav" style="margin-bottom:0;">
+			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4" style="height:70px; margin-bottom:0;">
+				<ul class="navbar-nav" style="text-align:center;">
+					<li class="nav-item active"> <a class="nav-link" href="main.html">Home</a></li>
+					<li class="nav-item"> <a class="nav-link" href="about.html">LazyBoy</a></li>
+					<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="products.html" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#">LTE Camera</a>
+							<a class="dropdown-item" href="#">Arduino Camera</a>
+						</div>
+					</li>
+					<li class="nav-item"> <a class="nav-link" href="dashboard.php">Dashboard</a></li>
+					<li class="nav-item dropdown"> 
+						<a class="nav-link" href="support.html">Support</a>
+					</li>
+					<li class="nav-item"> <a class="nav-link" href="broadcast.php">Emergency Broadcast </a></li>
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active"> 
+						<a id="signBtn"class="btn btn-primary" href="login.php" role="button">
+							Sign In
+						</a>
+					</li>
+				</ul>
+			</nav>				
+		</div>
+			
+			
+		<div class="container-fluid">
+			<h1 style="text-align:center;">Forum</h1>
+			<h6 style="text-align:center;">A place you can scream and shout at LazyBoy</h6>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						
+						<th>No#</th>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Date</th>
+						<th>Views</th> 
+					</tr>
+				</thead>
+				
+				<tbody id= "table_obj">
+				</tbody>	
+				<?php
+					$var = "hi";
+				?>
+					<tr>
+						<td><?php echo $var; ?></td> 
+						<td>2</td> 
+						<td></td> 
+						<td></td> 
+						<td></td>  
+					</tr>
+				
+			</table>	
+				
+			
+			<script>
+				var table_obj = document.getElementById("table_obj");
+				var json_obj = 
+				'{	
+					"No": 1,	
+					"Title": "Sample Title",
+					"Author": "sample author",	
+					"Date": "sample date",
+					"Views": "sample views"
+				}';
+				var obj = JSON.parse (json_obj);
+				var html_out = "" 
+				
+				for (var i = 0; i < 5; i++) {
+					html_out  += "<tr>" + "<td>" + obj["No"] +  "</td><td>" + obj["Title"] +  "</td><td>" + obj["Author"] +  "</td><td>" + obj["Date"] +  "</td><td>" + obj["Views"] + "</td></tr>";
+				}
+				
+				
+				//table_obj.innerHTML = html_out;
+				
+				
+				/*
+				var para = document.createElement("td");
+				var node = document.createTextNode("This is new.");
+				para.appendChild(node);
+				var element = document.getElementById("row1");
+				element.appendChild(para);
+				element.appendChild(para);
+				*/
+			</script>
+			
+			<nav aria-label="Page navigation example" style="margin:auto;">
+				<ul class="pagination justify-content-center">
+					<li class="page-item"><a class="page-link" href="#">Previous</a></li>
+					<li class="page-item"><a class="page-link" href="#">1</a></li>
+					<li class="page-item"><a class="page-link" href="#">2</a></li>
+					<li class="page-item"><a class="page-link" href="#">3</a></li>
+					<li class="page-item"><a class="page-link" href="#">Next</a></li>
+				</ul>
+			</nav>
+		</div>
+
+	</body>
+</html>
