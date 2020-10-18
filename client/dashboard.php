@@ -21,10 +21,11 @@
 
 <html>
 	<head>
-		<!-- Import Bootstrap CDN -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<!-- Import Custom stylesheets -->
 		<link rel="stylesheet" href="css/style.css">	
+		<!-- Import Bootstrap CDN -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		
 		
 		<meta charset="utf-8">
 		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -36,9 +37,9 @@
 		<!-- Top Navigation Bar -->
 		<div id="main_nav" style="margin-bottom:0;">
 			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4" style="height:100px; margin-bottom:0px !important;">
-				<ul class="navbar-nav" style="text-align:center; margin:0 auto; padding:20px;">
+				<ul class="navbar-nav" style="text-align:center; margin:0 auto; left:20%;">
 					<li class="nav-item active"> <a class="nav-link" href="index.html">Home</a></li>
-					<li class="nav-item"> <a class="nav-link" href="about.html">Lazyboy</a></li>
+					<li class="nav-item"> <a class="nav-link" href="about.html">LazyBoy</a></li>
 					<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="products.html" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#">LTE Camera</a>
@@ -47,30 +48,40 @@
 					</li>
 					<li class="nav-item"> <a class="nav-link" href="dashboard.php">Dashboard</a></li>
 					<li class="nav-item dropdown"> 
-						<a class="nav-link" href="support.html">Support</a>
+						<a class="nav-link" href="support.php">Support</a>
 					</li>
 					<li class="nav-item"> <a class="nav-link" href="broadcast.php">Emergency Broadcast </a></li>
 				</ul>
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active"> 
+
+				<ul class="navbar-nav">
+					<li class="nav-item active" style="font-weight:bold; "> 
+							<a id="userInfoUI" class="nav-link" href="#" style="font-weight:bold; text-align:right;"></a>
+					</li>
+				</ul>
+					
+				<ul class="navbar-nav">
+					<li id="signInContainer" class="nav-item active"> 
 						<a id="signBtn"class="btn btn-primary" href="login.php" role="button">
 							Sign In
 						</a>
-					</li>
-				</ul>
+					</li>					
+				</ul>	
 			</nav>				
 		</div>
-		
+			
 		<script src="js/cookie_handler.js"></script>
+		<script src="js/login_handler.js"></script>
 		<script>
-				var authProvider = getCookie('LazyWeb Signature');
-				if (authProvider) {
-					document.getElementById('signBtn').innerHTML = "Sign Out";
-				}
-		</script>	
+			var authenticator = getCookie('Authenticator' );
+			var username = getCookie('Username' );
+			var profilePicture = getCookie('ProfilePicture' );
+			var signInContainer = document.getElementById("signInContainer");
+			var userProfileUI = document.getElementById("userInfoUI");
+			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
+		</script>
 		
 		<div class="container-fluid" style="width:70%;">
-			<h1 style="text-align:center; margin-top:30px;">Shitpost Heaven</h1>
+			<h1 style="text-align:center; margin-top:30px;">Shitposting Time</h1>
 			<div style="margin-bottom:10px;">
 				<table style="width:100%;">
 					<tr>
@@ -83,7 +94,7 @@
 			
 			<script src="js/cookie_handler.js"></script>
 			<script>
-					var authProvider = getCookie('LazyWeb Signature');
+					var authProvider = getCookie('Authenticator');
 					if (!authProvider) {
 						document.getElementById('postBtn').href = 'login.php';
 					}
@@ -101,7 +112,7 @@
 				</thead>
 				
 				<tbody id= "table_obj">
-				</tbody>	
+				
 				<?php
 					$sql = "use dashboard";
 					$result0 = mysqli_query($conn, $sql);
@@ -112,12 +123,18 @@
 					$num_rows = $result["post_count"];
 					$num_pages = intval($num_rows/10) + 1;  
 					
-					$query = $_SERVER['QUERY_STRING'];					
-					if ($query > $num_pages)
-							$curr_page = $num_pages;
-					else
-						$curr_page = $query;
-					
+					$query = $_SERVER['QUERY_STRING'];			
+					if (empty($query)) {
+						$curr_page = 1;
+					}
+					else{
+						if ($query > $num_pages)
+								$curr_page = $num_pages;
+						else if ($query < 1)
+								$curr_page = 1;
+						else
+							$curr_page = $query;
+					}
 					$lower_limit = strval(($curr_page-1) * 10);
 					$upper_limit = strval($curr_page + 9);
 					$sql = "SELECT * FROM mainboard ORDER BY no DESC LIMIT " . $lower_limit . ','  . $upper_limit;
@@ -133,15 +150,12 @@
 					}		
 					echo $table_posts;
 			?>	
+				</tbody>	
 			</table>	
-			
-			<?php
-				//echo $sql;
-			?>
 
 			<nav aria-label="Page navigation example" style="margin:auto; margin-top:20px;">
 				<ul class="pagination justify-content-center">
-					<li class="page-item"><a class="page-link" href="dashboard.php?<?php echo $query-1; ?>">Previous</a></li>
+					<li class="page-item"><a class="page-link" href="dashboard.php?<?php echo $curr_page-1; ?>">Previous</a></li>
 					<?php				
 						if (($query+4) > $num_pages)
 							$page_ceiling = $num_pages;
@@ -156,7 +170,7 @@
 							}
 						} 
 					?>
-					<li class="page-item"><a class="page-link" href="dashboard.php?<?php echo $query+1?>">Next</a></li>
+					<li class="page-item"><a class="page-link" href="dashboard.php?<?php echo $curr_page+1?>">Next</a></li>
 				</ul>
 			</nav>
 		</div>

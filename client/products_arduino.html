@@ -14,33 +14,51 @@
 	</head>
 	
 	<body>
-			<!-- Top Navigation Bar -->
-			<div class="continer" id="main_nav">
-				<nav class="navbar border-bottom navbar-expand-sm navbar-dark bg-dark mb-4" style="height:56px;">
-					<ul class="navbar-nav" style="text-align:center;">
-						<li class="nav-item active"> <a class="nav-link" href="main.html">Home</a></li>
-						<li class="nav-item"> <a class="nav-link" href="about.html">LazyBoy</a></li>
-						<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="products.html" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="products_lte.html">LTE Camera</a>
-								<a class="dropdown-item" href="products_arduino.html">Arduino Camera</a>
-							</div>
-						</li>
-						<li class="nav-item"> <a class="nav-link" href="dashboard.html">Dashboard</a></li>
-						<li class="nav-item dropdown"> 
-							<a class="nav-link" href="support.html">Support</a>
-						</li>
-						<li class="nav-item"> <a class="nav-link" href="broadcast.html">Emergency Broadcast </a></li>
-					</ul>
-					<ul class="navbar-nav ml-auto">
-						<li class="nav-item active"> 
-							<a class="btn btn-primary" href="login.html" role="button">
-								Sign In
-							</a>
-						</li>
-					</ul>
-				</nav>				
-			</div>
+		<!-- Top Navigation Bar -->
+		<div id="main_nav" style="margin-bottom:0;">
+			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4" style="height:100px; margin-bottom:0px !important;">
+				<ul class="navbar-nav" style="text-align:center; margin:0 auto; left:20%;">
+					<li class="nav-item active"> <a class="nav-link" href="index.html">Home</a></li>
+					<li class="nav-item"> <a class="nav-link" href="about.html">LazyBoy</a></li>
+					<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="products.html" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#">LTE Camera</a>
+							<a class="dropdown-item" href="#">Arduino Camera</a>
+						</div>
+					</li>
+					<li class="nav-item"> <a class="nav-link" href="dashboard.php">Dashboard</a></li>
+					<li class="nav-item dropdown"> 
+						<a class="nav-link" href="support.php">Support</a>
+					</li>
+					<li class="nav-item"> <a class="nav-link" href="broadcast.php">Emergency Broadcast </a></li>
+				</ul>
+
+				<ul class="navbar-nav">
+					<li class="nav-item active" style="font-weight:bold; "> 
+							<a id="userInfoUI" class="nav-link" href="#" style="font-weight:bold; text-align:right;"></a>
+					</li>
+				</ul>
+					
+				<ul class="navbar-nav">
+					<li id="signInContainer" class="nav-item active"> 
+						<a id="signBtn"class="btn btn-primary" href="login.php" role="button">
+							Sign In
+						</a>
+					</li>					
+				</ul>	
+			</nav>				
+		</div>
+			
+		<script src="js/cookie_handler.js"></script>
+		<script src="js/login_handler.js"></script>
+		<script>
+			var authenticator = getCookie('Authenticator' );
+			var username = getCookie('Username' );
+			var profilePicture = getCookie('ProfilePicture' );
+			var signInContainer = document.getElementById("signInContainer");
+			var userProfileUI = document.getElementById("userInfoUI");
+			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
+		</script>
 
 	</body>
 </html>

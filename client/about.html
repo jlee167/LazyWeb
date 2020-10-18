@@ -2,18 +2,18 @@
 
 <html>
 	<head>
-		<!-- Import Bootstrap CDN -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<!-- Import Custom stylesheets -->
 		<link rel="stylesheet" href="css/style.css">		
+		<!-- Import Bootstrap CDN -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<meta charset="utf-8">
 		 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 	</head>
 	
 	<body>
 		<!-- Top Navigation Bar -->
-		<div id="main_nav" style="margin-bottom:0;">
-			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4" style="height:100px; margin-bottom:0px !important;">
+		<div id="main_nav" style="">
+			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4 fixed-top" style="height:100px; margin-bottom:0px !important;">
 				<ul class="navbar-nav" style="text-align:center; margin:0 auto; left:20%;">
 					<li class="nav-item active"> <a class="nav-link" href="index.html">Home</a></li>
 					<li class="nav-item"> <a class="nav-link" href="about.html">LazyBoy</a></li>
@@ -25,92 +25,143 @@
 					</li>
 					<li class="nav-item"> <a class="nav-link" href="dashboard.php">Dashboard</a></li>
 					<li class="nav-item dropdown"> 
-						<a class="nav-link" href="support.html">Support</a>
+						<a class="nav-link" href="support.php">Support</a>
 					</li>
 					<li class="nav-item"> <a class="nav-link" href="broadcast.php">Emergency Broadcast </a></li>
 				</ul>
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active"> 
+
+				<ul class="navbar-nav">
+					<li class="nav-item active" style="font-weight:bold; "> 
+							<a id="userInfoUI" class="nav-link" href="#" style="font-weight:bold; text-align:right;"></a>
+					</li>
+				</ul>
+					
+				<ul class="navbar-nav">
+					<li id="signInContainer" class="nav-item active"> 
 						<a id="signBtn"class="btn btn-primary" href="login.php" role="button">
 							Sign In
 						</a>
-					</li>
-				</ul>
+					</li>					
+				</ul>	
 			</nav>				
+
 		</div>
 			
+		<script src="js/cookie_handler.js"></script>
+		<script src="js/login_handler.js"></script>
+		<script>
+			var authenticator = getCookie('Authenticator' );
+			var username = getCookie('Username' );
+			var profilePicture = getCookie('ProfilePicture' );
+			var signInContainer = document.getElementById("signInContainer");
+			var userProfileUI = document.getElementById("userInfoUI");
+			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
+		</script>
+			
+			
 			<!-- Personal Info -->			
-			<div class="aboutarea" style="overflow:scroll;">
-				<div style="width:30%; float:left;border-right-color:blue;">
-				<h2 align="center" style="margin:20%; margin-bottom:80%;"> About Lazyboy</h2>
-				</div>
-				<div style="width:60%; height:auto;float:left;overflow:scroll; margin-top:40px;">
-					<div>
-						<ul>
-							<li> ~2 years of experience as an entry-level RTL engineer</li>
-							<li> Jack of all trades, Master of none </li>
-							<li> My nickname tells everything else you need to know about me </li>
-							<li> <p> I will not list the details of my work in progress with current employer (except for skills used) </p> </li>
-						</ul>
-						
-						<table style="text-align:center; width:100%;">	
-							<tr style="background-color:navy; color:white;">
-								<td colspan=2>Digital <br>Hardware</td>
-								<td colspan=2>Hardware<br>Languages</td>
-								<td colspan=2>Software<br>Languages</td>
-								<td colspan>Platforms / OS</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>Artix7/Kintex7<br>Zynq Ultrascale+<br>Spartan<br>Lattice FPGA<br>Cortex-M<br>Cortex-A</td>
-								<td>
-									<span class="badge badge-success">Proficient</span><br>
-									<span class="badge badge-warning">Intermediate</span><br>		
-									<span class="badge badge-warning">Intermediate</span><br>
-									<span class="badge badge-warning">Intermediate</span><br>
-									<span class="badge badge-danger">Retrainable</span><br>
-									<span class="badge badge-danger">Retrainable</span><br>
-								</td>
-								<td>Systemverilog<br>Verilog<br>VHDL<br><br><br><br></td>
-								<td>
-									<span class="badge badge-success">Proficient</span><br>
-									<span class="badge badge-success">Proficient</span><br>
-									<span class="badge badge-danger">Beginner</span><br><br><br><br>
-								</td>
-								<td>C<br>C++<br>Python<br>Java<br>C#<br>x86/ARM assembly<br></td>
-								<td><span class="badge badge-warning">Intermediate</span><br>
-									<span class="badge badge-warning">Intermediate</span><br>
-									<span class="badge badge-warning">Intermediate</span><br>
-									<span class="badge badge-danger">Beginner</span><br><span class="badge badge-danger">Beginner</span><br><span class="badge badge-danger">Retrainable</span><br></td>
-								<td> Desktop Linux<br>Embedded Linux<br>Android<br>Misc RTOS <br>Windows<br><br></td>
-							</tr>
-						</table>
-						<table style="text-align:center; width:100%;">	
-							<tr style="background-color:navy; color:white;">
-								<td colspan=5>Skills/Tools</td>
-								<td colspan=1>Layer 1/2 Protocols<td>
-								<td colspan=1>Misc Protocols<td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>Digital Electronics<br>Analog Electronics<br>CMOS Circuit<br>PCB Artwork<br>Firmware<br>Device Driver<br><br></td>
-								<td>Embedded Linux<br>Digital Camera<br>ASIC<br>Giga Trancievers<br>LVDS<br>IO Serdes<br><br></td>
-								<td>Qt5 GUI<br>.NET Windows GUI<br>Android Mobile Dev<br>Basic Networking<br><br><br><br></td>
-								<td>Atmel SAM / TI C2000<br>Cortex-A Processors w/Linux<br>Logic Analyzer<br>Oscilloscope<br>Beagle Analyzer<br><br><br></td>
-								<td> </td>
-								<td>UART<br>I2C<br>SPI<br>USB 1.0/2.0<br>Ethernet<br>IR Light Communication<br>MIPI/Parallel<br>Camera Interface</td>			
-								<td></td>
-								<td>TCP<br>UDP<br><br><br><br><br><br><br></td>
-							</tr>
-						</table>
-						<table style="text-align:center; width:100%;">	
-							<tr style="background-color:navy; color:white;">
-								<td colspan=5>I don't <u><b>'know' </b></u> these... just YET</td>
-							</tr>
-							<tr>
-								<td>HTML<br>CSS<br>Javascript<br>Bootstrap<br>PHP<br>MySQL<br>HTTP</td>
-							</tr>
-						</table>
+			<div id="main-contents" style="overflow:hidden; width:100%; padding-top:100px;">
+				<div style="overflow:hidden; width:100%;">
+					<div style="overflow:hidden; min-width:200px; width:20%; position:fixed;background-color:#e25132; height:100%; display:flex; flex-direction:column; justify-content: center; text-align:center;">		
+						<a href="#overview" style="color:white;"> <h2 class="mb-5"><b>Overview</b> <br></h2></a>
+						<a href="#rtl" style="color:white;">  <h2 class="mb-5"><b>RTL</b><br></h2> </a>
+						<a href="" style="color:white;"> <h2 class="mb-5"> <b>Hardware</b><br></h2> </a>
+						<a href="" style="color:white;">  <h2 class="mb-5"><b>Software</b><br></h2> </a>
+					</div>
+					
+					<div style="overflow:hidden; width:80%;float:right;">
+						<div style="overflow:hidden; max-width:1200px;float:center; padding-left:50px; padding-top:50px;">
+							<section id="overview">
+								<h2 class="mb-3" style="color:#5a5a5a;"> <b> Overview  </b></h2>		
+								
+								<div class="subheading mb-3">Things to know...</div>
+								<ul class="fa-ul mb-3">
+									<li class="fa-li fa fa-check"> Entry-level RTL engineer with ~2 years of experience</li>
+									<li class="fa-li fa fa-check"> Yes, this is an one-man business </li>
+									<li class="fa-li fa fa-check"> Jack of all trades, Master of none. Do not expect expert-level works. I will focus on assisting entry level makers for the time being </li>
+									<li class="fa-li fa fa-check"> Details about my work outside of Lazyboy (my 40hr/week job) will not be shared nor will they be invoved in my efforts within Lazyboy in any way </li>
+								</ul>
+								
+								<h4 style="color:#5a5a5a;margin-top:30px;"> <b> HDL / Software  </b></h2>	
+								<table style="text-align:center; width:100%;">	
+									<tr style="background-color:navy; color:white;">
+										<td colspan=2>Digital <br>Hardware</td>
+										<td colspan=2>Hardware<br>Languages</td>
+										<td colspan=2>Software<br>Languages</td>
+										<td colspan>Platforms / OS</td>
+										<td></td>
+									</tr>
+									<tr>
+										<td>Artix7/Kintex7<br>Zynq Ultrascale+<br>Spartan<br>Lattice FPGA<br>Cortex-M<br>Cortex-A</td>
+										<td>
+											<span class="badge badge-success">Proficient</span><br>
+											<span class="badge badge-warning">Intermediate</span><br>		
+											<span class="badge badge-warning">Intermediate</span><br>
+											<span class="badge badge-warning">Intermediate</span><br>
+											<span class="badge badge-danger">Retrainable</span><br>
+											<span class="badge badge-danger">Retrainable</span><br>
+										</td>
+										<td>Systemverilog<br>Verilog<br>VHDL<br><br><br><br></td>
+										<td>
+											<span class="badge badge-success">Proficient</span><br>
+											<span class="badge badge-success">Proficient</span><br>
+											<span class="badge badge-danger">Beginner</span><br><br><br><br>
+										</td>
+										<td>C<br>C++<br>Python<br>Java<br>C#<br>x86/ARM assembly<br></td>
+										<td><span class="badge badge-warning">Intermediate</span><br>
+											<span class="badge badge-warning">Intermediate</span><br>
+											<span class="badge badge-warning">Intermediate</span><br>
+											<span class="badge badge-danger">Beginner</span><br><span class="badge badge-danger">Beginner</span><br><span class="badge badge-danger">Retrainable</span><br></td>
+										<td> Desktop Linux<br>Embedded Linux<br>Android<br>Misc RTOS <br>Windows<br><br></td>
+									</tr>
+								</table>
+								
+								<h4 style="color:#5a5a5a;margin-top:30px;"> <b> Skillsets / Protocol Knowledges  </b></h2>	
+								<table style="text-align:center; width:100%;">	
+									<tr style="background-color:navy; color:white;">
+										<td colspan=5>Skills/Tools</td>
+										<td colspan=1>Layer 1/2 Protocols<td>
+										<td colspan=1>Misc Protocols<td>
+										<td></td>
+									</tr>
+									<tr>
+										<td>Digital Electronics<br>Analog Electronics<br>CMOS Circuit<br>PCB Artwork<br>Firmware<br>Device Driver<br><br></td>
+										<td>Embedded Linux<br>Digital Camera<br>ASIC<br>Giga Trancievers<br>LVDS<br>IO Serdes<br><br></td>
+										<td>Qt5 GUI<br>.NET Windows GUI<br>Android Mobile Dev<br>Basic Networking<br><br><br><br></td>
+										<td>Atmel SAM / TI C2000<br>Cortex-A Processors w/Linux<br>Logic Analyzer<br>Oscilloscope<br>Beagle Analyzer<br><br><br></td>
+										<td> </td>
+										<td>UART<br>I2C<br>SPI<br>USB 1.0/2.0<br>Ethernet<br>IR Light Communication<br>MIPI/Parallel<br>Camera Interface</td>			
+										<td></td>
+										<td>TCP<br>UDP<br><br><br><br><br><br><br></td>
+									</tr>
+								</table>
+								
+								<h4 style="color:#5a5a5a;margin-top:30px;"> <b> Web / Server </b></h2>	
+								<table style="text-align:center; ">	
+									<tr style="background-color:navy; color:white;">
+										<td colspan=5>Things I don't <u><b>'know' </b></u>... just YET</td>
+									</tr>
+									<tr>
+										<td>HTML<br>CSS<br>Javascript<br>Bootstrap<br>AJAX<br>Apache 2.0<br>PHP<br>MySQL<br>HTTP<br>REST API</td>
+									</tr>
+								</table>
+							</section>
+							
+							<section id="rtl" style="margin-top:50px;">
+								<hr class="my-4">
+								<h2 class="mb-3" style="color:#5a5a5a;"> <b> RTL / FPGA </b></h2>	
+							</section>
+							
+							<section id="hardware" style="margin-top:50px;">
+								<hr class="my-4">
+								<h2 class="mb-3" style="color:#5a5a5a;"> <b> Hardware </b></h2>		
+							</section>
+							
+							<section id="software" style="margin-top:50px;">
+								<hr class="my-4">
+								<h2 class="mb-3" style="color:#5a5a5a;"> <b> Software </b></h2>	
+							</section>
+					</div>
 				
 				</div>
 			</div>

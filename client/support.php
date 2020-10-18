@@ -35,7 +35,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
 	</head>
 	
-	<body style="background-color:#d6eaf8; margin:0; overflow:hidden;">		
+	<body>
 		<!-- Top Navigation Bar -->
 		<div id="main_nav" style="margin-bottom:0;">
 			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4" style="height:100px; margin-bottom:0px !important;">
@@ -84,10 +84,18 @@
 		
 
 		<div style="margin:auto; width:100%;height:100%;">
-			<form action="createpost.php" enctype="multipart/form-data" method="POST" style="margin:auto; margin-top:100px; width:60%;height:60%;">
+			<form action="support.php" enctype="multipart/form-data" method="POST" style="margin:auto; margin-top:80px; width:60%;height:60%;">
 				<input type="hidden" id="postToken" name="postToken"> 
-				<label for="title" style="width:100%;">Title</label><br>
-				<input type="text" id="title" name="title" style="width:100%; min-width:500px;"><br><br>
+
+				<label style="width:100%;">What do you need support with? </label><br>				
+				<input type="checkbox" id="repair" name="repair" value="reair">
+				<label for="repair"> Repair  </label><br>
+				<input type="checkbox" id="service" name="service" value="service">
+				<label for="service2"> Service Malfunction  </label> <br>
+				<input type="checkbox" id="hardware" name="hardware" value="hardware">
+				<label for="hardware"> Hardware Development  </label>  <br>
+				<input type="checkbox" id="software" name="software" value="software">
+				<label for="software"> Software Development  </label> <br><br>
 				
 				<label for="content" style="width:100%">Content</label><br>
 				<textarea id="summernote" name="content" style="width:100%; min-width:500px; height:60%;"></textarea><br>
@@ -104,7 +112,6 @@
 			});
 		</script>
 		
-		<script src="js/cookie_handler.js"></script>
 		<script>
 			var googleToken = getCookie('AccessToken' );
 			document.getElementById('postToken').value=googleToken;
@@ -115,7 +122,8 @@
 			require_once 'vendor/autoload.php';
 			
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$postToken = $_POST['postToken'];		
+				
+				$postToken = $_POST['postToken'];
 				
 				// Specify the CLIENT_ID of the app that accesses the backend
 				$client = new Google_Client(['494240878735-c8eo6b0m0t8fhd8vo2lcj0a9v6ena7bp.apps.googleusercontent.com' => $CLIENT_ID]);  
@@ -133,16 +141,22 @@
 					return;
 				}
 				
-				$title = $_POST['title'];
+				$repair = $_POST['repair'];
+				$service = $_POST['service'];
+				$hardware = $_POST['hardware'];
+				$software = $_POST['software'];
+				$type = $repair . $service . $hardware . $software;
+				echo $type;
+				
+				
 				$content = $_POST['content'];
-				$sql = "USE LazyWeb;";
+				$sql = "USE LazyWeb";
 				$result = mysqli_query($conn, $sql);
-				$sql = "INSERT INTO dashboard(uid, title, author, views, contents) values('$uid', '$email', '$title', '0', '$content')";
+				$sql = "INSERT INTO supports(uid, type, contents, status) values('$uid', '$type', '$content', '0')";
 				echo $sql;
 				$result = mysqli_query($conn, $sql);
 				echo $result;
 			}		
 		?>
 	</body>
-
-<html>
+</html>

@@ -13,10 +13,11 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	</head>
 	
+	<!--body style="background:linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,1)), url('img/main_background.jpg');"-->
 	<body>
 		<!-- Top Navigation Bar -->
-		<div id="main_nav" style="margin-bottom:0;">
-			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4" style="height:100px; margin-bottom:0px !important; background-color:#4b0082;">
+		<div id="main_nav" style="">
+			<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4 fixed-top" style="height:100px; margin-bottom:0px !important;">
 				<ul class="navbar-nav" style="text-align:center; margin:0 auto; left:20%;">
 					<li class="nav-item active"> <a class="nav-link" href="index.html">Home</a></li>
 					<li class="nav-item"> <a class="nav-link" href="about.html">LazyBoy</a></li>
@@ -28,115 +29,151 @@
 					</li>
 					<li class="nav-item"> <a class="nav-link" href="dashboard.php">Dashboard</a></li>
 					<li class="nav-item dropdown"> 
-						<a class="nav-link" href="support.html">Support</a>
+						<a class="nav-link" href="support.php">Support</a>
 					</li>
 					<li class="nav-item"> <a class="nav-link" href="broadcast.php">Emergency Broadcast </a></li>
 				</ul>
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active"> 
+
+				<ul class="navbar-nav">
+					<li class="nav-item active" style="font-weight:bold; "> 
+							<a id="userInfoUI" class="nav-link" href="#" style="font-weight:bold; text-align:right;"></a>
+					</li>
+				</ul>
+					
+				<ul class="navbar-nav">
+					<li id="signInContainer" class="nav-item active"> 
 						<a id="signBtn"class="btn btn-primary" href="login.php" role="button">
 							Sign In
 						</a>
-					</li>
-				</ul>
+					</li>					
+				</ul>	
 			</nav>				
 		</div>
+			
+		<script src="js/cookie_handler.js"></script>
+		<script src="js/login_handler.js"></script>
+		<script>
+			var authenticator = getCookie('Authenticator' );
+			var username = getCookie('Username' );
+			var profilePicture = getCookie('ProfilePicture' );
+			var signInContainer = document.getElementById("signInContainer");
+			var userProfileUI = document.getElementById("userInfoUI");
+			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
+		</script>
 		
-
-		<div style="overflow:scroll; width:100%; height:100%;">
-					
-			<div class="contents" style="height:600px; ">
-				<div style="width:25%;height:100%; margin:0 auto; float:left;">
-					<h1 align="center" style="margin:20%"> 상표<br>자리<br></h1>
-					<h2 align="center"> 상호미정<br></h2>
-				</div>
-				<div style="width:75%; height:100%; float:left; margin:auto; display:flex; justify-content:center;">
-
-					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="margin:auto; width:50%; height:50%;">
-					  <div class="carousel-inner" style="width:100%; height:100%;">
-						<div class="carousel-item active">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="First slide">
+		<div id="main-contents" style="overflow:hidden; width:100%; padding-top:100px;">
+		<script>
+			var contents_height = window.innerHeight - document.getElementById("main_nav").height;
+			//document.getElementById("main-contents").height = contents_height;
+			console.log("hi");
+			console.log(contents_height);
+		</script>
+			<div class="contents" style="height:500px;">
+				<div style="width:100%; height:100%; float:left; margin:auto; display:flex; justify-content:center;">
+					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="margin:auto; width:100%; height:100%; background-color:#5a5a5a;">
+						<ol class="carousel-indicators">
+							<li data-target="#carouselExampleControls" data-slide-to="1"></li>
+							<li data-target="#carouselExampleControls" data-slide-to="2"></li>
+							<li data-target="#carouselExampleControls" data-slide-to="3"></li>
+						</ol>
+						
+					  <div class="carousel-inner " style="width:100%; height:100%;color:#5a5a5a;">
+					  
+						<div class="carousel-item active" style="width:100%; height:100%;">
+							<div style=" width:100%; height:100%"> 
+										<div style="background-color:black; color: white; width:15%; min-width:200px; height:100%; float:right;"> 
+											<p style="width:100%; height:100%; display: flex; justify-content: center; align-items: center;"><b> RTL / FPGA </b></p>
+										</div>
+										<div style="background-image:linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,1)), url('img/main_background.jpg'); width:85%; height:100%"> 
+										</div>
+								</div>
 						</div>
-						<div class="carousel-item">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="Second slide">
+						
+						<div class="carousel-item " style="width:100%; height:100%;">
+							<div style=" width:100%; height:100%"> 
+										<div style="background-color:black; color: white; width:15%; min-width:200px; height:100%; float:right;"> 
+											<p style="width:100%; height:100%; display: flex; justify-content: center; align-items: center;"><b> Hardware </b></p>
+										</div>
+										<div style="background-image:linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,1)), url('img/main_background.jpg'); width:85%; height:100%"> 
+										</div>
+								</div>
 						</div>
-						<div class="carousel-item">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="Third slide">
+						
+						<div class="carousel-item " style="width:100%; height:100%;">
+							<div style=" width:100%; height:100%"> 
+									<div style="background-color:black; color: white; width:15%; min-width:200px; height:100%; float:right;"> 
+										<p style="width:100%; height:100%; display: flex; justify-content: center; align-items: center;"><b> Software </b></p>
+									</div>
+									<div style="background-image:linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,1)), url('img/main_background.jpg'); width:85%; height:100%"> 
+								</div>
+							</div>
 						</div>
+						
 					  </div>
-					  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+					  
+					  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="color:black;">
 						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 						<span class="sr-only">Previous</span>
 					  </a>
-					  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+					  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="color:black;">
 						<span class="carousel-control-next-icon" aria-hidden="true"></span>
 						<span class="sr-only">Next</span>
 					  </a>
+					</div>
+				</div>
+			</div>
+			<div class="contents" style="background-color:#f8f8f8; height:auto; padding-top:40px;padding-bottom:40px;">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-4">
+							<h2> High-tech for beginners </h2>
+							<p style="font:Georgia;"> 
+								Upcoming products of Lazyboy Industry will be focused on providing entry level makers a chance to use Soc level modules on entry level Microcontroller boards.	<br><br>
+								No more soldering BGA microchips. <br><br>
+								No more struggle fitting in your big fat LInux boards into design just cause you can't design it on your own. <br><br>
+								Just an 48 Mhz Arduino-class microcontroller will give you acces to a Full HD 1080p streaming in your product!
+								Okay, it may be 720p honestly. I am still in designing process.<br>
+							</p>
+							<a id=""class="btn btn-primary" href="" role="button" style="width:100px; text-align:center;">
+								Todo
+							</a>
+						</div>
+						
+						<div class="col-md-4">
+							<h2> Making made easy </h2>
+							<p>
+								Bringing your ideas to life as a hardware start-up is still a daunting task.<br>
+								Prototyping in protoboards and custom dev boards can only take you so far if you have physical requirements<br>
+							</p>
+							<a id=""class="btn btn-primary" href="" role="button" style="width:100px; text-align:center;">
+								Todo
+							</a>
+						</div>
+						
+						<div class="col-md-4">
+							<h2>Commercial use</h2>
+							<p>
+								All products will be made just to realize your ideas involving difficult technologies into one integrated commercial product. <br>
+								Licenses will be prepared in a way that you can use my product in your design at your own responsibility. <br>
+								You will get access to design specifics on mass purchase. <br><br>
+								Please refer to license options for embeding Lazyboy's products into your design.
+							</p>
+							
+							<a id=""class="btn btn-primary" href="" role="button" style="width:100px; text-align:center;">
+								Todo
+							</a>
+						</div>
+						
 					</div>
 				</div>
 			</div>
 			
-			<div class="contents" style="height:600px;background-color:#f5f5f5;">
-				<div style="width:25%;height:100%; margin:0 auto; float:left;">
-					<h1 align="center" style="margin:20%"> 상표<br>자리<br></h1>
-					<h2 align="center"> 상호미정<br></h2>
-				</div>
-				<div style="width:75%; height:100%; float:left; margin:0 auto;">
-
-					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="width:100%; height:100%;">
-					  <div class="carousel-inner" style="width:100%; height:100%;">
-						<div class="carousel-item active">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="First slide">
-						</div>
-						<div class="carousel-item">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="Second slide">
-						</div>
-						<div class="carousel-item">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="Third slide">
-						</div>
-					  </div>
-					  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					  </a>
-					  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					  </a>
-					</div>
+			<div  class="contents" style="background-color:grey; height:100px; ">
+				<div class="container" style=" height:100%; ">
+					<p style="color:white; height:100%; display: flex; justify-content: center; align-items: center;">Copyright 2020 Lazyboy Industry CO.Limitied All Rights Reserved</p>
 				</div>
 			</div>
+		</div>
 			
-			<div class="contents" style="height:600px;">
-				<div style="width:25%;height:100%; margin:0 auto; float:left;">
-					<h1 align="center" style="margin:20%"> 상표<br>자리<br></h1>
-					<h2 align="center"> 상호미정<br></h2>
-				</div>
-				<div style="width:75%; height:100%; float:left; margin:0 auto;">
-
-					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="width:100%; height:100%;">
-					  <div class="carousel-inner" style="width:100%; height:100%;">
-						<div class="carousel-item active">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="First slide">
-						</div>
-						<div class="carousel-item">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="Second slide">
-						</div>
-						<div class="carousel-item">
-						  <img class="d-block w-100" src="img/main_background.jpg" alt="Third slide">
-						</div>
-					  </div>
-					  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					  </a>
-					  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					  </a>
-					</div>
-				</div>
-			</div>
-		</iframe>
 	</body>
 </html>
