@@ -65,8 +65,6 @@
 	}
 
 
-
-
 	class Peer {
 		public $uid;
 		public $name;
@@ -100,12 +98,10 @@
 
 
 
-
 	class RequestHandler {
 		// Request info
 		public $request;		
 	}
-
 
 
 
@@ -136,8 +132,7 @@
 				$msg = "<p>" . $dbg_msg . "</p>";
 				$sql = "USE LazyWeb;";
 				$result = mysqli_query($conn, $sql);
-			}
-			
+			}			
 		}
 
 

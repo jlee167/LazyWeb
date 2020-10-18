@@ -36,7 +36,7 @@
 				var id_token = googleUser.getAuthResponse().id_token;
 				console.log("ID Token: " + id_token);
 				var xhr = new XMLHttpRequest();
-				xhr.open('POST', 'user_register.php', true);
+				xhr.open('POST', '../server/user_register.php', true);
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.onload = function() {
 					var text = 'Signed in as: ' + xhr.responseText;
@@ -171,7 +171,7 @@
 											
 											console.log(token_kakao);
 											var xhttp = new XMLHttpRequest();											
-											xhttp.open("POST",  "user_register.php", true);
+											xhttp.open("POST",  "../server/user_register.php", true);
 											xhttp.setRequestHeader('Content-Type', 'application/json');
 											xhttp.onload = function() {
 												var text = 'Signed in as: ' + xhttp.responseText;

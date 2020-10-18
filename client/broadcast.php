@@ -83,7 +83,7 @@
 			var peerlist;
 		
 			var xhttp = new XMLHttpRequest();
-			xhttp.open('POST', 'user_register.php', true);
+			xhttp.open('POST', '../server/user_register.php', true);
 			xhttp.setRequestHeader('Content-Type', 'application/json');
 			
 			var accessToken = getCookie('AccessToken');
@@ -221,7 +221,7 @@
 					else if (authProvider == 'Google') {
 						var googleToken = getCookie('AccessToken' );
 						var xhp = new XMLHttpRequest();
-						xhp.open('POST', 'user_register.php', true);
+						xhp.open('POST', '../server/user_register.php', true);
 						xhp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						
 						xhp.onload = function() {

@@ -37,7 +37,7 @@
 			var id_token = googleUser.getAuthResponse().id_token;
 			console.log("ID Token: " + id_token);
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST', 'user_register.php', true);
+			xhr.open('POST', '../server/user_register.php', true);
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xhr.onload = function() {
 				var text = 'Signed in as: ' + xhr.responseText;

@@ -55,7 +55,7 @@
 			var peerlist;
 		
 			var xhttp = new XMLHttpRequest();
-			xhttp.open('POST', 'user_register.php', true);
+			xhttp.open('POST', '../server/user_register.php', true);
 			xhttp.setRequestHeader('Content-Type', 'application/json');
 			
 			var accessToken = getCookie('AccessToken');
@@ -125,7 +125,7 @@
 			<script src="js/cookie_handler.js"></script>
 			<script>
 				newGuardianRequestBtn.onclick = function () {
-					xhttp.open('POST', 'user_register.php', true);
+					xhttp.open('POST', '../server/user_register.php', true);
 					var newpeer_request = {
 						"Request" : "New Peer Request",
 						"Action" : "Create",
@@ -139,7 +139,7 @@
 				}
 				
 				newProtecteeRequestBtn.onclick = function () {
-					xhttp.open('POST', 'user_register.php', true);
+					xhttp.open('POST', '../server/user_register.php', true);
 					var newpeer_request = {
 						"Request" : "New Peer Request",
 						"Action" : "Create",
