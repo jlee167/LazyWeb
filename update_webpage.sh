@@ -1,13 +1,21 @@
 #!/bin/bash
 
-DEST=/var/www/lazyweb
-DEST2=/var/www/html
-SRC=./client/*
+#DEST=/var/www/lazyweb
+#DEST2=/var/www/html
+#SRC=./client/*
 
-sudo cp -r -f ${SRC} ${DEST}
-sudo cp -r -f ./vendor ${DEST}
-sudo cp -r -f ./streams ${DEST}
-sudo cp -r -f ${SRC} ${DEST2}
-sudo cp -r -f ./vendor ${DEST2}
-sudo cp -r -f ./streams ${DEST2}
+DEST=/var/www/lazyweblaravel
+SRC=./lazyweblaravel/
+
+sudo rm -rf ${DEST}
+sudo cp -r ${SRC} ${DEST}
+#sudo cp -r -f ./vendor ${DEST}
+#sudo cp -r -f ./streams ${DEST}
+#sudo cp -r -f ${SRC} ${DEST2}
+#sudo cp -r -f ./vendor ${DEST2}
+#sudo cp -r -f ./streams ${DEST2}
+
+sudo chown -R www-data:www-data ${DEST}
+sudo chmod -R 775 ${DEST}/storage
+sudo chmod -R 775 ${DEST}/bootstrap/cache
 sudo systemctl reload apache2
