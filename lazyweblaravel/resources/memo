@@ -1,0 +1,191 @@
+
+/**************************************************************
+
+Membership Management CRUD
+
+# Common parameters:
+        Member (Both new/existing) personal information
+        Members' emergency correspondence information
+
+**************************************************************/
+
+
+GET /members/{uid}
+{
+    Param:
+        {Authentication-Provider}
+        {id}/{password} or {Authentication-Token}
+
+    Description:
+        Retrieves user information.
+        ID/Password
+
+    Response:
+
+
+}
+
+
+
+
+POST /members/{uid}
+{
+    Param:
+        {Authentication-Provider}
+        {id}/{password} or {Authentication-Token}
+
+    Description:
+        Creates new user account
+
+    Response:
+
+
+}
+
+
+
+
+PUT /members/{uid}
+{
+    Param:
+        {Authentication-Provider}
+        {id}/{password} or {Authentication-Token}
+
+    Description:
+        Updates existing user information
+
+    Response:
+
+
+}
+
+
+DELETE /members/{uid}
+{
+    Param:
+        {Authentication-Provider}
+        {id}/{password} or {Authentication-Token}
+
+    Description:
+
+    Response:
+
+
+}
+
+
+
+
+/**************************************************************
+
+Protector Relationship Management CRUD
+
+# Common parameters:
+        Member (Both new/existing) personal information
+        Members' emergency correspondence information
+
+**************************************************************/
+
+
+
+POST /member/{uid}/guardians
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+PUT /member/{uid}/guardians
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+GET /member/{uid}/guardians
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+DELETE /member/{uid}/guardians
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+POST /member/{uid}/protected
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+PUT /member/{uid}/protected
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+GET /member/{uid}/protected
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+DELETE /member/{uid}/protected
+{
+    Param:
+        {Authentication-Provider}
+        {Access-Token}
+
+    Description:
+
+    Response:
+}
+
+
+
+
+
+<User Management CRUD>
+

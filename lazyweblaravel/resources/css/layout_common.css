@@ -1,0 +1,65 @@
+.section-contents-nopadding {
+    overflow:hidden;
+    width:100vw;
+}
+
+.section-contents {
+    overflow:hidden;
+    width:100vw;
+    padding-top:70px;
+}
+
+
+.navbar a{
+    color: rgb(185, 185, 185) !important;
+    font-family: 'Nunito' !important;
+    font-weight: 500 !important;
+}
+
+
+#login-manual {
+    width:700px;
+    border-radius:3%;
+}
+
+
+
+#view-login {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    width:100vw;
+    height:100vh;
+    background-image: url(https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png);
+    background-size: cover;
+}
+
+
+input.login-normal {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-family: 'Nunito' !important;
+    font-weight: 500 !important;
+    border-radius:3%;
+    border-color: rgb(185, 185, 185);
+    border: 1px solid #555;
+}
+
+
+input.login-small {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-family: 'Nunito' !important;
+    font-weight: 500 !important;
+    border-radius:3%;
+    border-color: rgb(185, 185, 185);
+    border: 1px solid #555;
+}
+
+label.login {
+    font-family: 'Nunito' !important;
+    font-weight: 500 !important;
+}
