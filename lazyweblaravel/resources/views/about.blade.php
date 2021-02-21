@@ -3,10 +3,11 @@
 <html>
 	<head>
         @include('includes.imports.styles_common')
+        <link rel="stylesheet" href="/css/resume.css">
 	</head>
 
 	<body>
-        @include('includes.layouts.navbar')
+        {{--@include('includes.layouts.navbar')--}}
 
 		<script src="js/auth_helpers.js"></script>
 		<script>
@@ -20,73 +21,160 @@
 
 
         <!-- Personal Info -->
-        <div class="section-contents">
-            <div style="overflow:hidden; width:100%;">
-                <div style="overflow:hidden; min-width:200px; width:20%; position:fixed;background-color:#e25132; height:100%; display:flex; flex-direction:column; justify-content: center; text-align:center;">
-                    <a href="#overview" style="color:white;"> <h2 class="mb-5"><b>Overview</b> <br></h2></a>
-                    <a href="#rtl" style="color:white;">  <h2 class="mb-5"><b>RTL</b><br></h2> </a>
-                    <a href="" style="color:white;"> <h2 class="mb-5"> <b>Hardware</b><br></h2> </a>
-                    <a href="" style="color:white;">  <h2 class="mb-5"><b>Software</b><br></h2> </a>
+        <div id="resume-contents" class="section-contents" style="padding-top:0px; height:100vh;">
+            <div style="width:100%; height:100%; display:flex; overflow:scroll;">
+                <div class="resume-sidebar" style="overflow:hidden; position:fixed; background-color:#bc5c3c; height:100%;
+                                                    display:inline-flex; flex-direction:column; justify-content: center;
+                                                    text-align:center; margin-top:0px;">
+                    <div style="display:flex; flex-direction:row; justify-content:center; overflow:hidden;">
+                        <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="width:120px; height:120px;">
+                    </div>
+                    <h2 class="title-font" style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;"> LazyBoy </h2>
+                    <hr style="border-top: 1px solid; width:80%; border-width:1px; color:white;">
+                    <a href="#profile" style="color:white;"> <h5 class="mb-3"><b>Overview</b> <br></h2></a>
+                    <a href="#skills" style="color:white;">  <h5 class="mb-3"><b>Skills</b><br></h2> </a>
+                    <a href="#rtl" style="color:white;">  <h5 class="mb-3"><b>RTL</b><br></h2> </a>
+                    <a href="#hardware" style="color:white;"> <h5 class="mb-3"> <b>Hardware</b><br></h2> </a>
+                    <a href="#software" style="color:white;">  <h5 class="mb-3"><b>Software</b><br></h2> </a>
+
+                    <hr style="border-top: 1px solid; width:80%; border-width:1px; color:white;">
+                    <h3 class="title-font"> Contact </h3>
+                    <div style="display:flex; flex-direction:row; justify-content:center;">
+                        <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="width:32px; height:32px;">
+                    </div>
                 </div>
 
-                <div style="overflow:hidden; width:80%;float:right;">
-                    <div style="overflow:hidden; max-width:1200px;float:center; padding-left:50px; padding-top:50px;">
-                        <section id="overview">
-                            <h2 class="mb-3" style="color:#5a5a5a;"> <b> Overview  </b></h2>
+                <div class="resume-contents" style="display:inline-block; overflow:visible; margin-top:0px;">
+                    <div style="margin-left:50px; margin-right:50px; margin-top:50px; overflow:hidden;">
+                        <section id="profile">
+                            <h2 class="mb-6" style="color:#343032;"> <b> Profile  </b></h2>
+                            <hr style="border-width:3px; color:#d6c102;">
+                            <p>
+                                I am an RTL engineer with a little over 2 years of experience. My current work is closely
+                                related to self-driving, in which I was in charge of develping FPGA logic core and designing
+                                hardware.
+                                My area of interests include video/image processing, RF engineering, IoT,
+                                and education.
 
-                            <div class="subheading mb-3">Things to know...</div>
-                            <ul class="fa-ul mb-3">
-                                <li class="fa-li fa fa-check"> Entry-level RTL engineer with ~2 years of experience</li>
-                                <li class="fa-li fa fa-check"> Yes, this is an one-man business </li>
-                                <li class="fa-li fa fa-check"> Jack of all trades, Master of none. Do not expect expert-level works. I will focus on assisting entry level makers for the time being </li>
-                                <li class="fa-li fa fa-check"> Details about my work outside of Lazyboy (my 40hr/week job) will not be shared nor will they be invoved in my efforts within Lazyboy in any way </li>
-                            </ul>
+                                Details of my current work and personal information is not available at this time
+                                due to a need for anonymity.
+                            </p>
+                            <!--ul class="fa-ul mb-3">
 
-                            <h4 style="color:#5a5a5a;margin-top:30px;"> <b> HDL / Software  </b></h2>
-                            <table style="text-align:center; width:100%;">
-                                <tr style="background-color:navy; color:white;">
-                                    <td colspan=2>Digital <br>Hardware</td>
-                                    <td colspan=2>Hardware<br>Languages</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Artix7/Kintex7<br>Zynq Ultrascale+<br>Spartan<br>Lattice FPGA<br>Cortex-M<br>Cortex-A</td>
-                                    <td>
-                                        <span class="badge badge-success">Proficient</span><br>
-                                        <span class="badge badge-warning">Intermediate</span><br>
-                                        <span class="badge badge-warning">Intermediate</span><br>
-                                        <span class="badge badge-warning">Intermediate</span><br>
-                                        <span class="badge badge-danger">Retrainable</span><br>
-                                        <span class="badge badge-danger">Retrainable</span><br>
+                                <li class="fa-li fa fa-check"> Entry-level RTL engineer with a little over 2 years of experience.</li>
+                                <li class="fa-li fa fa-check"> My complete CV is not open at this time. </li>
+                                <li class="fa-li fa fa-check"> Jack of all trades, Master of none.
+                                                            My work here will be focused on helping entry-level makers. </li>
+                            </ul-->
+                        </section>
+
+
+                        <section id="">
+
+                        </section>
+
+
+                        <section class="section-margin" id="skills" style="overflow: hidden;">
+                            <h2 class="mb-7" style="color:#343032;"> <b> Skills  </b></h2>
+                            <hr style="border-width:3px; color:#d6c102;">
+                            <div class="sub-section-margin">
+                                <h4 style="color:#343032;margin-top:30px;"> <b> Digital Logics  </b></h4>
+                                <table style="display: inline-block; vertical-align:top; border-right:1px solid;">
+                                    <tr style=""><td colspan="2">
+                                        <h5 style="text-align:center; color:#343032;">Languages</h3>
+                                    </td></tr>
+                                    <tr>
+                                        <td style="padding-top:20px; padding-bottom:20px;
+                                                        padding-left:20px; padding-right:20px;">
+                                            <p style="display:inline-block; margin-bottom:0px;">Sytemverilog</p>
+                                            <br><skill-bar v-bind:level='2'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">Verilog</p>
+                                            <br><skill-bar v-bind:level='2'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">VHDL</p>
+                                            <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table style="display: inline-block; vertical-align:top;
+                                            margin-right:30px;">
+
+                                    <tr style=""><td colspan="2">
+                                        <h5 style="text-align:center; color:#343032;">Platforms</h3>
+                                    </td></tr>
+
+                                    <tr><td style="padding-top:20px; padding-bottom:20px;
+                                                    padding-left:20px; padding-right:20px;">
+                                        <p style="display:inline-block; margin-bottom:0px;">Artix7/Kintex7</p>
+                                        <br><skill-bar v-bind:level='2'></skill-bar><br>
+                                        <p style="display:inline-block; margin-bottom:0px;">Zynq Ultrascale+</p>
+                                        <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                        <p style="display:inline-block; margin-bottom:0px;">Lattice FPGA</p>
+                                        <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                        </td>
+
+
+                                        <td style="padding-top:20px; padding-bottom:20px;
+                                                    padding-left:20px; padding-right:20px; vertical-align:top;">
+                                        <p style="display:inline-block; margin-bottom:0px;">Cortex-M</p>
+                                        <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                        <p style="display:inline-block; margin-bottom:0px;">Cortex-A</p>
+                                        <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <h4 style="color:#343032;margin-top:30px;"> <b> Software </b></h4>
+                            <table style="display: inline-block; vertical-align:top;
+                                        margin-right:30px;">
+                                <tr style=""><td colspan="2">
+                                    <h3 style="text-align:center; color:#343032;">Languages</h3>
+                                </td></tr>
+                                <tr><td style="padding-top:20px; padding-bottom:20px;
+                                                padding-left:20px; padding-right:20px;">
+                                    <p style="display:inline-block; margin-bottom:0px;">C</p>
+                                    <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">C++</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">Python</p>
+                                    <br><skill-bar v-bind:level='1'></skill-bar><br>
                                     </td>
-                                    <td>Systemverilog<br>Verilog<br>VHDL<br><br><br><br></td>
-                                    <td>
-                                        <span class="badge badge-success">Proficient</span><br>
-                                        <span class="badge badge-success">Proficient</span><br>
-                                        <span class="badge badge-danger">Beginner</span><br><br><br><br>
+
+
+                                    <td style="padding-top:20px; padding-bottom:20px;
+                                                padding-left:20px; padding-right:20px; vertical-align:top;">
+                                    <p style="display:inline-block; margin-bottom:0px;">Java</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">C#</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">x86/ARM Assembly</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
                                     </td>
                                 </tr>
                             </table>
 
+                            <table style="display: inline-block; vertical-align:top;
+                                        margin-right:30px;">
+                                <tr style=""><td style="padding-left:20px; padding-right:20px;">
+                                    <h3 style="text-align:center; color:#343032;">Platforms</h3>
+                                </td></tr>
+                                <tr>
+                                <td style="padding-top:20px; padding-bottom:20px; text-align:center;">
+                                    <p style="display:inline-block; margin-bottom:0px;">Linux</p>
+                                    <br><p style="display:inline-block; margin-bottom:0px;">Android</p>
+                                    <br><p style="display:inline-block; margin-bottom:0px;">RTOS</p>
+                                    <br><p style="display:inline-block; margin-bottom:0px;">Windows</p>
+                                </td>
 
-                            <h4 style="color:#5a5a5a;margin-top:30px;"> <b> HDL / Software  </b></h2>
-                                <table style="text-align:center; width:100%;">
-                                    <tr style="background-color:navy; color:white;">
-                                        <td colspan=2>Software<br>Languages</td>
-                                        <td colspan>Platforms / OS</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>C<br>C++<br>Python<br>Java<br>C#<br>x86/ARM assembly<br></td>
-                                        <td><span class="badge badge-warning">Intermediate</span><br>
-                                            <span class="badge badge-warning">Intermediate</span><br>
-                                            <span class="badge badge-warning">Intermediate</span><br>
-                                            <span class="badge badge-danger">Beginner</span><br><span class="badge badge-danger">Beginner</span><br><span class="badge badge-danger">Retrainable</span><br></td>
-                                        <td> Desktop Linux<br>Embedded Linux<br>Android<br>Misc RTOS <br>Windows<br><br></td>
-                                    </tr>
-                                </table>
+                                </tr>
+                            </table>
 
-                            <h4 style="color:#5a5a5a;margin-top:30px;"> <b> Skillsets / Protocol Knowledges  </b></h2>
+
+
+
+                            <h4 style="color:#343032;margin-top:30px;"> <b> Skillsets / Protocol Knowledges  </b></h2>
                             <table style="text-align:center; width:100%;">
                                 <tr style="background-color:navy; color:white;">
                                     <td colspan=5>Skills/Tools</td>
@@ -96,7 +184,7 @@
                                 </tr>
                                 <tr>
                                     <td>Digital Electronics<br>Analog Electronics<br>CMOS Circuit<br>PCB Artwork<br>Firmware<br>Device Driver<br><br></td>
-                                    <td>Embedded Linux<br>Digital Camera<br>ASIC<br>Giga Trancievers<br>LVDS<br>IO Serdes<br><br></td>
+                                    <td>Embedded Linux<br>Digital Camera<br>ASIC<br><br></td>
                                     <td>Qt5 GUI<br>.NET Windows GUI<br>Android Mobile Dev<br>Basic Networking<br><br><br><br></td>
                                     <td>Atmel SAM / TI C2000<br>Cortex-A Processors w/Linux<br>Logic Analyzer<br>Oscilloscope<br>Beagle Analyzer<br><br><br></td>
                                     <td> </td>
@@ -106,72 +194,122 @@
                                 </tr>
                             </table>
 
-                            <h4 style="color:#5a5a5a;margin-top:30px;"> <b> Web / Server </b></h2>
-                            <table style="">
-                                    <td>
-                                        <table style="text-align:center; vertical-align:top;">
-                                            <tr style="background-color:navy; color:white;">
-                                                <td colspan=5>Languages</td>
-                                            </tr>
+                            <h4 style="color:#343032;margin-top:30px;"> <b> Web / Server </b></h2>
 
-                                            <tr>
-                                                <td>HTML<br>CSS<br>Javascript<br>PHP</td>
-                                            </tr>
-                                        </table>
-                                    </td>
+                            <table style="display: inline-block; vertical-align:top;
+                                        margin-right:30px;">
+                                <tr style=""><td>
+                                    <h3 style="text-align:center; color:#343032">Languages</h3>
+                                </td></tr>
+                                <tr>
+                                <td style="padding-top:20px; padding-bottom:20px;
+                                                padding-left:20px; padding-right:20px;">
+                                    <p style="display:inline-block; margin-bottom:0px;">HTML</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">CSS</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">Javascript</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">PHP</p>
+                                    <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                </td>
 
-                                    <td style="text-align:center; vertical-align:top;">
-                                        <table style="text-align:center; vertical-align:top;">
-                                            <tr style="background-color:navy; color:white;">
-                                                <td colspan=5>Databases</td>
-                                            </tr>
-                                            <tr>
-                                                <td>MySQL<br>MongoDB</td>
-                                            </tr>
-                                        </table>
-                                    </td>
+                                </tr>
+                            </table>
 
-                                    <td style="text-align:center; vertical-align:top;">
-                                        <table style="text-align:center; vertical-align:top;">
-                                            <tr style="background-color:navy; color:white;">
-                                                <td colspan=5>General Skills/Tools</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Bootstrap<br>Apache<br>REST API</td>
-                                            </tr>
-                                        </table>
-                                    </td>
+                            <table style="display: inline-block; vertical-align:top;
+                                        margin-right:30px;">
+                                <tr style=""><td>
+                                    <h3 style="text-align:center; color:#343032;">Database</h3>
+                                </td></tr>
+                                <tr>
+                                <td style="padding-top:20px; padding-bottom:20px;
+                                                padding-left:20px; padding-right:20px;">
+                                    <p style="display:inline-block; margin-bottom:0px;">MySQL / MariaDB</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">MongoDB</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">ArangoDB</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                </td>
 
-                                    <td style="text-align:center; vertical-align:top;">
-                                        <table style="text-align:center; vertical-align:top;">
-                                            <tr style="background-color:navy; color:white;">
-                                                <td colspan=5>Platforms/Frameworks</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Laravel<br>NodeJS</td>
-                                            </tr>
-                                        </table>
+                                </tr>
+                            </table>
+
+                            <table style="display: inline-block; vertical-align:top;
+                                        margin-right:30px;">
+                                <tr style=""><td>
+                                    <h3 style="text-align:center; color:#343032;">Skills / Tools</h3>
+                                </td></tr>
+                                <tr>
+                                <td style="padding-top:20px; padding-bottom:20px;
+                                                padding-left:20px; padding-right:20px;">
+                                    <p style="display:inline-block; margin-bottom:0px;">Bootstrap</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">Apache</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style="display:inline-block; margin-bottom:0px;">REST API</p>
+                                    <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                </td>
+
+                                </tr>
+                            </table>
+
+
+                            <table style="display: inline-block; vertical-align:top;
+                                        margin-right:30px;">
+                                <tr style=""><td>
+                                    <h3 style="text-align:center; color:#343032"> Frameworks</h3>
+                                </td></tr>
+                                <tr>
+                                    <td style="padding-top:20px; padding-bottom:20px;
+                                                    padding-left:20px; padding-right:20px;">
+                                        <p style="display:inline-block; margin-bottom:0px;">Laravel</p>
+                                        <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                        <p style="display:inline-block; margin-bottom:0px;">NodeJS</p>
+                                        <br><skill-bar v-bind:level='0'></skill-bar><br>
                                     </td>
+                                </tr>
                             </table>
                         </section>
 
+
+
+
+
                         <section id="rtl" style="margin-top:50px;">
-                            <hr class="my-4">
-                            <h2 class="mb-3" style="color:#5a5a5a;"> <b> RTL / FPGA </b></h2>
+
+                            <h2 class="mb-3" style="color:#343032;"> <b> RTL / FPGA </b></h2>
+                            <hr>
+                            <p>
+                                I have worked on many small-sized digital projects since college.
+                                My first significant (depends on your standard for 'significant' ...) project was an
+                                FPGA to digital camera (OV7670) interface
+                            </p>
                         </section>
 
                         <section id="hardware" style="margin-top:50px;">
-                            <hr class="my-4">
-                            <h2 class="mb-3" style="color:#5a5a5a;"> <b> Hardware </b></h2>
+                            <h2 class="mb-3" style="color:#343032;"> <b> Hardware </b></h2>
+                            <hr>
                         </section>
 
                         <section id="software" style="margin-top:50px;">
-                            <hr class="my-4">
-                            <h2 class="mb-3" style="color:#5a5a5a;"> <b> Software </b></h2>
+                            <h2 class="mb-3" style="color:#343032;"> <b> Software </b></h2>
+                            <hr>
+
                         </section>
                 </div>
+
             </div>
         </div>
+
+
+        <script src="{{ mix('js/app.js') }}"></script>
+        <script>
+            const app = new Vue({
+                el: '#resume-contents'
+            });
+        </script>
 
 	</body>
 </html>

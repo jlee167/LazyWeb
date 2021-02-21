@@ -3,5 +3,9 @@
     "/css/app.css": "/css/app.css",
     "/css/chatbox.css": "/css/chatbox.css",
     "/css/layout_common.css": "/css/layout_common.css",
-    "/js/auth_helpers.js": "/js/auth_helpers.js"
+    "/css/resume.css": "/css/resume.css",
+    "/css/login.css": "/css/login.css",
+    "/js/auth_helpers.js": "/js/auth_helpers.js",
+    "/js/videojs-contrib-hls.js": "/js/videojs-contrib-hls.js",
+    "/js/videojs-contrib-hls.min.js": "/js/videojs-contrib-hls.min.js"
 }

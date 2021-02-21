@@ -2,7 +2,10 @@
 
 <html style="height:100%;">
 	<head>
+        <!-- Login -->
         @include('includes.imports.styles_common')
+        <link rel="stylesheet" href="/css/login.css">
+
 
 		<!-- Google Imports -->
 		<meta name="google-signin-scope" content="profile email">
@@ -42,7 +45,7 @@
 
 				xhr.send(JSON.stringify(registration_request));
 
-				// Todo: Change to something other than user's actual name
+				//Todo: Change to something other than user's actual name
 				//console.log(login_enable);
 				if (login_enable == true) {
 					// Set Cookies to access user information from anywhere
@@ -72,6 +75,9 @@
 
 	</head>
 
+
+
+
     <body style="margin:0; height:100%; overflow:scroll;">
 
 		@include('includes.layouts.navbar')
@@ -93,14 +99,22 @@
 		<!--Login Information-->
 		<div class="section-contents-nopadding">
             <div id="view-login">
-                <div id="login-manual" class="card w-25 h-50">
+                <div id="login-manual" class="card login-prompt">
                     <form style="align:center; margin:auto; width:75%; background-color:transparent;">
                         <div style="margin:auto; float:center;">
-                            <input class="login-normal" type="text" id="email" name="email" placeholder="Enter your email" style="width:100%; align:center;">
-                            <input class="login-normal" type="password" id="nickame" name="nickame" placeholder="Choose temporary nickname" style="width:100%; align:center; ">
-                            <input type="submit" value="Guest Login" style="width:100%; align:center; ">
+                            <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">ID</p>
+                            <input class="form-control" id="input_account" type="text" placeholder="Enter username" aria-describedby="search-btn" style="width:100%; height:50px;
+                                    align:center; margin-bottom:30px;">
+                            <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">Password</p>
+                            <input class="form-control" id="input_password" type="password" placeholder="Enter password" aria-describedby="search-btn" style="width:100%; height:50px;
+                                    align:center; margin-bottom:20px;">
+                            <button type="button" class="btn" style="background-color:#5603ad; color: white; width:100%; height:50px;
+                                                                    font-weight:600; font-family: 'Nunito Sans', sans-serif;"
+                                                                    onclick="nonSocialLogin()"
+                                                                    >Login</button>
                         </div>
                     </form>
+                    <hr>
 
                     <table style="width:70%;align:center; margin:auto; background-color:transparent;">
                         <tr style="height:50px; display:flex; justify-content:center;">
@@ -108,64 +122,7 @@
                                 <a id="kakao-login-btn" style=""></a>
                                 <a href="http://alpha-developers.kakao.com/logout"></a>
 
-                                    <script type='text/javascript'>
-                                        // Set JavaScript Key of current app.
-                                        Kakao.init('fcbc674142c20da29ab5dfe6d1aae93f');
 
-                                        // Create Kakao Login button.
-                                        Kakao.Auth.createLoginButton({
-                                            container: '#kakao-login-btn',
-                                            success: function(authObj) {
-                                                alert(JSON.stringify(authObj))
-                                                console.log("Cookie: " + authObj);
-                                                document.cookie += authObj;
-
-                                                var token_kakao = Kakao.Auth.getAccessToken();
-                                                var profile = Kakao.Auth.getBasicProfile;
-
-
-                                                console.log(token_kakao);
-                                                var xhttp = new XMLHttpRequest();
-                                                xhttp.open("POST",  "../server/user_register.php", true);
-                                                xhttp.setRequestHeader('Content-Type', 'application/json');
-                                                xhttp.onload = function() {
-                                                    var text = 'Signed in as: ' + xhttp.responseText;
-                                                    console.log(text);
-                                                };
-                                                var login_data = {
-                                                    "Request" : "Registration",
-                                                    "Access Token" : token_kakao,
-                                                    "Authenticator" : "Kakao"
-                                                };
-                                                console.log(JSON.stringify(login_data));
-
-                                                xhttp.send(JSON.stringify(login_data));
-                                                document.cookie = 'AccessToken=' + token_kakao + ';';
-                                                document.cookie = 'Authenticator = Kakao;';
-                                                console.log("Cookie: " + Kakao.Auth.getName);
-
-                                                //document.getElementById('signBtn').innerHTML= "Sign Out";
-                                                Kakao.API.request({
-                                                    url: '/v2/user/me',
-                                                    success: function(res) {
-                                                        //response = JSON.parse(res);
-                                                        //alert('login success' + JSON.stringify(res));
-                                                        //alert(res["properties"]["nickname"]);
-                                                        document.cookie = 'Username = ' + res["kakao_account"]["email"] + ';';
-                                                        document.cookie = 'ProfilePicture = ' + res["properties"]["thumbnail_image"]  + ';';
-                                                        window.location.href = 'index.html';
-                                                    },
-                                                    fail: function(error) {
-                                                        alert('login success, but failed to request user information: ' + JSON.stringify(error));
-                                                        return;
-                                                    },
-                                                });
-                                            },
-                                            fail: function(err) {
-                                                    alert(JSON.stringify(err));
-                                            }
-                                        });
-                                    </script>
                             </td>
                         </tr>
 
@@ -184,7 +141,102 @@
             @include('includes.layouts.footer')
         </div>
 
+
+
+        <script>
+
+            /**
+             *  Non-social login routine.
+             *  Authenticate users by username and password
+             */
+            function nonSocialLogin(){
+                var csrf = "{{ csrf_token() }}";
+                var username = document.getElementById('input_account').value;
+                var password = document.getElementById('input_password').value;
+                var loginRequest = new XMLHttpRequest();
+                loginRequest.open('POST', '/auth', true);
+                loginRequest.setRequestHeader('Content-Type', 'application/json');
+                loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
+                loginRequest.onload = function() {
+                    var response = JSON.parse(loginRequest.responseText);
+                    if (response.authenticated == true) {
+                        console.log("Successfully authenticated by LazyWeb!")
+                        window.location.href = response.href;
+                    }
+                    else {
+                        console.log("Login Failed!");
+                    }
+                };
+
+                loginRequest.send(JSON.stringify({
+                    "username" : username,
+                    "password" : password
+                }));
+            }
+
+
+            /**
+             *  Kakao Authentication routine
+             *  Initializes Kakao login button and callback routines.
+             */
+
+            /* Set JavaScript Key of current app */
+            Kakao.init('fcbc674142c20da29ab5dfe6d1aae93f');
+
+            /* Create Kakao Login button */
+            Kakao.Auth.createLoginButton({
+                container: '#kakao-login-btn',
+                success: function(authObj) {
+                    alert(JSON.stringify(authObj))
+                    console.log("Cookie: " + authObj);
+                    document.cookie += authObj;
+
+                    var token_kakao = Kakao.Auth.getAccessToken();
+                    var profile = Kakao.Auth.getBasicProfile;
+
+
+                    console.log(token_kakao);
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST",  "../server/user_register.php", true);
+                    xhttp.setRequestHeader('Content-Type', 'application/json');
+                    xhttp.onload = function() {
+                        var text = 'Signed in as: ' + xhttp.responseText;
+                        console.log(text);
+                    };
+                    var login_data = {
+                        "Request" : "Registration",
+                        "Access Token" : token_kakao,
+                        "Authenticator" : "Kakao"
+                    };
+                    console.log(JSON.stringify(login_data));
+
+                    xhttp.send(JSON.stringify(login_data));
+                    document.cookie = 'AccessToken=' + token_kakao + ';';
+                    document.cookie = 'Authenticator = Kakao;';
+                    console.log("Cookie: " + Kakao.Auth.getName);
+
+                    //document.getElementById('signBtn').innerHTML= "Sign Out";
+                    Kakao.API.request({
+                        url: '/v2/user/me',
+                        success: function(res) {
+                            //response = JSON.parse(res);
+                            //alert('login success' + JSON.stringify(res));
+                            //alert(res["properties"]["nickname"]);
+                            document.cookie = 'Username = ' + res["kakao_account"]["email"] + ';';
+                            document.cookie = 'ProfilePicture = ' + res["properties"]["thumbnail_image"]  + ';';
+                            window.location.href = 'main';
+                        },
+                        fail: function(error) {
+                            alert('login success, but failed to request user information: ' + JSON.stringify(error));
+                            return;
+                        },
+                    });
+                },
+                fail: function(err) {
+                        alert(JSON.stringify(err));
+                }
+            });
+        </script>
+
 	</body>
-
-
 <html>

@@ -1,0 +1,42 @@
+.resume-sidebar {
+    width: 0px;
+}
+.resume-contents {
+    margin-left:0px;
+    width:100vw;
+}
+
+.section-margin {
+    margin-top:80px;
+}
+
+.sub-section-margin {
+    margin-top:50px;
+    margin-bottom:50px;
+}
+
+.title-font {
+    color:white;
+    margin: 30px;
+}
+
+@media only screen and (min-width: 600px) {
+    .resume-sidebar {
+        width: 200px;
+    }
+    .resume-contents {
+        margin-left:200px;
+        width:100vw - 200px;
+    }
+}
+
+
+@media only screen and (min-width: 768px) {
+    .resume-sidebar {
+        width: 300px;
+    }
+    .resume-contents {
+        margin-left:300px;
+        width:100vw - 300px;
+    }
+}

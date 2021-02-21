@@ -1,15 +1,24 @@
+<!doctype html>
+
 <?php
 	use Illuminate\Support\Facades\View;
 	use Illuminate\Routing\UrlGenerator;
 ?>
 
-<!doctype html>
-
 <html>
 	<head>
+        <!-- Braodcast -->
         @include('includes.imports.styles_common')
 
-		<link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+        <!-- Page Specific Stylesheet -->
+        <link rel="stylesheet" href="/css/chatbox.css">
+
+        <!--  -->
+        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        <script src="https://unpkg.com/video.js/dist/video.js"></script>
+        <script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
+        <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
+
 
 		<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_CLIENT_ID"></script>
 
@@ -21,8 +30,6 @@
 		<!--  Kakao Imports -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-
-		<link rel="stylesheet" href="/css/chatbox.css">
 	</head>
 
 
@@ -37,27 +44,15 @@
 
 			<!-- Company Info-->
 			<div class="contents" style="background-color: ;float:right; width:auto; flex-grow:1; display:flex; justify-content:center;">
-				<div style="background-color: orange; margin-top:50px; min-width:200px; width:100%; height:520px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;">
-					<div style="margin-right:15px; width:wrap-content; height:480px;">
-						<video 	id="emergency_broadcast"
-								class="video-js vjs-default-skin"
-								controls preload="auto"
-								width="640"
-								height="480"
-								data-setup='{}'>
-
-							<p class="vjs-no-js">
-								To view this video please enable JavaScript, and consider upgrading to a
-								web browser that
-								<a href="https://videojs.com/html5-video-support/" target="_blank"
-									>supports HTML5 video</a>
-							</p>
-						</video>
-
-						<script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
-
+				<div style="background-color: min-width:200px; width:100%; height:720px; align-items:center; justify-content:center; overflow:hidden !important;">
+					<div style="display:inline-block; margin-left:15px; width:wrap-content; height:480px;">
+                        <video id=emergency_broadcast width=1280 height=720 class="video-js vjs-default-skin" controls>
+                        <source
+                            src="//d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8",
+                            type="application/x-mpegURL">
+                        </video>
 					</div>
-					<div id="map" style="width:30%; height:480px;">
+					<div id="map" style="display:inline-block; width:300px; height:300px; vertical-align:top; margin-left:-300px;">
 					</div>
 				</div>
 			</div>
@@ -76,6 +71,13 @@
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f"></script>
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f&libraries=services,clusterer,drawing"></script>
 		<script>
+
+            /**
+            *   Kakao Maps Setup
+            *   --------------------------------------------
+            *   Constantly updates location of the target.
+            *   @Todo: Determine Refresh rate
+            */
 			var container = document.getElementById('map');
 			var lat = 33.450701;
 			var streamerPosition = new kakao.maps.LatLng(lat, 126.570667);
@@ -88,7 +90,12 @@
 			var marker = new kakao.maps.Marker({
 				position: streamerPosition
 			});
-			marker.setMap(map);
+            marker.setMap(map);
+
+
+            /* Instantiate VideoJS player */
+            var player = videojs('emergency_broadcast');
+            player.play();
 		</script>
 
 		<script type="text/javascript" src="{{asset('js/login_handler.js')}}"></script>
@@ -150,8 +157,6 @@
 			}
 
 
-			var src_video = '';
-			const player = videojs('emergency_broadcast');
 
 			//alert(getCookie('LazyWeb Signature'));
 			var authProvider = getCookie('Authenticator');
@@ -166,7 +171,7 @@
 					fail: function(error) {
 						//alert('login success, but failed to request user information: ' + JSON.stringify(error));
 					},
-					});
+                });
 			}
 			else if (authProvider == 'Google') {
 				var googleToken = getCookie('AccessToken' );
@@ -178,13 +183,13 @@
 					src_video = 'http://www.hlsserver.com/' + xhp.responseText.trim() + '.m3u8';
 					console.log(src_video);
 					player.src({
-						src: src_video,//'http://www.hlsserver.com/0c83f57c786a0b4a39efab23731c7ebc.m3u8',
+						src: "//d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8",
 						type: 'application/x-mpegURL'
-					});
+                    });
+                    player.play();
 				};
 				xhp.send("googlestream=" + googleToken);
 			}
 		</script>
-
 	</body>
 </html>

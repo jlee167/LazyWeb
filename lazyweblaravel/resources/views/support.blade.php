@@ -1,24 +1,5 @@
 <!doctype html>
 
-<?php
-	// TODO: Credentials moved out of php file
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "LazyboyServer";
-
-	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
-
-	// Check connection
-	if (mysqli_connect_error()) {
-		die("Database connection failed: " . mysqli_connect_error());
-		$dbg_msg="Connection Failed";
-	}
-	else if ($conn){
-		$dbg_msg="Connected successfully";
-	}
-?>
 
 <html>
 	<head>
@@ -41,24 +22,22 @@
 
         @include('includes.layouts.navbar')
 
-        <div class="section-contents">
-
-			<form action="support.php" enctype="multipart/form-data" method="POST" style="margin:auto; margin-top:10vh; width:60%;height:80vh; margin-bottom:100px;">
+        <div class="section-contents" style="height:70%;">
+            <form action="/support_request" enctype="multipart/form-data" method="POST" style="margin:auto; margin-top:10vh; width:60%;height:80vh; margin-bottom:100px;">
+                @csrf
 				<input type="hidden" id="postToken" name="postToken">
 
 				<label style="width:100%;">What do you need support with? </label><br>
-				<input type="checkbox" id="repair" name="repair" value="reair">
-				<label for="repair"> Repair  </label><br>
-				<input type="checkbox" id="service" name="service" value="service">
-				<label for="service2"> Service Malfunction  </label> <br>
-				<input type="checkbox" id="hardware" name="hardware" value="hardware">
-				<label for="hardware"> Hardware Development  </label>  <br>
-				<input type="checkbox" id="software" name="software" value="software">
-				<label for="software"> Software Development  </label> <br><br>
+				<select id="type" name="type" style="margin-bottom:40px;">
+                    <option value="REPAIR">Repair</option>
+                    <option value="TECH_SUPPORT">Tech Support</option>
+                    <option value="REFUND">Refund</option>
+                    <option value="LEGAL">Legal</option>
+                </select>
 
-				<label for="content" style="width:100%">Content</label><br>
-				<textarea id="summernote" name="content" style="width:100%; min-width:500px; height:60%;"></textarea><br>
-				<input class="btn btn-primary" type="submit" value="submit" style="float:right; margin-top:15px; width: 100px;">
+				<label for="contents" style="width:100%">State Your Issues</label><br>
+				<textarea id="summernote" name="contents" style="width:100%; min-width:500px; height:60%;"></textarea><br>
+				<input class="btn btn-primary" type="button" value="submit" onclick="submit_request();" style="float:right; margin-top:15px; margin-bottom:50px; width: 100px;">
             </form>
 
             @include('includes.layouts.footer')
@@ -68,55 +47,47 @@
 		<script>
 			$('#summernote').summernote({
 				placeholder: 'content',
-				tabsize: 2,
-				height: 200
-			});
-		</script>
+                tabsize: 4,
+                height: 300
+            });
+        </script>
 
-		<script>
-			var googleToken = getCookie('AccessToken' );
-			document.getElementById('postToken').value=googleToken;
-			console.log(googleToken);
-		</script>
+        <script>
 
-		<?php
+            /**
+             * Submit support request with information provided in the form.
+             */
+            function submit_request(){
+                /* Get user input from the form */
+                var type_sel = document.getElementById("type");
+                var type = type_sel.options[type_sel.selectedIndex].value;
+                var text = document.getElementById("summernote").value;
 
-			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                /* Acquire CSRF Token from server (Done in PHP Laravel) */
+                var csrf = "{{ csrf_token() }}";
 
-				$postToken = $_POST['postToken'];
+                /*  Submit support request with AJAX. This Javascript routine was used
+                    instead of form due to unnecessary page refresh. */
+                var xmlRequest = new XMLHttpRequest();
+                xmlRequest.open('POST', '/support_request', true);
+                xmlRequest.setRequestHeader('Content-Type', 'application/json');
+                xmlRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
 
-				// Specify the CLIENT_ID of the app that accesses the backend
-				$client = new Google_Client(['494240878735-c8eo6b0m0t8fhd8vo2lcj0a9v6ena7bp.apps.googleusercontent.com' => $CLIENT_ID]);
+                xmlRequest.onload = function() {
+                    if (xmlRequest.responseText == 'true') {
+                        window.alert("Your request has been submitted!");
+                    }
+                    window.location.href = '/views/support';
+                }
 
-				$email='';
+                xmlRequest.send(
+                    JSON.stringify({
+                        "type"      : String(type),
+                        "contents"  : text
+                    })
+                )
+            }
 
-				if ($postToken)
-					$payload = $client->verifyIdToken($postToken);
-
-				if ($payload) {
-					$uid = $payload['sub'];
-					$name = $payload['name'];
-					$email = $payload['email'];
-				} else {
-					return;
-				}
-
-				$repair = $_POST['repair'];
-				$service = $_POST['service'];
-				$hardware = $_POST['hardware'];
-				$software = $_POST['software'];
-				$type = $repair . $service . $hardware . $software;
-				echo $type;
-
-
-				$content = $_POST['content'];
-				$sql = "USE LazyWeb";
-				$result = mysqli_query($conn, $sql);
-				$sql = "INSERT INTO supports(uid, type, contents, status) values('$uid', '$type', '$content', '0')";
-				echo $sql;
-				$result = mysqli_query($conn, $sql);
-				echo $result;
-			}
-        ?>
+        </script>
 	</body>
 </html>

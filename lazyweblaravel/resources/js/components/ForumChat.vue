@@ -1,26 +1,19 @@
 <template>
-    <div>
-        <p>{{ msg_in }}</p>
-        <button v-on:click="reverseMessage">메시지 뒤집기</button>
+    <div style="display:flex;">
+
     </div>
 </template>
 
-
-
 <script>
     export default {
-        props: ['msg_in'],
-
         mounted() {
             console.log('Component mounted.')
         },
-        /*
         data() {
             return {
-                message: "Hello2"
+
             }
         },
-        */
         methods: {
             reverseMessage: function () {
                 this.message = this.message.split('').reverse().join('')

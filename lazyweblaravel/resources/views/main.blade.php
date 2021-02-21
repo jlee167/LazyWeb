@@ -19,6 +19,8 @@
 			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
 		</script>
 
+
+
 		<div class="section-contents">
             <div class="contents" style="height:70vh;">
 
@@ -75,10 +77,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="contents" style="background-color:#f8f8f8; height:auto; padding-top:40px;padding-bottom:40px;">
-				<div class="container">
+			<div style="height:auto; background-color:rgb(238, 238, 238);">
+				<div class="container" style="padding-top:40px;padding-bottom:40px;">
 					<div style="display:inline-flex;">
-						<div class="card col-md-4" style="margin-right:20px;">
+						<div class="card col-md-4" style="margin-right:20px; background-color:transparent;">
 							<h2> Bridging the gap </h2>
 							<p style="font:Georgia;">
 								Upcoming products of Lazyboy Industry will be focused on providing entry level makers a chance to use Soc level modules on entry level Microcontroller boards.	<br><br>
