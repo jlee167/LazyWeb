@@ -1,4 +1,4 @@
-/*
+/**
     Block
         MySql / MariaDb Hard Reset
 
@@ -57,6 +57,15 @@ CREATE TABLE users (
 
     INDEX(status, response)
 
+) ENGINE=INNODB;
+
+
+
+
+CREATE TABLE cam_ownership (
+    cam_id              INT AUTO_INCREMENT PRIMARY KEY,
+    owner_uid           INT NOT NULL,
+    date_registered     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=INNODB;
 
 
@@ -330,23 +339,55 @@ CREATE PROCEDURE GetExternalUser (
     IN id_external VARCHAR(50)
 )
 BEGIN
-        SELECT
-            firstname,
-            lastname,
-            username,
-            email,
-            cell,
-            auth_provider,
-            stream_id,
-            status,
-            response
+    SELECT
+        firstname,
+        lastname,
+        username,
+        email,
+        cell,
+        auth_provider,
+        stream_id,
+        status,
+        response
 
+    FROM
+        users
+
+    WHERE
+        users.auth_provider = auth_provider AND
+        users.id_external = id_external;
+END $$
+
+
+
+
+/* Todo: Compare Subquery vs Inner Join */
+CREATE PROCEDURE GetCamOwner (
+    IN cam_id INT
+)
+BEGIN
+    /*
+        SELECT
+            id, username
         FROM
             users
+        INNER JOIN
+            cam_ownership ON users.id=cam_ownership.owner_uid
+        WHERE cam_ownership.cam_id = cam_id;
+    */
+    SELECT
+        id, username
+    FROM
+        users
+    WHERE
+        users.id = (SELECT
+                        owner_uid
+                    FROM
+                        cam_ownership
+                    WHERE
+                        cam_ownership.cam_id = cam_id
+                    );
 
-        WHERE
-            users.auth_provider = auth_provider AND
-            users.id_external = id_external;
 END $$
 
 

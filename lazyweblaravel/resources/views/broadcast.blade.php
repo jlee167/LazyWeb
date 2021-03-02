@@ -5,6 +5,8 @@
 	use Illuminate\Routing\UrlGenerator;
 ?>
 
+
+
 <html>
 	<head>
         <!-- Braodcast -->
@@ -12,12 +14,11 @@
 
         <!-- Page Specific Stylesheet -->
         <link rel="stylesheet" href="/css/chatbox.css">
+        <link rel="stylesheet" href="/css/broadcast.css">
 
         <!--  -->
-        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
-        <script src="https://unpkg.com/video.js/dist/video.js"></script>
-        <script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
-        <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
+        <link href="//vjs.zencdn.net/7.10.2/video-js.min.css" rel="stylesheet">
+        <script src="//vjs.zencdn.net/7.10.2/video.min.js"></script>
 
 
 		<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_CLIENT_ID"></script>
@@ -36,27 +37,36 @@
 	<body>
 		@include('includes.layouts.navbar')
 
-		<div class="section-contents" style="display:flex; flex-wrap:wrap;height: 100vh;">
-			<div style="overflow:hidden; width:250px; background-color:#ECEAEA; display:inline-block; height:100%;">
-				<table id="peer table" style="width:100%; height:50px;">
-				</table>
+		<div id="resume-contents" class="section-contents" style="display:flex;
+                                                                  flex-direction:row;
+                                                                  flex-wrap:wrap;
+                                                                  height:100vh;
+                                                                  width:100%;
+                                                                  align-content:space-between;
+                                                                  background-color:red;
+                                                                  ">
+
+			<div style="width:250px; height:100%; background-color:#5d31ff;">
+                <div style="margin-top:20px;">
+                    <p style="color:white; margin-top:30px; margin-left:15px; font-size:14px;"> Moderators </p>
+                    <user-list-display v-bind:users="users"></user-list-display>
+
+                    <p style="color:white; margin-top:50px; margin-left:15px; font-size:14px;"> Operators </p>
+                    <user-list-display v-bind:users="users"></user-list-display>
+
+                    <p style="color:white;  margin-top:50px; margin-left:15px; font-size:14px;"> Guardians </p>
+                    <user-list-display v-bind:users="users"></user-list-display>
+                </div>
 			</div>
 
+            <video id="emergency_broadcast" width=320 height=240 class="video-js" controls style="flex: 1 0 auto; height:100%; vertical-align:top; margin-left:auto;">
+            </video>
 			<!-- Company Info-->
-			<div class="contents" style="background-color: ;float:right; width:auto; flex-grow:1; display:flex; justify-content:center;">
-				<div style="background-color: min-width:200px; width:100%; height:720px; align-items:center; justify-content:center; overflow:hidden !important;">
-					<div style="display:inline-block; margin-left:15px; width:wrap-content; height:480px;">
-                        <video id=emergency_broadcast width=1280 height=720 class="video-js vjs-default-skin" controls>
-                        <source
-                            src="//d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8",
-                            type="application/x-mpegURL">
-                        </video>
-					</div>
-					<div id="map" style="display:inline-block; width:300px; height:300px; vertical-align:top; margin-left:-300px;">
-					</div>
-				</div>
-			</div>
-			<div class="chat-container" style="display:flex; flex-direction:column;">
+            <div id="map" style="display:inline-block; width:400px; height:100%; vertical-align:top; margin-right:auto;">
+            </div>
+
+
+			<div class="chat-container" style="height:100%; display:flex; flex-direction:column;">
 				<div class="chat-top-bar" style="display:flex; flex-direction:row; justify-content:center; align-items:center;">
 					<b style="color:white; font-size:100%;">Live Chat</b>
 				</div>
@@ -64,19 +74,62 @@
 
 				</div>
 				<div class="chat-inputarea">
+                    <form action="/forum/general/post"
+                    enctype="multipart/form-data"
+                    method="POST"
+                    style="margin:auto; width:200px; height:100px; flex-direction:row;">
+                    @csrf
+                    <textarea
+                        name=""
+                        style="width:100%; height:60%; border-radius:5px;"
+                        placeholder="Message">
+                    </textarea><br>
+
+                    <input  class="btn btn-outline-success" type="submit" value="submit"
+                            style="display:inline-block; float:right; margin-top:15px; width: 100px;"
+                    >
+                    </form>
 				</div>
 			</div>
 		</div>
 
+        <!-- Footer -->
+        @include('includes.layouts.footer')
+
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f"></script>
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f&libraries=services,clusterer,drawing"></script>
-		<script>
 
+        <script src="{{ mix('js/app.js') }}"></script>
+        <script>
+            //console.log({{asset('/images/GitHub-Mark-Light-32px.png')}});
+            userListApp = new Vue ({
+                el: '#resume-contents',
+                data: {
+                    users: [
+                        {
+                            imageUrl: '{{asset('/images/GitHub-Mark-Light-32px.png')}}',
+                            name: "lazyboy"
+                        },
+                        {
+                            imageUrl: '{{asset('/images/GitHub-Mark-Light-32px.png')}}',
+                            name: "lazyboy2"
+                        }
+                    ],
+                    dev_height: Number(1080)
+                },
+                mounted: function(){
+                }
+            });
+        </script>
+
+
+
+		<script>
             /**
             *   Kakao Maps Setup
             *   --------------------------------------------
-            *   Constantly updates location of the target.
-            *   @Todo: Determine Refresh rate
+            *   @Desc   Constantly updates location of the target.
+            *   @Todo   Determine Refresh rate
             */
 			var container = document.getElementById('map');
 			var lat = 33.450701;
@@ -95,6 +148,8 @@
 
             /* Instantiate VideoJS player */
             var player = videojs('emergency_broadcast');
+            //player.fluid(true);
+            player.src("//d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8");
             player.play();
 		</script>
 
@@ -192,4 +247,5 @@
 			}
 		</script>
 	</body>
+
 </html>

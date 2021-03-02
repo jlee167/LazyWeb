@@ -6,7 +6,14 @@
 
 <!--  Import Custom stylesheets -->
 <link rel="stylesheet" href="/css/layout_common.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
 <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet'>
+<!-- font-family: 'Anton', sans-serif; -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<!-- font-family: 'Lobster', cursive; -->
+<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+<!-- font-family: 'Akaya Telivigala', cursive; -->
+<link href="https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=swap" rel="stylesheet">
 
 <!--  Metadata  -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

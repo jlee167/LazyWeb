@@ -20,7 +20,8 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+Vue.component('user-list-display', require('./components/UserListDisplay.vue').default);
+Vue.component('video-js', require('./components/VideoJs.vue').default);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('forum-post-list', require('./components/ForumPostList.vue').default);
 Vue.component('forum-chat', require('./components/ForumChat.vue').default);

@@ -19,7 +19,7 @@ class UserController extends Controller
      *
      *  @param string $username     unique username of an user
      */
-    static public function __get_id_by_username($username) {
+    static public function __get_id_by_name($username) {
         $query_result = DB::table('users')
                             ->where('username', '=', (string)$username)
                             ->get('id');
@@ -124,17 +124,17 @@ class UserController extends Controller
     }
 
 
-    public function get_my_account(){
+    public function get_user_account(){
         $this->get_user(Auth::id());
     }
 
 
-    public function delete_my_account(){
+    public function delete_user_account(){
         $this->delete_user(Auth::id());
     }
 
 
-    public function update_my_account(Request $request, $uid){
+    public function update_user_account(Request $request, $uid){
         $this->update_user($request->my_info, Auth::id());
     }
 
@@ -172,8 +172,7 @@ class UserController extends Controller
      * @return  void
      */
     static public function add_friend(Request $request, $uid) {
-        $result = DB::table('friendship')
-                    -> insert([
+        $result = DB::table('friendship')-> insert([
                         'uid_user1' => Auth::id(),
                         'uid_user2' => $uid
                     ]);

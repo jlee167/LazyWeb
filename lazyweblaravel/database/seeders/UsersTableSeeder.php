@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Faker\Factory as Faker;
 
 
 
@@ -20,32 +21,39 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        define("NUM_USERS", 100);
+
+        $faker = Faker::create();
+
+        define("NUM_USERS", 200);
 
         for ($i = 1; $i <= NUM_USERS; $i++)
         {
             /* Username: user1, user2, user3... */
-            $curr_user = 'user' . strval($i);
 
             /* Insert random users into database */
             DB::table('users')->insert([
-                'firstname' => str_random(10),
-                'lastname' => str_random(10),
-                'username' => $curr_user,
-                'password' => Hash::make("secret"),
+                'firstname' => $faker->firstName(),
+                'lastname' => $faker->lastName,
+                'username' => 'user' . strval($i),
+                'password' => Hash::make("secret" . strval($i)),
                 'auth_provider' => Arr::random(['Google', 'Kakao', 'None']),
                 'id_external' => str_random(10),
                 'faceshot_url' => str_random(10),
-                'email' => str_random(10) . '@company.com',
-                'cell' => strval(rand(100,999)) . '-' . strval(rand(1000,9999)) .
-                            '-' . strval(rand(100,999)),
+                'email' => $faker->unique()->email,
+                'cell' => '010' . '-' . strval(rand(100,9999)) . '-' . strval(rand(1000,9999)),
                 'stream_id' => str_random(32),
                 'status' => 'FINE',
                 'response' => 'RESOLVED',
                 'privacy' => 'PRIVATE',
-                'proxy_enable' => 1,
+                'proxy_enable' => true,
                 'password_hint' => 'my hint',
                 'hint_answer' => 'my answer'
+            ]);
+
+
+            DB::table('cam_ownership')->insert([
+                'cam_id'    => $faker->unique()->numberBetween(1000,10000),
+                'owner_uid' => rand(1,200)
             ]);
 
             /*
@@ -86,14 +94,13 @@ class UsersTableSeeder extends Seeder
                 'description'   => '',
                 'stream_key'    => Hash::make(str_random(10)),
             ]);
-
-
-
         }
 
+
+
         DB::table('friendship')->insert([
-            'uid_user1'        => strval(2),
-            'uid_user2'        => strval(3)
+            'uid_user1'        => strval(rand(1,200)),
+            'uid_user2'        => strval(rand(1,200))
         ]);
     }
 }

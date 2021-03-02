@@ -22,12 +22,12 @@
 
         <!-- Personal Info -->
         <div id="resume-contents" class="section-contents" style="padding-top:0px; height:100vh;">
-            <div style="width:100%; height:100%; display:flex; overflow:scroll;">
-                <div class="resume-sidebar" style="overflow:hidden; position:fixed; background-color:#bc5c3c; height:100%;
+            <div style="width:100%; height:100%; display:flex; overflow-y:scroll;">
+                <div class="resume-sidebar" style="overflow-y:hidden; position:fixed; background-color:#bc5c3c; height:100%;
                                                     display:inline-flex; flex-direction:column; justify-content: center;
                                                     text-align:center; margin-top:0px;">
                     <div style="display:flex; flex-direction:row; justify-content:center; overflow:hidden;">
-                        <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="width:120px; height:120px;">
+                        <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="min-width:120px; min-height:120px;">
                     </div>
                     <h2 class="title-font" style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;"> LazyBoy </h2>
                     <hr style="border-top: 1px solid; width:80%; border-width:1px; color:white;">
@@ -44,8 +44,8 @@
                     </div>
                 </div>
 
-                <div class="resume-contents" style="display:inline-block; overflow:visible; margin-top:0px;">
-                    <div style="margin-left:50px; margin-right:50px; margin-top:50px; overflow:hidden;">
+                <div class="resume-contents" style="display:inline-block; margin-top:0px;">
+                    <div style="overflow:hidden;">
                         <section id="profile">
                             <h2 class="mb-6" style="color:#343032;"> <b> Profile  </b></h2>
                             <hr style="border-width:3px; color:#d6c102;">
@@ -74,18 +74,25 @@
                         </section>
 
 
-                        <section class="section-margin" id="skills" style="overflow: hidden;">
+                        <section class="section-margin" id="skills">
                             <h2 class="mb-7" style="color:#343032;"> <b> Skills  </b></h2>
                             <hr style="border-width:3px; color:#d6c102;">
-                            <div class="sub-section-margin">
+                            <div class="sub-section-margin" style="overflow:hidden;">
                                 <h4 style="color:#343032;margin-top:30px;"> <b> Digital Logics  </b></h4>
-                                <table style="display: inline-block; vertical-align:top; border-right:1px solid;">
-                                    <tr style=""><td colspan="2">
-                                        <h5 style="text-align:center; color:#343032;">Languages</h3>
-                                    </td></tr>
+                                <table style="display: inline-block; vertical-align:top;  overflow: hidden;">
+                                    <tr style="">
+                                        <td colspan="1" style="border-right:1px solid;">
+                                            <h5 style="text-align:center; color:#343032;">Languages</h3>
+                                        </td>
+                                        <td colspan="2">
+                                            <h5 style="text-align:center; color:#343032;">Platforms</h3>
+                                        </td>
+
+
+                                    </tr>
                                     <tr>
                                         <td style="padding-top:20px; padding-bottom:20px;
-                                                        padding-left:20px; padding-right:20px;">
+                                                        padding-left:20px; padding-right:20px; border-right:1px solid;">
                                             <p style="display:inline-block; margin-bottom:0px;">Sytemverilog</p>
                                             <br><skill-bar v-bind:level='2'></skill-bar><br>
                                             <p style="display:inline-block; margin-bottom:0px;">Verilog</p>
@@ -93,33 +100,21 @@
                                             <p style="display:inline-block; margin-bottom:0px;">VHDL</p>
                                             <br><skill-bar v-bind:level='0'></skill-bar><br>
                                         </td>
-                                    </tr>
-                                </table>
-
-                                <table style="display: inline-block; vertical-align:top;
-                                            margin-right:30px;">
-
-                                    <tr style=""><td colspan="2">
-                                        <h5 style="text-align:center; color:#343032;">Platforms</h3>
-                                    </td></tr>
-
-                                    <tr><td style="padding-top:20px; padding-bottom:20px;
+                                        <td style="padding-top:20px; padding-bottom:20px;
                                                     padding-left:20px; padding-right:20px;">
-                                        <p style="display:inline-block; margin-bottom:0px;">Artix7/Kintex7</p>
-                                        <br><skill-bar v-bind:level='2'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Zynq Ultrascale+</p>
-                                        <br><skill-bar v-bind:level='1'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Lattice FPGA</p>
-                                        <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">Artix7/Kintex7</p>
+                                            <br><skill-bar v-bind:level='2'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">Zynq Ultrascale+</p>
+                                            <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">Lattice FPGA</p>
+                                            <br><skill-bar v-bind:level='0'></skill-bar><br>
                                         </td>
-
-
                                         <td style="padding-top:20px; padding-bottom:20px;
                                                     padding-left:20px; padding-right:20px; vertical-align:top;">
-                                        <p style="display:inline-block; margin-bottom:0px;">Cortex-M</p>
-                                        <br><skill-bar v-bind:level='1'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Cortex-A</p>
-                                        <br><skill-bar v-bind:level='0'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">Cortex-M</p>
+                                            <br><skill-bar v-bind:level='1'></skill-bar><br>
+                                            <p style="display:inline-block; margin-bottom:0px;">Cortex-A</p>
+                                            <br><skill-bar v-bind:level='0'></skill-bar><br>
                                         </td>
                                     </tr>
                                 </table>

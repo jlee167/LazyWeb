@@ -99,12 +99,12 @@
 		<!--Login Information-->
 		<div class="section-contents-nopadding">
             <div id="view-login">
-                <div id="login-manual" class="card login-prompt">
-                    <form style="align:center; margin:auto; width:75%; background-color:transparent;">
-                        <div style="margin:auto; float:center;">
+                <div id="login-manual" class="login-prompt card px-md-5 pr-md-5 pb-5 py-5">
+                    <form class="login-form" style="align:center; margin:auto; background-color:transparent;">
+                        <div style="margin:0 auto; float:center;">
                             <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">ID</p>
                             <input class="form-control" id="input_account" type="text" placeholder="Enter username" aria-describedby="search-btn" style="width:100%; height:50px;
-                                    align:center; margin-bottom:30px;">
+                                    align:center; margin-bottom:20px;">
                             <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">Password</p>
                             <input class="form-control" id="input_password" type="password" placeholder="Enter password" aria-describedby="search-btn" style="width:100%; height:50px;
                                     align:center; margin-bottom:20px;">
@@ -114,15 +114,13 @@
                                                                     >Login</button>
                         </div>
                     </form>
-                    <hr>
+                    <hr style="width:80%; margin: auto; margin-top:15px; margin-bottom:15px;">
 
                     <table style="width:70%;align:center; margin:auto; background-color:transparent;">
                         <tr style="height:50px; display:flex; justify-content:center;">
                             <td style="margin:auto;">
                                 <a id="kakao-login-btn" style=""></a>
                                 <a href="http://alpha-developers.kakao.com/logout"></a>
-
-
                             </td>
                         </tr>
 
@@ -133,12 +131,13 @@
                                 </div>
                             </td>
                         </tr>
-
                     </table>
 
                 </div>
             </div>
+
             @include('includes.layouts.footer')
+
         </div>
 
 
@@ -158,10 +157,11 @@
                 loginRequest.setRequestHeader('Content-Type', 'application/json');
                 loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
                 loginRequest.onload = function() {
+                    console.log(loginRequest.responseText);
                     var response = JSON.parse(loginRequest.responseText);
                     if (response.authenticated == true) {
                         console.log("Successfully authenticated by LazyWeb!")
-                        window.location.href = response.href;
+                        window.location.href = "{{url()->previous()}}";
                     }
                     else {
                         console.log("Login Failed!");

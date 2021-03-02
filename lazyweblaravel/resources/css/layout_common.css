@@ -5,7 +5,7 @@
 
 .section-contents {
     overflow:hidden;
-    width:100vw;
+    width:100%;
     padding-top:70px;
     margin-bottom:0px;
     margin-right:0px;
@@ -13,18 +13,26 @@
 
 }
 
-
 .navbar a{
-    color: rgb(185, 185, 185) !important;
-    font-family: 'Nunito' !important;
+    color: rgb(230, 230, 230) !important;
+    font-family: 'Anton', sans-serif !important;
     font-weight: 500 !important;
+}
+
+.nav-item {
+    margin-left:10px !important;
+    margin-right:10px !important;
+}
+
+
+#menu-collapsible {
+    padding-left:30px;
 }
 
 
 
 #view-login {
     display:flex;
-    align-items:center;
     justify-content:center;
     margin:auto;
     width:100vw;
@@ -68,24 +76,23 @@ label.login {
     width:  100%;
 }
 
-.container-forum-side {
-    display:flex;
-    flex-direction:column;
-    width:400px;
-    height:auto;
-    margin: 0 auto;
-    margin-top:100px;
-    text-align:center;
-    border: 0.2px solid;
-    border-color: black;
-    background-color:white;
-    box-shadow: 1px 1px 1px gray;
-}
-
 
 .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
 }
+
 .fade-enter, .fade-leave-to {
     opacity: 0;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}
+
+.nav-item {
+    padding-left:0px;
+}
+
+#menu-links {
+    padding-left:0px;
 }

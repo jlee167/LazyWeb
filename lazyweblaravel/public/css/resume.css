@@ -3,7 +3,11 @@
 }
 .resume-contents {
     margin-left:0px;
+    max-width:1000px;
     width:100vw;
+    padding-left:50px;
+    padding-right:50px;
+    padding-top:50px;
 }
 
 .section-margin {
@@ -13,6 +17,11 @@
 .sub-section-margin {
     margin-top:50px;
     margin-bottom:50px;
+    overflow: hidden;
+}
+
+.sub-section-header {
+    margin-bottom:30px;
 }
 
 .title-font {
@@ -40,3 +49,4 @@
         width:100vw - 300px;
     }
 }
+

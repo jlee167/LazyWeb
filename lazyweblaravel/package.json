@@ -23,5 +23,9 @@
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.10"
     },
-    "dependencies": {}
+    "dependencies": {
+        "video.js": "^7.11.4",
+        "videojs": "^1.0.0",
+        "vue-video-player": "^5.0.2"
+    }
 }

@@ -1,130 +1,173 @@
 <!doctype html>
 
 <html>
-	<head>
-		@include('includes.imports.styles_common')
-	</head>
+
+<head>
+    @include('includes.imports.styles_common')
+    <link rel="stylesheet" type="text/css" href="/css/full-page-scroll.css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .section1 {
+            background-color: #121212;
+        }
+
+        .section2 {
+            background-color: #98c19f;
+        }
+
+        .section3 {
+            background-color: #a199e2;
+        }
+
+        .section4 {
+            background-color: #cc938e;
+        }
+
+        .section5 {
+            background-color: #d2c598;
+        }
+
+        section div {
+            font-family: "Open Sans";
+            font-style: normal;
+            text-align: center;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .button {
+            background-color: #f2cf66;
+            border-bottom: 5px solid #d1b358;
+            text-shadow: 0px -2px #d1b358;
+            padding: 10px 40px;
+            border-radius: 10px;
+            font-size: 25px;
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
 
 
-	<body>
-        @include('includes.layouts.navbar')
-
-		<script src="/js/auth_helpers.js"></script>
-		<script>
-			var authenticator = getCookie('Authenticator');
-			var username = getCookie('Username' );
-			var profilePicture = getCookie('ProfilePicture' );
-			var signInContainer = document.getElementById("signInContainer");
-			var userProfileUI = document.getElementById("userInfoUI");
-			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
-		</script>
+<body>
+    @include('includes.layouts.navbar')
 
 
+    <div id="main" class="scroll-container">
+        <section class="section1">
+            <div>
+                <h1> My Picture Goes Here </h1>
+                <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+            font-weight: 500 !important; font-size:100px;"> Hi, I'm LazyBoy!</h1>
+            </div>
+        </section>
+        <section class="section2">
+            <div>
+                <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+        font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
+                <p>
+                    3 Years of experience in FPGA engineering.
+                    I have experience with some time-critical modules and various protocols.
 
-		<div class="section-contents">
-            <div class="contents" style="height:70vh;">
+                </p>
+            </div>
+        </section>
+        <section class="section3">
+            <div>
+                <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+        font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
+                <p>
+                    3 Years of experience in FPGA engineering.
+                    I have experience with some time-critical modules and various protocols.
 
-				<div style="width:100%; height:100%; float:left; margin:auto; display:flex; justify-content:center;">
-					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="margin:auto; width:100%; height:100%; background-color:#5a5a5a;">
-						<ol class="carousel-indicators">
-							<li data-target="#carouselExampleControls" data-slide-to="1"></li>
-							<li data-target="#carouselExampleControls" data-slide-to="2"></li>
-							<li data-target="#carouselExampleControls" data-slide-to="3"></li>
-						</ol>
+                </p>
+            </div>
+        </section>
+        <section class="section4">
+            <div>
+                <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+        font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
+                <p>
+                    3 Years of experience in FPGA engineering.
+                    I have experience with some time-critical modules and various protocols.
 
-					  <div class="carousel-inner " style="width:100%; height:100%;color:#5a5a5a;">
+                </p>
+            </div>
+        </section>
+        <section class="section5">
+            <div>
+                <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+        font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
+                <p>
+                    3 Years of experience in FPGA engineering.
+                    I have experience with some time-critical modules and various protocols.
 
-						<div class="carousel-item active" style="width:100%; height:100%;">
-							<div style=" width:100%; height:100%">
-										<div style="background-color:black; color: white; width:15%; min-width:200px; height:100%; float:right;">
-											<p style="width:100%; height:100%; display: flex; justify-content: center; align-items: center;"><b> RTL / FPGA </b></p>
-										</div>
-										<div style="background-image:linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,1)), url('img/main_background.jpg'); width:85%; height:100%">
-										</div>
-								</div>
-						</div>
+                </p>
+            </div>
+        </section>
+    </div>
+    <script src="/js/full-page-scroll.js"></script>
+    <script type="text/javascript">
+        new fullScroll({
+      mainElement: "main",
+      displayDots: true,
+      dotsPosition: "left",
+      animateTime: 0.7,
+      animateFunction: "ease",
+    });
+    </script>
 
-						<div class="carousel-item " style="width:100%; height:100%;">
-							<div style=" width:100%; height:100%">
-										<div style="background-color:black; color: white; width:15%; min-width:200px; height:100%; float:right;">
-											<p style="width:100%; height:100%; display: flex; justify-content: center; align-items: center;"><b> Hardware </b></p>
-										</div>
-										<div style="background-image:linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,1)), url('img/main_background.jpg'); width:85%; height:100%">
-										</div>
-								</div>
-						</div>
 
-						<div class="carousel-item " style="width:100%; height:100%;">
-							<div style=" width:100%; height:100%">
-									<div style="background-color:black; color: white; width:15%; min-width:200px; height:100%; float:right;">
-										<p style="width:100%; height:100%; display: flex; justify-content: center; align-items: center;"><b> Software </b></p>
-									</div>
-									<div style="background-image:linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,1)), url('img/main_background.jpg'); width:85%; height:100%">
-								</div>
-							</div>
-						</div>
+    <div style="height:70vh; background-color:#121212;">
+        <div class="section-contents">
+        </div>
+    </div>
 
-					  </div>
+    <div style="height:80vh; background-color:#121212;">
+        <h1> My Picture Goes Here </h1>
+        <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+            font-weight: 500 !important; font-size:100px;"> Hi, I'm LazyBoy!</h1>
+    </div>
 
-					  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="color:black;">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					  </a>
-					  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="color:black;">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					  </a>
-					</div>
-				</div>
-			</div>
-			<div style="height:auto; background-color:rgb(238, 238, 238);">
-				<div class="container" style="padding-top:40px;padding-bottom:40px;">
-					<div style="display:inline-flex;">
-						<div class="card col-md-4" style="margin-right:20px; background-color:transparent;">
-							<h2> Bridging the gap </h2>
-							<p style="font:Georgia;">
-								Upcoming products of Lazyboy Industry will be focused on providing entry level makers a chance to use Soc level modules on entry level Microcontroller boards.	<br><br>
-								No more soldering BGA microchips. <br><br>
-								No more struggle fitting in your big fat LInux boards into design just cause you can't design it on your own. <br><br>
-								Just an 48 Mhz Arduino-class microcontroller will give you acces to a Full HD 1080p streaming in your product!
-								Okay, it may be 720p honestly. I am still in designing process.<br>
-							</p>
-							<a id=""class="btn btn-primary" href="" role="button" style="width:100px; text-align:center;">
-								Todo
-							</a>
-						</div>
+    <div style="height:600px; background-color:#121212;">
+        <div style="width:100%; display:flex; justify-content:center; ">
+            <div style="display:inline-block;">
+                <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+                    font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
+                <p>
+                    3 Years of experience with FPGA .
 
-						<div class="card col-md-4" style="margin-right:20px;">
-							<h2> Ideas to product </h2>
-							<p>
-								Bringing your ideas to life as an amateur can be overwhelming.<br>
-								Protoboards and dev boards can only take you so far when it comes to designing actual products to sell.<br>
-							</p>
-							<a id=""class="btn btn-primary" href="" role="button" style="width:100px; text-align:center;">
-								Todo
-							</a>
-						</div>
+                </p>
+            </div>
+            <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="min-width:120px; min-height:120px;">
+        </div>
+    </div>
 
-						<div class="card col-md-4">
-							<h2>Commercial use</h2>
-							<p>
-								Products of Lazyboy are meant to be used specifically for education and prototyping. If you want to
-								embed my modules into your commercial product, you may do so at your own risk. Lazyboy.Co Ltd
-								does not guarantee product quality for commercial use. I may however, provide technical support for
-								manufacturers using my design at their own risk.
-							</p>
+    <div style="height:600px; background-color:#121212;">
+        <div style="display:flex; flex-direction:row; width:100vw; height:60px; margin-top:70px;
+                        border-bottom: 1px solid #D5D5D5; align-items:center;">
+            <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="min-width:120px; min-height:120px;">
+            <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+                            font-weight: 500 !important; font-size:50px;"> Hardware</h1>
+            <p> </p>
+        </div>
+    </div>
 
-							<a id=""class="btn btn-primary" href="" role="button" style="width:100px; text-align:center;">
-								Todo
-							</a>
-						</div>
+    <div style="height:600px; background-color:#121212;">
+        <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
+            font-weight: 500 !important; font-size:50px;"> Software</h1>
+        <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="min-width:120px; min-height:120px;">
+    </div>
 
-					</div>
-				</div>
-			</div>
 
-            @include('includes.layouts.footer')
-		</div>
 
-	</body>
+
+
+
+
+
+
+</body>
+
 </html>

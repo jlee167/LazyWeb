@@ -30,7 +30,8 @@ class LoginController extends BaseController
 
         else
         {
-            $this->auth_uname($request);
+
+            return $this->auth_uname($request);
             /*
             switch ($request->auth_provider) {
                 case 'Google':
@@ -46,6 +47,15 @@ class LoginController extends BaseController
             */
         }
     }
+
+    public static function get_auth_state()
+    {
+        if (Auth::check())
+            return true;
+        else
+            return false;
+    }
+
 
 
     public function auth_uname(Request $request)
@@ -70,11 +80,10 @@ class LoginController extends BaseController
         {
             $retval = [
                 "token"           => "/",
-                "href"            => "/",
+                "href"            => redirect()->intended()->getTargetUrl(),
                 "authenticated"   => false,
             ];
         }
-
         return json_encode($retval);
     }
 

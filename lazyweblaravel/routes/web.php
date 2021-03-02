@@ -38,7 +38,7 @@ Route::get('/views/login', function () {
         return view('login');
 })->name('login');
 
-
+Route::post('/auth', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
 
 
@@ -57,8 +57,6 @@ Route::get('/views/createpost', function () {
 })->middleware('auth');
 
 
-Route::post('/auth', [LoginController::class, 'authenticate']);
-
 /* Routes for views that do not require authentication */
 Route::get('/views/{php_view_file}', function ($php_view_file) {
     return view($php_view_file);
@@ -75,6 +73,8 @@ Route::get('/views/{php_view_file}', function ($php_view_file) {
  */
 
 /* User information CRUD */
+Route::get('/ping', function () {return "Lazyboy Web Server is running!";});
+
 Route::get('/members/{username}', [UserController::class, 'get_user']) ->middleware('auth');
 Route::post('/members/{username}', [UserController::class, 'register_user']);
 Route::put('/members/{username}', [UserController::class, 'update_user']) ->middleware('auth');
@@ -87,17 +87,17 @@ Route::put('/forum/{forum_name}/post/{post_id}', [ForumController::class, '']);
 Route::delete('/forum/{forum_name}/post/{post_id}', [ForumController::class, '']);
 Route::post('/support_request', [ForumController::class, 'request_support']);
 
-Route::get('/friends', [UserController::class,'get_friends']) ->middleware('auth');
+Route::get('/friend/all', [UserController::class,'get_friends']) ->middleware('auth');
 Route::post('/friend/{uid}', [UserController::class, 'add_friend']) ->middleware('auth');
 Route::put('/friend/{uid}', [UserController::class, 'respond_friend_request']) ->middleware('auth');
 Route::delete('/friend/{uid}', [UserController::class, 'delete_friend']) ->middleware('auth');
 
-Route::get('/members/guardians', [UserController::class,'get_guardians']) ->middleware('auth');
+Route::get('/members/guardian/all', [UserController::class,'get_guardians']) ->middleware('auth');
 Route::post('/members/guardian/{uid}', [UserController::class,'add_guardian']) ->middleware('auth');
 Route::put('/members/guardian/{uid}', [UserController::class,'confirm_guardian_request']) ->middleware('auth');
 Route::delete('/members/guardian/{uid}', [UserController::class,'delete_guardian']) ->middleware('auth');
 
-Route::get('/members/protecteds', [UserController::class,'get_protecteds']) ->middleware('auth');
+Route::get('/members/protected/all', [UserController::class,'get_protecteds']) ->middleware('auth');
 Route::post('/members/protected/{uid}', [UserController::class,'add_protected']) ->middleware('auth');
 Route::put('/members/protected/{uid}', [UserController::class,'confirm_protected_request']) ->middleware('auth');
 Route::delete('/members/protected/{uid}', [UserController::class,'delete_protected']) ->middleware('auth');

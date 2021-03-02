@@ -5,7 +5,8 @@
     "/css/layout_common.css": "/css/layout_common.css",
     "/css/resume.css": "/css/resume.css",
     "/css/login.css": "/css/login.css",
+    "/css/dashboard.css": "/css/dashboard.css",
+    "/css/full-page-scroll.css": "/css/full-page-scroll.css",
     "/js/auth_helpers.js": "/js/auth_helpers.js",
-    "/js/videojs-contrib-hls.js": "/js/videojs-contrib-hls.js",
-    "/js/videojs-contrib-hls.min.js": "/js/videojs-contrib-hls.min.js"
+    "/js/full-page-scroll.js": "/js/full-page-scroll.js"
 }

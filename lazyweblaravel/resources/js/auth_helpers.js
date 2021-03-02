@@ -25,7 +25,6 @@ function getCookie(key) {
 
 
 function clearCookie() {
-
 	// Clear cookie
 	document.cookie = 'AccessToken=;';
 	document.cookie = 'Authenticator =;';
