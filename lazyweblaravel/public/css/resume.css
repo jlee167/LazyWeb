@@ -1,6 +1,8 @@
 .resume-sidebar {
     width: 0px;
 }
+
+
 .resume-contents {
     margin-left:0px;
     max-width:1000px;
@@ -10,9 +12,11 @@
     padding-top:50px;
 }
 
+
 .section-margin {
     margin-top:80px;
 }
+
 
 .sub-section-margin {
     margin-top:50px;
@@ -20,14 +24,17 @@
     overflow: hidden;
 }
 
+
 .sub-section-header {
     margin-bottom:30px;
 }
+
 
 .title-font {
     color:white;
     margin: 30px;
 }
+
 
 @media only screen and (min-width: 600px) {
     .resume-sidebar {

@@ -14,16 +14,6 @@
 
 
 <body>
-    <script src="/js/auth_helper.js"></script>
-    <script>
-        var authenticator = getCookie('Authenticator' );
-			var username = getCookie('Username' );
-			var profilePicture = getCookie('ProfilePicture' );
-			var signInContainer = document.getElementById("signInContainer");
-			var userProfileUI = document.getElementById("userInfoUI");
-			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
-    </script>
-
     @include('includes.layouts.navbar')
 
     <div class="section-contents" style="overflow:visible; display:flex; flex-direction:row;
@@ -177,31 +167,30 @@
     </script>
 
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-    Launch demo modal
-  </button>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width:80vw !important; max-height:80vh !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">My Resume</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-contents">
+                    @include('resume')
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
 </body>
+
+
 
 </html>

@@ -8,7 +8,7 @@
                 <a href="https://github.com/jlee167" style="width:32px; height:32px;">
                     <img src="{{asset('/images/php_logo.png')}}" style="width:32px; height:32px;">
                 </a>
-                <p style="color:white; padding-left:15px; white-space:nowrap;">PHP 7.4</p>
+                <p style="color:white; padding-left:15px; white-space:nowrap;">PHP 7.3</p>
             </div>
             <div style="display:flex; flex-direction:row; padding-right:50px;">
                 <a href="https://github.com/jlee167" style="width:32px; height:32px;">
@@ -26,8 +26,8 @@
 
         <div style="display:flex; flex-direction:column; padding-right:50px;">
             <p style="white-space:nowrap; color:white; font-family: 'Akaya Telivigala', cursive; white-space:nowrap;">Contact</p>
-            <p style="white-space:nowrap; color:white;">Owner: LazyBoy</p>
-            <p style="white-space:nowrap; color:white;">Email: slackingengineer@gmail.com</p>
+            <p style="white-space:nowrap; color:white;">LazyBoy Co.Ltd</p>
+            <p style="white-space:nowrap; color:white;">Email: lazyboyindustries.main@gmail.com</p>
             <p style="white-space:nowrap; color:white;">Cell: 010-xxxx-xxxx</p>
             <div>
                 <a href="https://github.com/jlee167" style="width:32px; height:32px;">

@@ -160,14 +160,6 @@
         <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="min-width:120px; min-height:120px;">
     </div>
 
-
-
-
-
-
-
-
-
 </body>
 
 </html>

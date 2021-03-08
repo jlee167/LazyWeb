@@ -13,7 +13,10 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
 
+    <!-- Page specific stylesheet(s) -->
     <link rel="stylesheet" href="/css/dashboard.css">
+
+
 </head>
 
 <body>
@@ -23,10 +26,10 @@
     <div style="display:flex; width:100%; height:60px; margin-top:70px; border-bottom: 1px solid #D5D5D5; justify-content:center;">
         <h5 style="margin-top:auto; margin-bottom:auto;">Forum</h5>
         <select id="type" name="type" style="padding-right:10px;
-        padding-left:10px; margin-left:15px; margin-top:auto;
-        margin-bottom:auto; height:40px; vertical-align:center;
-        border-radius: 5px 5px 5px 5px;
-        ">
+            padding-left:10px; margin-left:15px; margin-top:auto;
+            margin-bottom:auto; height:40px; vertical-align:center;
+            border-radius: 5px 5px 5px 5px;
+            ">
             <option value="GENERAL_FORUM">General</option>
             <option value="TECH_FORUM">Tech</option>
         </select>
@@ -42,12 +45,13 @@
 
 
     <!--
-    |--------------------------------------------------------------
+    |-------------------------------------------------------------------
     |   Forum Contents Section
-    |--------------------------------------------------------------
+    |-------------------------------------------------------------------
     |   This section displays the list of posts for a page in a forum.
     |   The forum name and page should be specified to fetch the list.
     |   Vue + Ajax will handle fetching.
+    |-------------------------------------------------------------------
     -->
     <div id="contents-area"
         style="display:flex; justify-content:center; width:100%; min-height:100vh; background-color:#E9E9E9;">
@@ -165,20 +169,10 @@
 			});
     </script>
 
-
-    <script src="/js/cookie_handler.js"></script>
-    <script src="/js/login_handler.js"></script>
-    <script>
-        var authenticator = getCookie('Authenticator' );
-			var username = getCookie('Username' );
-			var profilePicture = getCookie('ProfilePicture' );
-			var signInContainer = document.getElementById("signInContainer");
-			var userProfileUI = document.getElementById("userInfoUI");
-            updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
-    </script>
+    <!-- Initialize Vue Application -->
+    <script src="{{ mix('js/app.js') }}"></script>
 
     <!-- Vue application for rendering fetched posts -->
-    <script src="{{ mix('js/app.js') }}"></script>
     <script>
         var HEADER_GENERAL_FORUM = 'General Discussions';
         var HEADER_TECH_FORUM = 'Technical Discussions';
@@ -207,56 +201,42 @@
     </script>
 
     <script>
-        //******************************************************************
-        //    Vue Test Code
-        //******************************************************************
-
-            /*
-                for (var i = 0; i < 8; i++) {
-                    forumApp.posts.push('title' + String(i));
-                }
-
-                for (var i = 0; i < 8; i++) {
-                    sideApp.contents.push({
-                        title: "mytitle",
-                        date: "xx-xx-xx"
-                    });
-                }
-            */
-
-            /* */
-            var current_page = 0;
-            var csrf = "{{ csrf_token() }}";
-            var loginRequest = new XMLHttpRequest();
-            loginRequest.onload = function() {
-                console.log(loginRequest.responseText);
-                var posts = JSON.parse(loginRequest.responseText);
-                forumApp.original_post = posts[0];
-                forumApp.comments.push(posts[8]);
-                forumApp.comments.push(posts[9]);
-                console.log("here");
-                console.log(forumApp.display_post);
-                for(post in posts) {
-                    console.log(post);
-                    forumApp.posts.push(
-                        posts[post]
-                    );
-                }
-            };
-
-            /**
-             *  Fetch a single dashboard page content from the server.
-             *
-             *  @param      None
-             *  @returns    None
-             */
-            function get_page(page) {
-                loginRequest.open('GET', '/forum/general/page/' + String(page));//'/members/guardian/5' , true);//
-                loginRequest.setRequestHeader('Content-Type', 'application/json');
-                loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
-                loginRequest.send(JSON.stringify({response:true}));
+        /* Todo: fix test codes into general code. */
+        var current_page = 0;
+        var csrf = "{{ csrf_token() }}";
+        var loginRequest = new XMLHttpRequest();
+        loginRequest.onload = function() {
+            console.log(loginRequest.responseText);
+            var posts = JSON.parse(loginRequest.responseText);
+            forumApp.original_post = posts[0];
+            forumApp.comments.push(posts[8]);
+            forumApp.comments.push(posts[9]);
+            console.log("here");
+            console.log(forumApp.display_post);
+            for(post in posts) {
+                console.log(post);
+                forumApp.posts.push(
+                    posts[post]
+                );
             }
-            get_page(1);
+        };
+
+        /**
+         *  Fetch a single dashboard page content from the server.
+         *
+         *  @param      None
+         *  @returns    None
+         */
+        function get_page(page) {
+            loginRequest.open('GET', '/forum/general/page/' + String(page));
+            loginRequest.setRequestHeader('Content-Type', 'application/json');
+            loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
+            loginRequest.send(JSON.stringify({response:true}));
+        }
+
+        let urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams.get('page'));
+        get_page(parseInt(urlParams.get('page')));
     </script>
 
 </body>

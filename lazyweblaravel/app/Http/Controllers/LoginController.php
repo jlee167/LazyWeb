@@ -19,32 +19,14 @@ class LoginController extends BaseController
      */
     public function authenticate(Request $request)
     {
-        if (Auth::check())
-        {
+        if (Auth::check()) {
             return json_encode([
                 "token"             => Auth::check(),
                 "href"              => route('main'),
                 "authenticated"     => true,
             ]);
-        }
-
-        else
-        {
-
+        } else {
             return $this->auth_uname($request);
-            /*
-            switch ($request->auth_provider) {
-                case 'Google':
-                    auth_google($request);
-                    break;
-                case 'Kakao':
-                    auth_kakao($request);
-                    break;
-                default:
-                    auth_uname_password($request);
-                    break;
-            }
-            */
         }
     }
 
@@ -63,10 +45,7 @@ class LoginController extends BaseController
         $username = $request->input('username');
         $password = $request->input('password');
 
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
-        {
-            //Auth::login($username);
-            //Auth::logout(Auth::user());
+        if (Auth::attempt(['username' => $username, 'password' => $password])) {
             /*  Return session token and redirect URL to client.
                 Client uses AJAX, so do not return redirect(). */
             $retval = [
@@ -75,9 +54,7 @@ class LoginController extends BaseController
                 "authenticated"     => true,
             ];
             //$request->session()->put('mykey', 'myvalue');
-        }
-        else
-        {
+        } else {
             $retval = [
                 "token"           => "/",
                 "href"            => redirect()->intended()->getTargetUrl(),
@@ -107,37 +84,38 @@ class LoginController extends BaseController
      *
      * @param Request $request      // Contains login credentials
      */
-    public function oauth_kakao(string $access_token){
+    public function oauth_kakao(string $access_token)
+    {
         /*
             Make Rest API Request to Kakao.
             Response includes account information for user registration and sign in process.
 		 */
-		$authorization = 'Authorization: Bearer ' . $access_token;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_token));
-		curl_setopt($ch, CURLOPT_URL, 'https://kapi.kakao.com/v2/user/me');
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $authorization = 'Authorization: Bearer ' . $access_token;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_token));
+        curl_setopt($ch, CURLOPT_URL, 'https://kapi.kakao.com/v2/user/me');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
 
-		// Get http response
-		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
+        // Get http response
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-		//echo "access_token: " . $access_token . "\n";
-		//echo 'http code: ' . $http_code . "\n";
-		//echo $result;
-		$result = json_decode($result, true);
+        //echo "access_token: " . $access_token . "\n";
+        //echo 'http code: ' . $http_code . "\n";
+        //echo $result;
+        $result = json_decode($result, true);
 
-		$uid = $result["id"];
-		$name = $result["properties"]["nickname"];
-		$email = $result["kakao_account"]["email"];
-		$profile_picture = $result["kakao_account"]["profile"]["thumbnail_image_url"];
+        $uid = $result["id"];
+        $name = $result["properties"]["nickname"];
+        $email = $result["kakao_account"]["email"];
+        $profile_picture = $result["kakao_account"]["profile"]["thumbnail_image_url"];
 
-		if (!$result) {
-			echo 'No response from Kakao Auth Server \n';
-			exit;
-		 }
+        if (!$result) {
+            echo 'No response from Kakao Auth Server \n';
+            exit;
+        }
     }
 
 
@@ -146,8 +124,8 @@ class LoginController extends BaseController
      *
      * @param Request $request      // Contains login credentials
      */
-    public function oauth_google(Request $request){
-
+    public function oauth_google(Request $request)
+    {
     }
 
 

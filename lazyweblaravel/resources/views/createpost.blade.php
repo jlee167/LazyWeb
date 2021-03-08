@@ -55,7 +55,8 @@
 			$('#summernote').summernote({
 				placeholder: 'content',
 				tabsize: 2,
-				height: 400
+				height: 400,
+                lineWrapping: true,
 			});
 		</script>
 

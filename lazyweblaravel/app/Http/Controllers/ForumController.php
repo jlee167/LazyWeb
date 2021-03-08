@@ -12,6 +12,7 @@ class ForumController extends Controller
 {
 
     const MAX_POSTS_PER_PAGE = 10;
+    const DEFAULT_PAGE = 1;
 
 
     /**
@@ -25,17 +26,17 @@ class ForumController extends Controller
      */
     public static function get_page(int $page_requested, string $forum)
     {
-        $forum = 'forum_'.trim($forum);
+        $forum = 'forum_' . trim($forum);
         $num_rows =  DB::table($forum)->count();
-        $num_pages = intval($num_rows/10) + 1;
+        $num_pages = (int)ceil($num_rows/10);
 
         if (empty($page_requested))
-            $result = 1;
+            $result = self::DEFAULT_PAGE;
         else {
             if ($page_requested > $num_pages)
                 $result = $num_pages;
             else if ($page_requested < 1)
-                $result = 1;
+                $result = self::DEFAULT_PAGE;
             else
                 $result = $page_requested;
         }
@@ -47,13 +48,15 @@ class ForumController extends Controller
     /**
      * Retrieve posts in the specified page and forum
      */
-    public static function get_posts_in_page(string $forum, int $page) {
-        return DB::table('forum_'.$forum)->orderByDesc('id')->forPage($page, self::MAX_POSTS_PER_PAGE)->get();
+    public static function get_posts_in_page(string $forum, int $page)
+    {
+        return DB::table('forum_' . $forum)->orderByDesc('id')->forPage($page, self::MAX_POSTS_PER_PAGE)->get();
     }
 
 
-    public function create_post(Request $request, string $forum_name) {
-        $result =  DB::table('forum_'.$forum_name)->insert([
+    public function create_post(Request $request, string $forum_name)
+    {
+        $result =  DB::table('forum_' . $forum_name)->insert([
             'uid'           => Auth::id(),
             'title'         => $request->input('title'),
             'author'        => Auth::user()['username'],
@@ -67,8 +70,9 @@ class ForumController extends Controller
     }
 
 
-    public function retrieve_post(string $forum_name, string $id) {
-        $post = DB::table('forum_'.$forum_name)->where('id', '=', intval($id));
+    public function retrieve_post(string $forum_name, string $id)
+    {
+        $post = DB::table('forum_' . $forum_name)->where('id', '=', intval($id));
         /* Todo: Check if response is empty */
 
         /* Todo: Delete this test snippet */
@@ -76,8 +80,9 @@ class ForumController extends Controller
     }
 
 
-    public function delete_post(string $forum_name, string $id) {
-        $post = DB::table('forum_'.$forum_name)->select('')->where('id', '=', intval($id));
+    public function delete_post(string $forum_name, string $id)
+    {
+        $post = DB::table('forum_' . $forum_name)->select('')->where('id', '=', intval($id));
         /* Todo: Check if response is empty */
 
         /* Todo: Delete this test snippet */
@@ -85,8 +90,9 @@ class ForumController extends Controller
     }
 
 
-    public function update_post(string $forum_name, string $id) {
-        $post = DB::table('forum_'.$forum_name)->where('id', '=', intval($id));
+    public function update_post(string $forum_name, string $id)
+    {
+        $post = DB::table('forum_' . $forum_name)->where('id', '=', intval($id));
         /* Todo: Check if response is empty */
 
         /* Todo: Delete this test snippet */
@@ -94,7 +100,8 @@ class ForumController extends Controller
     }
 
 
-    public function request_support(Request $request) {
+    public function request_support(Request $request)
+    {
         $post = DB::table('support_request')->insert([
             'uid'       => Auth::id(),
             'type'      => $request->type,

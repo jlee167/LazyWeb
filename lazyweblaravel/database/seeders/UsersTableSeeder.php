@@ -26,8 +26,7 @@ class UsersTableSeeder extends Seeder
 
         define("NUM_USERS", 200);
 
-        for ($i = 1; $i <= NUM_USERS; $i++)
-        {
+        for ($i = 1; $i <= NUM_USERS; $i++) {
             /* Username: user1, user2, user3... */
 
             /* Insert random users into database */
@@ -37,10 +36,10 @@ class UsersTableSeeder extends Seeder
                 'username' => 'user' . strval($i),
                 'password' => Hash::make("secret" . strval($i)),
                 'auth_provider' => Arr::random(['Google', 'Kakao', 'None']),
-                'id_external' => str_random(10),
+                'uid_oauth' => str_random(10),
                 'faceshot_url' => str_random(10),
                 'email' => $faker->unique()->email,
-                'cell' => '010' . '-' . strval(rand(100,9999)) . '-' . strval(rand(1000,9999)),
+                'cell' => '010' . '-' . strval(rand(100, 9999)) . '-' . strval(rand(1000, 9999)),
                 'stream_id' => str_random(32),
                 'status' => 'FINE',
                 'response' => 'RESOLVED',
@@ -52,8 +51,8 @@ class UsersTableSeeder extends Seeder
 
 
             DB::table('cam_ownership')->insert([
-                'cam_id'    => $faker->unique()->numberBetween(1000,10000),
-                'owner_uid' => rand(1,200)
+                'cam_id'    => $faker->unique()->numberBetween(1000, 10000),
+                'owner_uid' => rand(1, 200)
             ]);
 
             /*
@@ -73,18 +72,22 @@ class UsersTableSeeder extends Seeder
 
 
             /* Create one random report per user */
-            $status = Arr::random(['DANGER_URGENT_RESPONSE',
-                                    'DANGER_MEASURED_RESPONSE',
-                                    'DANGER_PUBLIC_RESPONSE',
-                                    'FINE']);
+            $status = Arr::random([
+                'DANGER_URGENT_RESPONSE',
+                'DANGER_MEASURED_RESPONSE',
+                'DANGER_PUBLIC_RESPONSE',
+                'FINE'
+            ]);
             if ($status == 'FINE')
                 $response = 'RESOLVED';
             else
-                $response  = Arr::random(['RESPONSE_REQUIRED',
-                                        'FIRST_RESPONDERS_DISPATCHED',
-                                        'FIRST_RESPONDERS_ARRIVED',
-                                        'RESOLVING',
-                                        'RESOLVED']);
+                $response  = Arr::random([
+                    'RESPONSE_REQUIRED',
+                    'FIRST_RESPONDERS_DISPATCHED',
+                    'FIRST_RESPONDERS_ARRIVED',
+                    'RESOLVING',
+                    'RESOLVED'
+                ]);
 
             DB::table('reports')->insert([
                 'uid'           => strval($i),
@@ -99,8 +102,8 @@ class UsersTableSeeder extends Seeder
 
 
         DB::table('friendship')->insert([
-            'uid_user1'        => strval(rand(1,200)),
-            'uid_user2'        => strval(rand(1,200))
+            'uid_user1'        => strval(rand(1, 200)),
+            'uid_user2'        => strval(rand(1, 200))
         ]);
     }
 }

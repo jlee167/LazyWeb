@@ -1,59 +1,89 @@
-/**
-    Block
-        MySql / MariaDb Hard Reset
+/****************************************************************************
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ *      WARNING   WARNING  WARNING  WARNING  WARNING  WARNING  WARNING      *
+ * ----------------------------------------------------------------------   *
+ *                THIS DATA SCHEME IS HIGHLY EXPERIMENTAL.                  *
+ *  IN NORMAL CIRCUMSTANCES, I WILL NOT BE ASKING ANYTHING MORE THAN YOUR   *
+ *                           - USERNAME, PASSWORD                           *
+ *                                 - EMAIL                                  *
+ *                            - FACESHOT(OPTIONAL)                          *
+ * IN MY WEBSITE. REST OF THE PERSONAL DATA WILL BE NULL FOR NORMAL USERS.  *
+ * ONLY MY OWN TEST ACCOUNTS WILL BE ABLE TO HAVE DATA ON REST OF FIELDS IN *
+ *                               USERS TABLE.                               *
+ ****************************************************************************/
 
-    Functionality
-        Initialize database to the new schema
-        Used only for development
-*/
+
+
+
+
+
+/* -------------------------------------------------------------------------- */
+/*                         MySql / MariaDb Hard Reset                         */
+/* -------------------------------------------------------------------------- */
+
+
+
+
+/* --------------------------------------------------------------------------
+    Funtionality
+        Initialize database to the new schema.
+-------------------------------------------------------------------------- */
+
+
 
 DROP DATABASE IF EXISTS LazyboyServer;
-
 CREATE DATABASE LazyboyServer;
 SHOW DATABASES;
-
 USE LazyboyServer;
 
 
 
 
 CREATE TABLE users (
-    id             INT AUTO_INCREMENT PRIMARY KEY,
-    firstname       VARCHAR(30) NOT NULL,
-    lastname        VARCHAR(30) NOT NULL,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    firstname       VARCHAR(30) DEFAULT NULL,
+    lastname        VARCHAR(30) DEFAULT NULL,
 
-    username        VARCHAR(30) UNIQUE,
-    password        VARCHAR(60) NOT NULL,   /* HASHED!!! */
+    username        VARCHAR(60) UNIQUE,
+    password        VARCHAR(60),   /* BCRYPT HASH */
     auth_provider   ENUM('Google', 'Kakao', 'None') NOT NULL,
-    id_external     VARCHAR(50),
+    uid_oauth       VARCHAR(50),
 
-    faceshot_url    VARCHAR(50) NOT NULL,
+    faceshot_url    VARCHAR(200) DEFAULT NULL,
 
-    email           VARCHAR(50) NOT NULL,
-    cell            VARCHAR(20) NOT NULL,
-    stream_id       VARCHAR(32) NOT NULL,
+    email           VARCHAR(50) UNIQUE NOT NULL,
+    cell            VARCHAR(20) DEFAULT NULL,
+    stream_id       VARCHAR(32) DEFAULT NULL,
     status          ENUM(
                         'DANGER_URGENT',
                         'FINE'
-                    ),
+                    ) DEFAULT NULL,
     response        ENUM(
                         'RESPONSE_REQUIRED',
                         'FIRST_RESPONDERS_DISPATCHED',
                         'FIRST_RESPONDERS_ARRIVED',
                         'RESOLVING',
                         'RESOLVED'
-                    ),
+                    ) DEFAULT NULL,
     privacy         ENUM (
                         'PRIVATE',
                         'LIMITED',
                         'PUBLIC'
-                    ),
-    proxy_enable    BOOL NOT NULL DEFAULT TRUE,
+                    ) DEFAULT NULL,
+    proxy_enable    BOOL DEFAULT NULL,
+    password_hint   MEDIUMTEXT DEFAULT NULL,
+    hint_answer     VARCHAR(50) DEFAULT NULL,
 
-    password_hint   MEDIUMTEXT NOT NULL,
-    hint_answer     VARCHAR(50) NOT NULL,
-
-    CONSTRAINT prevent_duplicate UNIQUE (id_external, auth_provider),
+    CONSTRAINT prevent_duplicate UNIQUE (uid_oauth, auth_provider),
 
     INDEX(status, response)
 
@@ -103,7 +133,7 @@ CREATE TABLE reports (
 
 
 CREATE TABLE forum_general (
-    id         INT AUTO_INCREMENT PRIMARY KEY,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
     uid             INT NOT NULL,
     title           VARCHAR(50) NOT NULL,
     author          VARCHAR(20) NOT NULL,
@@ -387,7 +417,6 @@ BEGIN
                     WHERE
                         cam_ownership.cam_id = cam_id
                     );
-
 END $$
 
 

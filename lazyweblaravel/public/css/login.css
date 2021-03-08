@@ -5,19 +5,67 @@
     overflow:       hidden;
     margin-left:    0px;
     margin-right:   0px;
-    margin-top:     200px;
+    margin-top:     200px
 }
 
 .login-form {
     width:80%;
 }
 
-@media only screen and (max-width: 768px) {
+#view-login {
+    display:flex;
+    justify-content:center;
+    margin:auto;
+    width:100vw;
+    height:100vh;
+    background-image: url(https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png);
+    background-size: cover;
+}
+
+
+@media only screen and (max-device-height: 320px) {
     .login-prompt {
+        margin-top:150px
+    }
+    #view-login {
+        height: 4000px;
+    }
+}
+
+@media only screen and (min-device-height: 500px) {
+    .login-prompt {
+        margin-top:150px
+    }
+    #view-login {
+        height: 700px;
+    }
+}
+
+@media only screen and  (min-device-height: 700px) {
+    .login-prompt {
+        margin-top:200px
+    }
+    #view-login {
+        height: 1080px;
+    }
+}
+
+@media only screen and  (min-device-height: 1080px) {
+    .login-prompt {
+        margin-top:200px
+    }
+    #view-login {
+        height: 1080px;
     }
 }
 
 
+
+
+@media only screen and (max-width: 768px) {
+    .login-prompt {
+    }
+}
 
 
 
@@ -33,7 +81,7 @@
 
 @media only screen and (min-width: 1280px) {
     .login-prompt {
-        width: 500px;
+        width: 400px;
     }
     .login-form {
         width:100%;

@@ -2002,6 +2002,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['title', 'contents', 'comments', 'author', 'views', 'img-url'],
   mounted: function mounted() {
@@ -6787,7 +6805,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.forum-list-item[data-v-3f08a3b7] {\n    width:100%;\n    max-width:100%;\n    height:150px;\n    display:flex;\n    flex-direction:row;\n    justify-content:flex-start;\n    space-between:50px;\n    margin-left: 0px;\n    margin-right: 0px;\n    margin-bottom:30px;\n    margin-top:30px;\n    overflow:hidden;\n    box-shadow: 1px 1px 1px gray;\n}\n.user-info[data-v-3f08a3b7]{\n    display:flex;\n    flex-direction:column;\n    justify-content: center;\n    space-between:20px;\n    width:100px;\n    overflow:hidden;\n}\n.post-contents[data-v-3f08a3b7]{\n    flex-grow:1;\n    space-between:20px;\n    justify-content: center;\n}\n.post-info[data-v-3f08a3b7]{\n    display:flex;\n    flex-direction:column;\n    width:100px; space-between:20px;\n    justify-content: center;\n}\n\n", ""]);
+exports.push([module.i, "\n.profile-image[data-v-3f08a3b7]{\n    width:80px;\n    height:80px;\n    margin-left:auto;\n    margin-right:auto;\n    border-radius:50%;\n}\n.forum-list-item[data-v-3f08a3b7] {\n    width:100%;\n    max-width:100%;\n    height:140px;\n    display:flex;\n    flex-direction:row;\n    justify-content:flex-start;\n    space-between:50px;\n    margin-left: 0px;\n    margin-right: 0px;\n    margin-bottom:30px;\n    margin-top:30px;\n    overflow:hidden;\n    /*box-shadow: 1px 1px 1px gray;*/\n}\n.forum-list-item[data-v-3f08a3b7]:hover {\n    box-shadow: 0.5px 0.5px 0.5px 0.5px gray;\n}\n.user-info[data-v-3f08a3b7]{\n    display:flex;\n    flex-direction:column;\n    justify-content: center;\n    space-between:20px;\n    width:100px;\n    overflow:hidden;\n}\n.post-contents[data-v-3f08a3b7]{\n    display:flex;\n    flex-direction: column;\n    flex-grow:1;\n    width:400px;\n    space-between:20px;\n    justify-content: center;\n    overflow:hidden;\n}\n.post-info[data-v-3f08a3b7]{\n    display:flex;\n    flex-direction:column;\n    width:50px; space-between:20px;\n    justify-content: center;\n}\n\n", ""]);
 
 // exports
 
@@ -6806,7 +6824,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.container[data-v-5d0999f4]{\n    width:800px;\n    min-height:300px;\n    margin-top:10px;\n    margin-bottom:20px;\n    padding-top:0px !important;\n    border:1px solid rgb(139, 139, 139);\n    display:flex;\n    flex-direction:column;\n    justify-content:flex-start;\n    background-color:white;\n}\n.container-info[data-v-5d0999f4]{\n    width:100%;\n    height:60px;\n    display:flex;\n    flex-direction:row;\n    align-items:center;\n    justify-content:flex-start;\n    border-bottom: 1px solid rgb(139, 139, 139);\n}\n.container-title[data-v-5d0999f4]{\n    width:90%;\n    height:60px;\n    margin-left:30px;\n    margin-top:20px;\n    display:flex;\n    flex-direction:row;\n    justify-content:flex-start;\n    border-bottom: 1px solid rgb(182, 180, 180);\n}\n.container-contents[data-v-5d0999f4]{\n    width:90%;\n    height:auto;\n    margin-left:30px;\n    margin-top:20px;\n    display:flex;\n    flex-direction:row;\n    justify-content:flex-start;\n}\n.font-title[data-v-5d0999f4]{\n    display:inline-block;\n    font-size: 24;\n    font-family: 'Poppins', sans-serif;\n    margin-top: 20px;\n    margin-left:10px;\n}\n.style-contents[data-v-5d0999f4]{\n    display:inline-block;\n    margin-left:10px;\n}\n.user-img[data-v-5d0999f4]{\n    display:inline-block;\n    width:40px;\n    height:40px;\n    border-radius:50%;\n    margin-left:20px;\n}\n.font-info[data-v-5d0999f4]{\n    display:inline-block;\n    font-family: 'Poppins', sans-serif;\n    margin-left:10px;\n    margin-bottom:0;\n}\n", ""]);
+exports.push([module.i, "\n.post-container[data-v-5d0999f4]{\n    width:100%;\n    min-height:300px;\n    margin-top:10px;\n    margin-bottom:20px;\n    margin-right: 0px;\n    margin-left: 0px;\n    padding-top:0px !important;\n    border:1px solid rgb(139, 139, 139);\n    display:flex;\n    flex-direction:column;\n    justify-content:flex-start;\n    background-color:white;\n}\n.container-info[data-v-5d0999f4]{\n    width:100%;\n    height:60px;\n    display:flex;\n    flex-direction:row;\n    align-items:center;\n    justify-content:flex-start;\n    border-bottom: 1px solid rgb(139, 139, 139);\n}\n.container-title[data-v-5d0999f4]{\n    width:90%;\n    height:60px;\n    margin-left:30px;\n    margin-top:20px;\n    display:flex;\n    flex-direction:row;\n    justify-content:flex-start;\n    border-bottom: 1px solid rgb(182, 180, 180);\n}\n.container-contents[data-v-5d0999f4]{\n    width:90%;\n    height:auto;\n    margin-left:30px;\n    margin-top:20px;\n    display:flex;\n    flex-direction:row;\n    justify-content:flex-start;\n}\n.font-title[data-v-5d0999f4]{\n    display:inline-block;\n    font-size: 24;\n    font-family: 'Poppins', sans-serif;\n    margin-top: 20px;\n    margin-left:10px;\n}\n.style-contents[data-v-5d0999f4]{\n    display:inline-block;\n    margin-left:10px;\n}\n.user-img[data-v-5d0999f4]{\n    display:inline-block;\n    width:40px;\n    height:40px;\n    border-radius:50%;\n    margin-left:20px;\n}\n.font-info[data-v-5d0999f4]{\n    display:inline-block;\n    font-family: 'Poppins', sans-serif;\n    margin-left:10px;\n    margin-bottom:0;\n}\n", ""]);
 
 // exports
 
@@ -38833,62 +38851,71 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card col-md-4 forum-list-item" }, [
-    _c("div", { staticClass: "user-info" }, [
-      _c("img", {
-        staticStyle: {
-          width: "50px",
-          height: "50px",
-          "margin-left": "auto",
-          "margin-right": "auto",
-          "border-radius": "50%"
-        },
-        attrs: {
-          src:
-            "https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png"
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "p",
-        {
-          staticStyle: {
-            "font-family": "'Poppins', sans-serif",
-            "margin-left": "auto",
-            "margin-right": "auto",
-            "margin-top": "10px"
-          }
-        },
-        [_vm._v(" " + _vm._s(_vm.author) + " ")]
-      )
-    ]),
+    _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "post-contents" }, [
-      _c("div", { staticStyle: { "margin-top": "20px" } }, [
-        _c(
-          "h4",
-          {
-            staticStyle: {
-              "font-family": "'Poppins', sans-serif",
-              "margin-left": "5%"
-            }
-          },
-          [_vm._v(_vm._s(_vm.title))]
-        ),
-        _vm._v(" "),
-        _c(
-          "p",
-          {
-            staticStyle: {
-              "font-family": "'Poppins', sans-serif",
-              "margin-left": "5%"
-            }
-          },
-          [_vm._v(_vm._s(_vm.contents))]
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _vm._m(0)
+      _c(
+        "div",
+        {
+          staticStyle: {
+            margin: "auto",
+            "margin-top": "20px",
+            "margin-left": "5%",
+            "margin-right": "5%",
+            "font-family": "'Poppins', sans-serif"
+          }
+        },
+        [
+          _c(
+            "p",
+            {
+              staticStyle: {
+                "font-family": "'Poppins', sans-serif",
+                overflow: "hidden",
+                width: "100%",
+                "text-overflow": "ellipsis",
+                "/* Required for text-overflow to do anything */\n                  white-space":
+                  "nowrap",
+                "max-lines": "2",
+                display: "-webkit-box",
+                "-webkit-box-orient": "vertical",
+                "-webkit-line-clamp": "2"
+              }
+            },
+            [
+              _vm._v(
+                _vm._s(_vm.title) +
+                  "\n                      adsffffffffffffffffffffffffffffffffffffffffffff\n                  adfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfs\n                  "
+              )
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticStyle: {
+            margin: "auto",
+            "margin-bottom": "10px",
+            "margin-left": "5%"
+          }
+        },
+        [
+          _c(
+            "p",
+            {
+              staticStyle: {
+                "font-family": "'Poppins', sans-serif",
+                margin: "auto",
+                "margin-top": "10px"
+              }
+            },
+            [_vm._v(" by " + _vm._s(_vm.author) + " ")]
+          )
+        ]
+      )
+    ])
   ])
 }
 var staticRenderFns = [
@@ -38896,28 +38923,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "post-info" }, [
-      _c(
-        "h2",
-        {
-          staticStyle: {
-            "font-family": "'Poppins', sans-serif",
-            "margin-left": "5%"
-          }
-        },
-        [_vm._v("PIC1")]
-      ),
-      _vm._v(" "),
-      _c(
-        "h2",
-        {
-          staticStyle: {
-            "font-family": "'Poppins', sans-serif",
-            "margin-left": "5%"
-          }
-        },
-        [_vm._v("PIC2")]
-      )
+    return _c("div", { staticClass: "user-info" }, [
+      _c("img", {
+        staticClass: "profile-image",
+        attrs: {
+          src:
+            "https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png"
+        }
+      })
     ])
   }
 ]
@@ -38943,7 +38956,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "post-container" }, [
       _c("div", { staticClass: "container-info" }, [
         _c("img", {
           staticClass: "user-img",
@@ -38967,6 +38980,7 @@ var render = function() {
       _c("div", { staticClass: "container-contents" }, [
         _c("div", {
           staticClass: "style-contents",
+          staticStyle: { "overflow-wrap": "break-word" },
           domProps: { innerHTML: _vm._s(_vm.post.contents) }
         })
       ])

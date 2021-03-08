@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+
+    'kakao' => [
+        'client_id' => env('5049c025e6a9fdd8898a89f517ab9b08'),
+        'client_secret' => env('KAKAO_CLIENT_SECRET'),
+        'redirect' => env('KAKAO_REDIRECT_URI')
+    ],
+
 ];

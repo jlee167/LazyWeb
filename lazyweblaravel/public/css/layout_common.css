@@ -31,15 +31,6 @@
 
 
 
-#view-login {
-    display:flex;
-    justify-content:center;
-    margin:auto;
-    width:100vw;
-    height:100vh;
-    background-image: url(https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png);
-    background-size: cover;
-}
 
 
 input.login-normal {
@@ -85,9 +76,6 @@ label.login {
     opacity: 0;
 }
 
-.navbar .navbar-collapse {
-    text-align: center;
-}
 
 .nav-item {
     padding-left:0px;

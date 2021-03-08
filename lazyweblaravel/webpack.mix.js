@@ -17,7 +17,7 @@ mix.js('resources/js/app.js', 'public/js')
 //.postCss('resources/css/app.css', 'public/css', [
 
 
-mix.js('resources/js/auth_helpers.js', 'public/js');
+mix.js('resources/js/auth.js', 'public/js');
 
 mix.postCss('resources/css/chatbox.css', 'public/css', [
 ]);

@@ -8,6 +8,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ForumController;
 
+use Laravel\Socialite\Facades\Socialite;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,6 +32,8 @@ Route::get('/', function () {
 })->name('main');
 
 
+
+
 /**
  *  Routes that need authentication
  */
@@ -38,8 +44,31 @@ Route::get('/views/login', function () {
         return view('login');
 })->name('login');
 
-Route::post('/auth', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
+
+
+Route::post('/auth', [LoginController::class, 'authenticate']);
+
+
+route::post('/auth/kakao', function(Request $request) {
+    $accessToken =  trim($request->get('accessToken'));
+    $user =  Socialite::driver('kakao')->userFromToken($accessToken);
+    $query_result = DB::table('users')
+                            ->insert([
+                                'auth_provider' => 'Kakao',
+                                'uid_oauth'      => $user->getId(),
+                                'faceshot_url'  => $user->getAvatar(),
+                                'email'         => $user->getEmail(),
+                            ]);
+    return $query_result;
+});
+
+
+route::post('/auth/google', function(Request $request) {
+    $accessToken =  trim($request->get('accessToken'));
+    $user =  Socialite::driver('google')->userFromToken($accessToken);
+    return $user->getAvatar();
+});
 
 
 
@@ -72,14 +101,16 @@ Route::get('/views/{php_view_file}', function ($php_view_file) {
  *  See REST API Documentation for details.
  */
 
-/* User information CRUD */
+
 Route::get('/ping', function () {return "Lazyboy Web Server is running!";});
 
+/* User information CRUD */
 Route::get('/members/{username}', [UserController::class, 'get_user']) ->middleware('auth');
 Route::post('/members/{username}', [UserController::class, 'register_user']);
 Route::put('/members/{username}', [UserController::class, 'update_user']) ->middleware('auth');
 Route::delete('/members/{username}', [UserController::class, 'remove_user']) ->middleware('auth');
 
+/* Forum & Support page CRUD */
 Route::get('/forum/{forum_name}/post/{post_id}', [ForumController::class, 'retrieve_post']);
 Route::get('/forum/{forum_name}/page/{page}', [ForumController::class, 'get_posts_in_page']);
 Route::post('/forum/{forum_name}/post', [ForumController::class, 'create_post']);
