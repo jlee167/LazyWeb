@@ -62,7 +62,8 @@ CREATE TABLE users (
 
     email           VARCHAR(50) UNIQUE NOT NULL,
     cell            VARCHAR(20) DEFAULT NULL,
-    stream_id       VARCHAR(32) DEFAULT NULL,
+    stream_id       VARCHAR(32) UNIQUE DEFAULT NULL,
+    stream_key      VARCHAR(32) NOT NULL, /* Todo: Make Bcrypt Hash */
     status          ENUM(
                         'DANGER_URGENT',
                         'FINE'
@@ -88,6 +89,7 @@ CREATE TABLE users (
     INDEX(status, response)
 
 ) ENGINE=INNODB;
+
 
 
 
@@ -132,43 +134,39 @@ CREATE TABLE reports (
 
 
 
-CREATE TABLE forum_general (
+CREATE TABLE posts (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    uid             INT NOT NULL,
+    forum           ENUM (
+                        'general',
+                        'tech'
+                    ),
     title           VARCHAR(50) NOT NULL,
     author          VARCHAR(20) NOT NULL,
     date            TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
     view_count      INT NOT NULL DEFAULT 0,
     contents        MEDIUMTEXT,
-    post_root       INT NOT NULL,
-    post_parent     INT,
 
-    FOREIGN KEY (uid)
-        REFERENCES users(id)
+    FOREIGN KEY (author)
+        REFERENCES users(username)
         ON UPDATE CASCADE
-
 ) ENGINE=INNODB;
 
 
 
 
-CREATE TABLE forum_tech (
-    id         INT AUTO_INCREMENT PRIMARY KEY,
-    uid             INT NOT NULL,
-    title           VARCHAR(50) NOT NULL,
+CREATE TABLE comments (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
     author          VARCHAR(20) NOT NULL,
     date            TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
-    view_count      INT NOT NULL DEFAULT 0,
     contents        MEDIUMTEXT,
-    post_root       INT NOT NULL,
-    post_parent     INT,
+    post_id         INT NOT NULL,
+    parent_id       INT NOT NULL,
+    depth           INT NOT NULL,
 
-    FOREIGN KEY (uid)
-        REFERENCES users(id)
+    FOREIGN KEY (author)
+        REFERENCES users(username)
         ON UPDATE CASCADE
-
 ) ENGINE=INNODB;
-
 
 
 
@@ -219,7 +217,6 @@ CREATE TABLE guardianship (
 
 
 
-
 /*
     Catalog
 */
@@ -231,6 +228,8 @@ CREATE TABLE product(
     quantity_available  INT UNSIGNED NOT NULL,
     active              BOOLEAN NOT NULL
 ) ENGINE=INNODB;
+
+
 
 
 CREATE TABLE rating(
@@ -363,6 +362,20 @@ END $$
 
 
 
+CREATE PROCEDURE GetIdByUsername (
+    IN username VARCHAR(60)
+)
+BEGIN
+    SELECT
+        id
+    FROM
+        users
+    WHERE
+        users.username = username;
+END $$
+
+
+
 
 CREATE PROCEDURE GetExternalUser (
     IN auth_provider ENUM('Google', 'Kakao', 'None'),
@@ -396,15 +409,6 @@ CREATE PROCEDURE GetCamOwner (
     IN cam_id INT
 )
 BEGIN
-    /*
-        SELECT
-            id, username
-        FROM
-            users
-        INNER JOIN
-            cam_ownership ON users.id=cam_ownership.owner_uid
-        WHERE cam_ownership.cam_id = cam_id;
-    */
     SELECT
         id, username
     FROM
@@ -418,6 +422,58 @@ BEGIN
                         cam_ownership.cam_id = cam_id
                     );
 END $$
+
+
+
+
+/* Todo: Compare Subquery vs Inner Join */
+/*
+CREATE PROCEDURE AuthStream (
+    IN stream_key VARCHAR(32)
+)
+BEGIN
+    SELECT
+        id
+    FROM
+        users
+    WHERE
+        users.stream_key = stream_key;
+END $$
+*/
+
+
+
+CREATE PROCEDURE GetGuardians (
+    IN username VARCHAR(60)
+)
+BEGIN
+    SELECT
+        id, username
+    FROM
+        users
+    WHERE
+        users.id = (
+            /* Get guardians' UIDs from their usernames */
+            SELECT
+                uid_guardian
+
+            FROM
+                guardianship
+
+            WHERE
+                uid_protected =(
+                                    SELECT
+                                        id
+                                    FROM
+                                        users
+                                    WHERE
+                                        users.username = username
+                                )
+                AND guardianship.signed_protected IS TRUE
+                AND guardianship.signed_guardian IS TRUE
+        );
+END $$
+
 
 
 

@@ -37,7 +37,7 @@
         width:100%;
         min-height:300px;
         margin-top:10px;
-        margin-bottom:20px;
+        margin-bottom:10px;
         margin-right: 0px;
         margin-left: 0px;
         padding-top:0px !important;

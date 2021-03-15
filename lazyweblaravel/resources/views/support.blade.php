@@ -167,12 +167,11 @@
     </script>
 
 
-    <!-- Button trigger modal -->
+    <!--
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
         Launch demo modal
     </button>
 
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width:80vw !important; max-height:80vh !important;">
@@ -184,11 +183,11 @@
                     </button>
                 </div>
                 <div class="modal-body" id="modal-contents">
-                    @include('resume')
+                    @@include('resume')
                 </div>
             </div>
         </div>
-    </div>
+    </div-->
 </body>
 
 

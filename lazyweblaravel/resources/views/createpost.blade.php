@@ -22,21 +22,19 @@
 	<body style="background-color:#d6eaf8; margin:0; overflow:auto;">
         @include('includes.layouts.navbar')
 
-		<script src="js/cookie_handler.js"></script>
-		<script src="js/login_handler.js"></script>
-		<script>
-			var authenticator = getCookie('Authenticator');
-			var username = getCookie('Username');
-			var profilePicture = getCookie('ProfilePicture' );
-			var signInContainer = document.getElementById("signInContainer");
-			var userProfileUI = document.getElementById("userInfoUI");
-			updateLoginUI(authenticator, username, signInContainer, userProfileUI, profilePicture);
-		</script>
-
 
 		<div style="margin:auto; width:100vw;height:100vh; margin-top:100px;">
-            <form action="/forum/general/post" enctype="multipart/form-data" method="POST" style="margin:auto; margin-top:100px; width:60%;height:60%;">
+            <form   action="/forum/general/post" enctype="multipart/form-data" method="POST"
+                    style="margin:auto; margin-top:100px; width:60%;height:60%;">
                 @csrf
+                <select id="type" name="type" style="padding-right:10px;
+                    padding-left:10px; margin-left:15px; margin-top:auto;
+                    margin-bottom:auto; height:40px; vertical-align:center;
+                    border-radius: 5px 5px 5px 5px;
+                    ">
+                    <option value="GENERAL_FORUM">General</option>
+                    <option value="TECH_FORUM">Tech</option>
+                </select>
                 <input type="hidden" id="post_root" name="post_root" value="0">
                 <input type="hidden" id="post_parent" name="post_parent" value="0">
 
@@ -46,7 +44,7 @@
 				<label for="content" style="width:100%">Content</label><br>
                 <textarea id="summernote" name="content" style="width:100%; min-width:500px; height:60%;"></textarea><br>
 
-				<input class="btn btn-primary" type="submit" value="submit" style="float:right; margin-top:15px; width: 100px;">
+				<input class="btn btn-primary" onclick="clickFunc();"  value="submit" style="float:right; margin-top:15px; width: 100px;">
 			</form>
 		</div>
 
@@ -58,13 +56,27 @@
 				height: 400,
                 lineWrapping: true,
 			});
-		</script>
 
-		<script src="js/cookie_handler.js"></script>
-		<script>
-			var googleToken = getCookie('AccessToken' );
-			document.getElementById('postToken').value=googleToken;
-			console.log(googleToken);
+
+            function clickFunc(){
+                let csrf = "{{ csrf_token() }}";
+                var postRequest = new XMLHttpRequest();
+                postRequest.open('POST', '/forum/general/post');
+                postRequest.setRequestHeader('Content-Type', 'application/json');
+                postRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
+                postRequest.onload = function(){
+                    window.location.href = "http://www.lazyweb.com/views/dashboard?page=1";
+                };
+
+                var sendData = {
+                    title: document.getElementById('title').value,
+                    forum: 'general',
+                    content: $('#summernote').summernote('code')
+                };
+                console.log(sendData);
+
+                postRequest.send(JSON.stringify(sendData));
+            }
 		</script>
 
 

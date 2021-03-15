@@ -18,21 +18,21 @@ Opposite when not authenticated yet.
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-color:#121212 !important;
-                                            height:70px !important;">
+                                            height:70px !important; padding: 0 0 0 0 ;">
     <!-- Brand -->
     <a class="navbar-brand" style="font-family: 'Lobster', cursive !important;">
         <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
-            style="min-width:40px; min-height:40px;margin-right:10px;"> LazyBoy Industries
+            style="min-width:40px; min-height:40px;margin-right:10px; margin-left:15px;"> LazyBoy Industries
     </a>
 
     <!-- Toggler/collapsibe Button -->
-    <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="margin-right:15px;">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Navbar links -->
     <div class="collapse navbar-collapse" id="collapsibleNavbar"
-        style="background-color:#121212 !important; width:100vw;">
+        style="background-color:#121212 !important; width:100%;">
 
         <!-- Menu -->
         <ul id="menu-links" class="navbar-nav mr-auto">
@@ -42,7 +42,9 @@ Opposite when not authenticated yet.
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Products</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/dashboard?page=1"> Dashboard</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/support"> Support</a></li>
-            <li class="nav-item"> <a class="nav-link" href="/views/broadcast"> Emergency</a></li>
+            <!--li class="nav-item"> <a class="nav-link" href="/views/broadcast"> Emergency</a></li-->
+            <li class="nav-item"> <a class="nav-link" onclick="broadcast();" onmouseover="" style="cursor: pointer;">
+                    Emergency</a></li>
         </ul>
 
 
@@ -54,12 +56,12 @@ Opposite when not authenticated yet.
             <!-------- Display username and logout button if currently logged in ------->
             <?php if (LoginController::get_auth_state()): ?>
             <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
-                style="display:inline-block; width:40px; height:40px; margin:auto;">
+                style="display:inline-block; width:40px; height:40px; margin:auto; ">
             <a class="font-username" style="display:inline-block; color:white; display:inline-block; margin:auto;
                                                 margin-left:10px; vertical-align:middle;">
                 <?php echo trim(Auth::user()["username"]); ?>
             </a>
-            <a style="color:white; display:inline-block; margin:auto; font-size:12px; margin-left:5px; vertical-align:middle;"
+            <a style="color:white; display:inline-block; margin:auto; font-size:12px; margin-left:5px; vertical-align:middle; margin-right:15px;"
                 href="javascript:logout();">
                 (logout)
             </a>
@@ -68,7 +70,7 @@ Opposite when not authenticated yet.
             <!-------- Display login button if login is required ------->
             <?php else: ?>
             <a id="signBtn" class="btn btn-outline-light" href="/views/login" role="button"
-                style="width:100px; height:45px; line-height:30px;">
+                style="width:100px; height:45px; line-height:30px; margin-right:15px;">
                 Sign In
             </a>
             <?php endif; ?>
@@ -78,7 +80,6 @@ Opposite when not authenticated yet.
             /-------------------------------------------------------------------------->
         </div>
 </nav>
-
 
 
 <script>
@@ -106,5 +107,13 @@ Opposite when not authenticated yet.
         };
 
         loginRequest.send();
+    }
+
+
+    /**
+     *
+     */
+    function broadcast(){
+        window.open("http://localhost:3001", "Emergency Stream");
     }
 </script>

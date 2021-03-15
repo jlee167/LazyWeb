@@ -1,5 +1,5 @@
 <template>
-    <div class="card col-md-4 forum-list-item">
+    <div id="container" class="card col-md-4 forum-list-item" onmouseover="" style="cursor: pointer;">
         <div class="user-info">
             <img class="profile-image" src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png">
         </div>
@@ -7,22 +7,17 @@
         <div class="post-contents">
             <div style="margin:auto; margin-top:20px; margin-left:5%; margin-right:5%;
                         font-family: 'Poppins', sans-serif;">
-
-
                     <p style="font-family: 'Poppins', sans-serif; overflow:hidden; width:100%;
-                     text-overflow: ellipsis;
+                        text-overflow: ellipsis;
 
-                    /* Required for text-overflow to do anything */
-                    white-space: nowrap;
-                    overflow: hidden;
-                    max-lines:2;
-                    display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-
+                        /* Required for text-overflow to do anything */
+                        white-space: nowrap;
+                        overflow: hidden;
+                        max-lines:2;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
                     ">{{title}}
-                        adsffffffffffffffffffffffffffffffffffffffffffff
-                    adfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfs
                     </p>
             </div>
 
@@ -31,10 +26,6 @@
             </div>
         </div>
 
-        <!--div class="post-info">
-            <h5 style="font-family: 'Poppins', sans-serif; margin-left:5%;">PIC1</h5>
-            <h5 style="font-family: 'Poppins', sans-serif; margin-left:5%;">PIC2</h5>
-        </div-->
     </div>
 </template>
 
@@ -51,6 +42,7 @@
 
 
 <style scoped>
+
     .profile-image{
         width:80px;
         height:80px;
@@ -58,6 +50,7 @@
         margin-right:auto;
         border-radius:50%;
     }
+
 
     .forum-list-item {
         width:100%;
@@ -74,6 +67,7 @@
         overflow:hidden;
         /*box-shadow: 1px 1px 1px gray;*/
     }
+
 
     .forum-list-item:hover {
         box-shadow: 0.5px 0.5px 0.5px 0.5px gray;
@@ -107,5 +101,4 @@
         width:50px; space-between:20px;
         justify-content: center;
     }
-
 </style>

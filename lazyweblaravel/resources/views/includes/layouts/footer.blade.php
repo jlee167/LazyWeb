@@ -3,7 +3,7 @@
                             background-color:#181818; vertical-align:bottom; border-top: 1px">
     <div class="container" style="display:flex; justify-content:center; padding-top:50px;">
         <div style="display:flex; flex-direction:column; padding-right:50px; width:300px;">
-            <p style="color:white; font-family: 'Akaya Telivigala', cursive; white-space:nowrap;">Written in</p>
+            <p style="color:white; font-family: 'Akaya Telivigala', cursive; white-space:nowrap;">Built With</p>
             <div style="display:flex; flex-direction:row; padding-right:50px;">
                 <a href="https://github.com/jlee167" style="width:32px; height:32px;">
                     <img src="{{asset('/images/php_logo.png')}}" style="width:32px; height:32px;">

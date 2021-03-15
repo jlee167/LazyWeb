@@ -53,7 +53,6 @@
 <body>
     @include('includes.layouts.navbar')
 
-
     <div id="main" class="scroll-container">
         <section class="section1">
             <div>
@@ -69,7 +68,6 @@
                 <p>
                     3 Years of experience in FPGA engineering.
                     I have experience with some time-critical modules and various protocols.
-
                 </p>
             </div>
         </section>
@@ -80,7 +78,6 @@
                 <p>
                     3 Years of experience in FPGA engineering.
                     I have experience with some time-critical modules and various protocols.
-
                 </p>
             </div>
         </section>
@@ -91,7 +88,6 @@
                 <p>
                     3 Years of experience in FPGA engineering.
                     I have experience with some time-critical modules and various protocols.
-
                 </p>
             </div>
         </section>
@@ -102,7 +98,6 @@
                 <p>
                     3 Years of experience in FPGA engineering.
                     I have experience with some time-critical modules and various protocols.
-
                 </p>
             </div>
         </section>

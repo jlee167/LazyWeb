@@ -41,6 +41,7 @@ class UsersTableSeeder extends Seeder
                 'email' => $faker->unique()->email,
                 'cell' => '010' . '-' . strval(rand(100, 9999)) . '-' . strval(rand(1000, 9999)),
                 'stream_id' => str_random(32),
+                'stream_key' => str_random(32),
                 'status' => 'FINE',
                 'response' => 'RESOLVED',
                 'privacy' => 'PRIVATE',

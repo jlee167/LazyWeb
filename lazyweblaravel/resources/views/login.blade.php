@@ -2,78 +2,79 @@
 
 <html style="height:100%;">
 	<head>
-    <!-- Login -->
-    @include('includes.imports.styles_common')
-    <link rel="stylesheet" href="/css/login.css">
+        <!-- Login -->
+        @include('includes.imports.styles_common')
+        <link rel="stylesheet" href="/css/login.css">
 
-    <!--  Kakao Imports -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+        <!--  Kakao Imports -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 
 
-    <script src="https://apis.google.com/js/api:client.js"></script>
+        <script src="https://apis.google.com/js/api:client.js"></script>
 
-    <script>
-    var googleUser = {};
-    var startApp = function() {
-    gapi.load('auth2', function(){
-        // Retrieve the singleton for the GoogleAuth library and set up the client.
-        auth2 = gapi.auth2.init({
-        client_id: '1083086831094-qatr04h8rnthlm9501q2oa45mjkjh4r0.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-        // Request scopes in addition to 'profile' and 'email'
-        //scope: 'additional_scope'
-        });
-    });
-    };
+        <script>
+            var googleUser = {};
+            var startApp = function() {
+            gapi.load('auth2', function(){
+                // Retrieve the singleton for the GoogleAuth library and set up the client.
+                auth2 = gapi.auth2.init({
+                client_id: '1083086831094-qatr04h8rnthlm9501q2oa45mjkjh4r0.apps.googleusercontent.com',
+                cookiepolicy: 'single_host_origin',
+                // Request scopes in addition to 'profile' and 'email'
+                //scope: 'additional_scope'
+                });
 
-    function attachSignin(element) {
-    console.log(element.id);
-    auth2.attachClickHandler(element, {},
-        function(googleUser) {
-            document.getElementById('name').innerText = "Signed in: " +
-                googleUser.getBasicProfile().getName();
-        }, function(error) {
-            alert(JSON.stringify(error, undefined, 2));
-        });
-    }
-    </script>
-    <style type="text/css">
-    #customBtn {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        background: white;
-        color: #444;
-        width: 300px;
-        height: 40px;
-        border-radius: 5px;
-        border: thin solid #888;
-        white-space: nowrap;
-    }
-    #customBtn:hover {
-        cursor: pointer;
-    }
-    span.label {
-        font-family: serif;
-        font-weight: normal;
-    }
-    img.icon {
-        display: inline-block;
-        width: 17px;
-        height: 17px;
-    }
-    span.buttonText {
-        display: inline-block;
-        vertical-align: middle;
-        padding-left: 10px;
-        font-size: 14px;
-        color:black;
-        /* Use the Roboto font that is loaded in the <head> */
-        font-family: 'Roboto', sans-serif;
-    }
-    </style>
+                attachSignin(document.getElementById('customBtn'));
+            });
+            };
 
+            function attachSignin(element) {
+                console.log(element.id);
+                auth2.attachClickHandler(element, {},
+                    function(googleUser) {
+                        document.getElementById('name').innerText = "Signed in: " +
+                            googleUser.getBasicProfile().getName();
+                    }, function(error) {
+                        alert(JSON.stringify(error, undefined, 2));
+                    });
+            }
+        </script>
+        <style type="text/css">
+        #customBtn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            color: #444;
+            width: 300px;
+            height: 40px;
+            border-radius: 5px;
+            border: thin solid rgb(180, 178, 178);
+            white-space: nowrap;
+        }
+        #customBtn:hover {
+            cursor: pointer;
+        }
+        span.label {
+            font-family: serif;
+            font-weight: normal;
+        }
+        img.icon {
+            display: inline-block;
+            width: 17px;
+            height: 17px;
+        }
+        span.buttonText {
+            display: inline-block;
+            vertical-align: middle;
+            padding-left: 10px;
+            font-size: 14px;
+            color:black;
+            /* Use the Roboto font that is loaded in the <head> */
+            font-family: 'Roboto', sans-serif;
+        }
+        </style>
 	</head>
 
 
@@ -131,7 +132,9 @@
                                     </div>
                                 </div>
                                 <div id="name"></div>
-                                <script>startApp();</script>
+                                <script>
+                                    startApp();
+                                </script>
                             </td>
                         </tr>
                     </table>
@@ -177,118 +180,12 @@
                 if (parts.length === 2) return parts.pop().split(";").shift();
             }
 
-            /*
-            Kakao.Auth.createLoginButton({
-                container: '#kakao-login-btn',
-                success: function(authObj) {
 
-                        alert(JSON.stringify(authObj))
-                        console.log("Cookie: " + authObj);
-                        document.cookie += authObj;
-
-                    let token_kakao = Kakao.Auth.getAccessToken();
-                    kakaoLogin(Kakao.Auth.getAccessToken());
-
-
-                        var xhttp = new XMLHttpRequest();
-
-                        xhttp.open("POST",  "../server/user_register.php", true);
-                        xhttp.setRequestHeader('Content-Type', 'application/json');
-                        xhttp.onload = function() {
-                            var text = 'Signed in as: ' + xhttp.responseText;
-                            console.log(text);
-                        };
-                        var login_data = {
-                            "Request" : "Registration",
-                            "Access Token" : token_kakao,
-                            "Authenticator" : "Kakao"
-                        };
-                        console.log(JSON.stringify(login_data));
-
-                        xhttp.send(JSON.stringify(login_data));
-                        document.cookie = 'AccessToken=' + token_kakao + ';';
-                        document.cookie = 'Authenticator = Kakao;';
-                        console.log("Cookie: " + Kakao.Auth.getName);
-
-
-                        //document.getElementById('signBtn').innerHTML= "Sign Out";
-
-                        Kakao.API.request({
-                            url: '/v2/user/me',
-                            success: function(res) {
-                                response = JSON.parse(res);
-                                alert('login success' + JSON.stringify(res));
-                                alert(res["properties"]["nickname"]);
-                                document.cookie = 'Username = ' + res["kakao_account"]["email"] + ';';
-                                document.cookie = 'ProfilePicture = ' + res["properties"]["thumbnail_image"]  + ';';
-                            },
-                            fail: function(error) {
-                                alert('login success, but failed to request user information: ' + JSON.stringify(error));
-                                return;
-                            },
-                        });
-
-                },
-                fail: function(err) {
-                        alert(JSON.stringify(err));
-                }
-            });
-            */
 
 
 
         /* ---------------------------- Google OAuth Setup --------------------------- */
-            var text = '';
-            var login_enable;
-            function onSignIn(googleUser) {
-                // Useful data for your client-side scripts:
-                var profile = googleUser.getBasicProfile();
-                console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-                console.log('Full Name: ' + profile.getName());
-                console.log('Given Name: ' + profile.getGivenName());
-                console.log('Family Name: ' + profile.getFamilyName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail());
 
-                // The ID token you need to pass to your backend:
-                var id_token = googleUser.getAuthResponse().id_token;
-                console.log("ID Token: " + id_token);
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '../server/user_register.php', true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onload = function() {
-                    var text = 'Signed in as: ' + xhr.responseText;
-                    console.log(text);
-                };
-
-                var registration_request = {
-                    "Request" : "Registration",
-                    "Access Token" : id_token,
-                    "Authenticator" : "Google"
-                };
-
-                xhr.send(JSON.stringify(registration_request));
-
-                //Todo: Change to something other than user's actual name
-                //console.log(login_enable);
-                if (login_enable == true) {
-                    // Set Cookies to access user information from anywhere
-                    // Todo: Get rid of them accordingly for security
-                    var username = profile.getName();
-                    var profilePicture = profile.getImageUrl();
-
-                    document.cookie = 'Access Token=' + id_token + ';';
-                    document.cookie = 'Authenticator = Google;';
-                    document.cookie = 'Username = ' + username + ';';
-                    document.cookie = 'ProfilePicture = ' + profilePicture + ';';
-                    //console.log(document.cookie);
-                    //gapi.auth2.getAuthInstance().signOut();
-                }
-                else {
-                    login_enable = true;
-                    //clearCookie();
-                }
-            }
 
         /* -------------------------------------------------------------------------- */
         /*                           /OAuth Modules Initialized                       */
@@ -334,6 +231,5 @@
 
 
         </script>
-
 	</body>
 <html>

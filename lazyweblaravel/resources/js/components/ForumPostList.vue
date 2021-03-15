@@ -3,12 +3,15 @@
         <div class="forum">
             <div style="display:flex; align-items:center;">
                 <h1 style="text-align: left;">General</h1>
-
-                <a id="postBtn" class="btn btn-outline-success" href="createpost" role="button"
-                    style="height:40px; margin-left:auto; white-space:nowrap;"> Create Post</a>
+                <a id="postBtn" class="btn btn-outline-success" role="button"
+                    style="height:40px; margin-left:auto; white-space:nowrap;"
+                    href="createpost"
+                    > Create Post</a>
+                     <!--v-on:click="write_post_callback();"-->
             </div>
             <div v-for="post in posts" :key="post">
                 <forum-list-item
+                    v-on:click.native="onclick_callback(post.id);"
                     v-bind:title=post.title
                     v-bind:contents=post.contents
                     v-bind:author=post.author
@@ -32,7 +35,9 @@
         props : {
             forum_name: String,
             posts: Array,
-            num_items: Number
+            num_items: Number,
+            onclick_callback: Function,
+            write_post_callback:Function
         },
 
        data() {

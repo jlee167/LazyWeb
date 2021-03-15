@@ -50,20 +50,36 @@ class ForumController extends Controller
      */
     public static function get_posts_in_page(string $forum, int $page)
     {
-        return DB::table('forum_' . $forum)->orderByDesc('id')->forPage($page, self::MAX_POSTS_PER_PAGE)->get();
+
+        return DB::table('posts')
+            ->where('forum', '=', 'general')
+            ->orderByDesc('id')
+            ->forPage($page, self::MAX_POSTS_PER_PAGE)
+            ->get();
     }
 
 
     public function create_post(Request $request, string $forum_name)
     {
-        $result =  DB::table('forum_' . $forum_name)->insert([
-            'uid'           => Auth::id(),
-            'title'         => $request->input('title'),
+        try {
+            DB::table('posts')->insert([
+                'title'         => $request->input('title'),
+                'forum'         => $forum_name,
+                'author'        => Auth::user()['username'],
+                'view_count'    => strval(0),
+                'contents'      => $request->input('content')
+            ]);
+            } catch (Exception $e) {
+                return "Create Post Fail!";
+            }
+    }
+
+
+    public function create_comment(Request $request, string $forum_name)
+    {
+        $result =  DB::table('comments_' . $forum_name)->insert([
             'author'        => Auth::user()['username'],
-            'view_count'    => strval(0),
-            'contents'      => $request->input('content'),
-            'post_root'     => $request->input('post_root'),
-            'post_parent'   => $request->input('post_parent'),
+            'contents'      => $request->input('content')
         ]);
 
         return view('dashboard');
@@ -72,11 +88,28 @@ class ForumController extends Controller
 
     public function retrieve_post(string $forum_name, string $id)
     {
-        $post = DB::table('forum_' . $forum_name)->where('id', '=', intval($id));
+        try {
+            $post = DB::table('posts')
+                        ->where('id', '=', intval($id))
+                        ->where('forum', '=', $forum_name)
+                        ->get();
+            $comments = DB::table('comments')
+                        ->where('post_id', '=', intval($id))
+                        ->get();
+        }
+        catch (Exception $e) {
+            return $e;
+        }
         /* Todo: Check if response is empty */
 
+
         /* Todo: Delete this test snippet */
-        return json_encode($post);
+        return json_encode(
+            [
+                'post'      => $post,
+                'comments'  => $comments
+            ]
+        );
     }
 
 
