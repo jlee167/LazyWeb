@@ -17,6 +17,7 @@
     <!-- Page specific stylesheet(s) -->
     <link rel="stylesheet" href="/css/dashboard.css">
 
+
     <style>
         .bounce {
         animation: bounce 1s infinite;
@@ -62,14 +63,39 @@
         </select>
 
         <div class="input-group flex-nowrap" style="width:300px; margin-left:70px; margin-top:auto; margin-bottom:auto;">
-            <input class="form-control" id="forumSearch" type="text" placeholder="Search Posts"
+            <input class="form-control" id="forumSearch" type="text" placeholder="Search by Title"
                 aria-describedby="search-btn">
             <div class="input-group-append">
-                <span class="input-group-text" id="search-btn">Search</span>
+                <span class="input-group-text" id="search-btn" onclick="searchPosts(document.getElementById('forumSearch').value);"
+                    onmouseover="" style="cursor: pointer;">Search</span>
             </div>
         </div>
     </div>
 
+    <script>
+        function searchPosts(keyword) {
+            var searchRequest = new XMLHttpRequest();
+            searchRequest.open('GET', '/forum/general/searched/' + String(keyword).trim());
+            searchRequest.onload = function() {
+                var results = JSON.parse(searchRequest.responseText);
+                console.log(forumApp.posts);
+                forumApp.posts = [];
+                console.log(forumApp.posts);
+                for(post in results) {
+                    console.log(results[post]);
+                    forumApp.posts.push(
+                        results[post]
+                    );
+                    console.log(forumApp.posts);
+                }
+            };
+            searchRequest.send( JSON.stringify({
+                forum: 'general',
+                keyword: keyword
+            }));
+
+        }
+    </script>
 
     <!--
     |-------------------------------------------------------------------
@@ -88,24 +114,6 @@
         <div class="section-contents" style="padding-top:0px !important; display:flex; flex-direction:row;
                                                     justify-content:center; width:100vw;">
 
-            <!-- Trending Posts Section -->
-            <!-- Todo: Work on this section -->
-            <!--div class="chatbot-container">
-                <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="width:200px; height:200px;">
-                <form action="" enctype="multipart/form-data" method=""
-                    style="margin:auto; margin-top:70px; width:300px; height:200px">
-                    @csrf
-                    <textarea
-                        name=""
-                        style="width:100%; height:60%;"
-                        placeholder="Bot Is not available yet... 챗봇은 준비중입니다...">
-                    </textarea><br>
-
-                    <input class="btn btn-outline-success" type="submit" value="submit"
-                        style="float:right; margin-top:15px; width: 100px;"
-                        >
-                </form>
-            </div-->
 
             <transition name="fade">
                 <div v-if="show_forum"
@@ -122,8 +130,14 @@
 
                     <nav aria-label="Page navigation example" style="margin:auto; margin-top:20px;">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item"><a class="page-link" href="dashboard?">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="dashboard?">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="dashboard?page=1"><<</a></li>
+                            <!--li class="page-item"><a class="page-link" href="dashboard?">Previous</a></li-->
+                            <template v-for="page_idx in page_index" :key="page_idx">
+                                <li class="page-item"><a class="page-link" v-bind:href="'dashboard?page='+ page_idx">@{{page_idx}}</a></li>
+                            </template>
+
+                            <!--li class="page-item"><a class="page-link" href="dashboard?">Next</a></li-->
+                            <li class="page-item"><a class="page-link" href="dashboard?">>></a></li>
                         </ul>
                     </nav>
                 </div>
@@ -142,16 +156,17 @@
                     </div>
                     <forum-post v-bind:post="original_post"></forum-post>
 
+
                     <div style="margin-top:50px;">
                         <p v-if="comments.length > 0" style="font-family: 'Oswald', sans-serif; font-weight: bold; font-size:20;">Comments</p>
                     </div>
-                    <div v-for="comment in comments" :key="post">
+                    <div v-for="comment in comments" :key="comment">
                         <forum-post v-bind:post="comment"></forum-post>
                     </div>
 
 
                     <div style="width:100%;">
-                        <form action="/forum/general/post" enctype="multipart/form-data" method="POST"
+                        <form action="/forum/general/post" enctype="multipart/form-data"
                             style="margin:auto; margin-top:100px; width:100%;height:80%;">
                             @csrf
                             <input type="hidden" id="post_root" name="post_root" value="0">
@@ -159,11 +174,15 @@
 
                             <label for="content" style="width:100%; font-family: 'Oswald', sans-serif; font-weight: bold; font-size:20;">
                                 Post Comment</label><br>
-                            <textarea id="summernote" name="content"
-                                style="width:100%; height:60%;"></textarea><br>
+                            <br>
 
-                            <input class="btn btn-outline-success" type="submit" value="submit"
-                                style="float:right; margin-top:15px; width:100px;">
+                            <?php if (LoginController::get_auth_state()): ?>
+                                <summer-note v-bind:post_action="post_action" v-bind:post_id="post_id" v-bind:auth_state="true" v-bind:redirect="redirect_auth"></summer-note>
+                            <?php else: ?>
+                                <summer-note v-bind:post_action="post_action" v-bind:post_id="post_id" v-bind:auth_state="false" v-bind:redirect="redirect_auth"></summer-note>
+                            <?php endif; ?>
+
+
                         </form>
                     </div>
                 </div>
@@ -196,13 +215,11 @@
                                 </p>
 
                             <?php endif; ?>
+
                         </div>
                     </div>
                 </div>
             </transition>
-
-
-
 
 
             <!-- Trending Posts Section -->
@@ -215,15 +232,15 @@
                 <!-- Polls -->
                 <div id="polls" class="container-forum-side">
                 </div>
+
+                <trending-posts v-bind:contents="contents">
+                </trending-posts>
             </div>
         </div>
     </div>
 
-    <a id="showBtn" class="btn btn-outline-success" onclick="
-        forumTransition();
-        " role="button" style="height:40px; margin-left:auto;"> Create Post
-    </a>
     @include('includes.layouts.footer')
+
 
 
     <?php if (LoginController::get_auth_state()): ?>
@@ -244,52 +261,38 @@
         </script>
     <?php endif; ?>
 
-    <script>
-        /*
-        function createPost() {
-            var postRequest = new XMLHttpRequest();
-            postRequest.open('POST', '/forum/general/post');
-            postRequest.setRequestHeader('Content-Type', 'application/json');
-            postRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
-            postRequest.onload = function(){
-                transToForum();
-                get_page(current_forum, parseInt(urlParams.get('page')));
-            };
 
-            var sendData = {
-                title: document.getElementById('title').value,
-                forum: current_forum,
-                content: ""
-            };
-            var k = $('.summernote').eq(1);
-            console.log('k is');
-            console.log(k);
-            postRequest.send(JSON.stringify(sendData));
-            delete sendData;
+
+    <script>
+        function redirectAuth(){
+            window.location.href = "http://www.lazyweb.com/views/login";
         }
-        */
+
+       function postComment(post_id, content) {
+            var commentRequest = new XMLHttpRequest();
+            var comment = {
+                content: content,
+                post_id : post_id
+            };
+            console.log("Post Commnet:");
+            console.log(comment);
+            commentRequest.open('POST', '/forum/comment');
+            commentRequest.setRequestHeader('Content-Type', 'application/json');
+            commentRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
+            commentRequest.onload = function() {
+                console.log(commentRequest.responseText);
+                transToPost(post_id);
+            };
+            commentRequest.send(JSON.stringify(comment));
+       }
     </script>
 
 
-    <script>
-        /*
-            $(document).ready(function() {
-            $('.summernote').summernote();
-            });
-        */
-        $('#summernote').summernote({
-            tabsize: 2,
-            height: 250
-        });
-    </script>
-
-    <!-- Initialize Vue Application -->
-    <script src="{{ mix('js/app.js') }}"></script>
 
     <!-- Vue application for rendering fetched posts -->
     <script>
-        var HEADER_GENERAL_FORUM = 'General Discussions';
-        var HEADER_TECH_FORUM = 'Technical Discussions';
+        var HEADER_GENERAL_FORUM    = 'General Discussions';
+        var HEADER_TECH_FORUM       = 'Technical Discussions';
 
         forumApp = new Vue({
             el: '#contents-area',
@@ -298,23 +301,52 @@
                 forum_header: HEADER_GENERAL_FORUM,
                 forum_name: 'General',
                 posts: [],
+                post_id: null,
                 original_post: {},
                 comments: [],
                 show_forum: true,
                 show_post: false,
                 show_write: false,
-                post_click_callback: forumTransition,
+                post_click_callback: transToPost,
                 trans_write: transToWrite,
+                post_action: postComment,
+                redirect_auth: redirectAuth,
+                page_count: 0,
+                page_curr:  0,
+                page_index: [],
 
                 contents: [{
                     title: "mytitle",
                     date: "xx-xx-xx"
-                }]
+                },
+                {
+                    title: "mytitle",
+                    date: "xx-xx-xx"
+                },
+                {
+                    title: "mytitle",
+                    date: "xx-xx-xx"
+                }
+
+                ]
             },
 
             mounted: function(){
+            },
+
+            computed: {
+                url_gen() {
+                    var url_arr = [];
+                    for (elem in page_index) {
+                        url_arr.push('dashboard?page=' + elem);
+                    }
+                    return url_arr;
+                }
             }
         });
+
+
+
 
 
         function transToForum(){
@@ -327,19 +359,23 @@
 
 
         function transToPost(post_id){
-            console.log(post_id);
             loginRequest.open('GET', '/forum/general/post/' + String(post_id).trim());
             loginRequest.onload = function() {
                 let resp = JSON.parse(loginRequest.responseText);
                 forumApp.original_post = resp.post[0];
+                forumApp.comments=resp.comments;
+                console.log(forumApp.original_post);
+                console.log(forumApp.comments);
                 forumApp.show_forum = false;
                 forumApp.show_write = false;
+                forumApp.post_id = post_id;
                 setTimeout(function() {
                     forumApp.show_post = true;
                 }, 500);
             };
             loginRequest.send();
         }
+
 
 
         /* Transition between:    Post List <-> Selected Post */
@@ -350,10 +386,8 @@
                 loginRequest.onload = function() {
                     console.log(loginRequest.responseText);
                     let resp = JSON.parse(loginRequest.responseText);
-                    console.log(resp);
-                    console.log(resp.post[0]);
-                    console.log(resp.comments);
                     forumApp.original_post = resp.post[0];
+                    forumApp.comments=resp.comments;
                 };
                 loginRequest.send();
             }
@@ -379,23 +413,19 @@
         let current_forum = 'general';
 
         /* Todo: fix test codes into general code. */
-        let current_page = 0;
         let csrf = "{{ csrf_token() }}";
         let loginRequest = new XMLHttpRequest();
         loginRequest.onload = function() {
-            console.log(loginRequest.responseText);
             let posts = JSON.parse(loginRequest.responseText);
-            console.log(forumApp.display_post);
+
             forumApp.posts = [];
             for(post in posts) {
-                console.log(post);
+                console.log(posts[post]);
                 forumApp.posts.push(
                     posts[post]
                 );
             }
         };
-
-
 
 
         /**
@@ -410,11 +440,36 @@
             loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
             loginRequest.send(JSON.stringify({response:true}));
         }
-
         let urlParams = new URLSearchParams(window.location.search);
-        console.log(urlParams.get('page'));
         get_page(current_forum, parseInt(urlParams.get('page')));
+
+
+        var paginationRequest = new XMLHttpRequest();
+        paginationRequest.open('GET', '/forum/page_count');
+        paginationRequest.setRequestHeader('Content-Type', 'application/json');
+        paginationRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
+        paginationRequest.onload = function() {
+            forumApp.page_count = Number(paginationRequest.responseText);
+            //console.log(forumApp.page_count);
+            forumApp.curr_page = parseInt(urlParams.get('page'));
+            //console.log(forumApp.curr_page);
+            var page_head = forumApp.curr_page - 4;
+            var page_tail = forumApp.curr_page + 5;
+
+            if (page_head < 1)
+                page_head = 1;
+            if (page_tail > forumApp.page_count)
+                page_tail = forumApp.page_count;
+
+            forumApp.page_index = [];
+            for (var i = page_head; i <= page_tail; i++) {
+                forumApp.page_index.push(i);
+            }
+            console.log(forumApp.page_index);
+        };
+        paginationRequest.send();
     </script>
+
 
 </body>
 

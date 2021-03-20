@@ -26,7 +26,8 @@ Opposite when not authenticated yet.
     </a>
 
     <!-- Toggler/collapsibe Button -->
-    <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="margin-right:15px;">
+    <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"
+        style="margin-right:15px;">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -37,14 +38,16 @@ Opposite when not authenticated yet.
         <!-- Menu -->
         <ul id="menu-links" class="navbar-nav mr-auto">
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Home</a></li>
-            <li class="nav-item"> <a class="nav-link" href="/views/about" style="white-space: nowrap;">My Resume</a>
+            <li class="nav-item"> <a class="nav-link" onclick="modalApp.showModal=true;" style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
             </li>
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Products</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/dashboard?page=1"> Dashboard</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/support"> Support</a></li>
-            <!--li class="nav-item"> <a class="nav-link" href="/views/broadcast"> Emergency</a></li-->
-            <li class="nav-item"> <a class="nav-link" onclick="broadcast();" onmouseover="" style="cursor: pointer;">
-                    Emergency</a></li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="broadcast();" onmouseover="" style="cursor: pointer;">
+                    Emergency
+                </a>
+            </li>
         </ul>
 
 
@@ -61,7 +64,12 @@ Opposite when not authenticated yet.
                                                 margin-left:10px; vertical-align:middle;">
                 <?php echo trim(Auth::user()["username"]); ?>
             </a>
-            <a style="color:white; display:inline-block; margin:auto; font-size:12px; margin-left:5px; vertical-align:middle; margin-right:15px;"
+            <a style="color:white;
+                    display:inline-block; margin:auto;
+                    font-size:12px;
+                    margin-left:5px;
+                    vertical-align:middle;
+                    margin-right:15px;"
                 href="javascript:logout();">
                 (logout)
             </a>
@@ -80,6 +88,68 @@ Opposite when not authenticated yet.
             /-------------------------------------------------------------------------->
         </div>
 </nav>
+
+
+<!-------------------------------------------------------------------------- */
+/*                                Resume Modal                               */
+/*---------------------------------------------------------------------------->
+
+<!-- template for the modal component -->
+<script type="text/x-template" id="modal-template">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+            <div class="modal-container">
+
+                <div class="modal-header">
+                    <slot name="header">
+                        <button class="modal-default-button" @click="$emit('close')">
+                            OK
+                          </button>
+                        default header
+                    </slot>
+                </div>
+
+                <div class="modal-body">
+                <slot name="body">
+                    default body
+                </slot>
+                </div>
+            </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+<!-- app -->
+<div id="app">
+    <!--button id="show-modal" @click="showModal = true">Show Modal</button-->
+    <!-- use the modal component, pass in the prop -->
+    <modal v-if="showModal" @close="showModal = false">
+        <div slot="body">
+            @include('resume-modal')
+        </div>
+    </modal>
+</div>
+
+<script>
+    // register modal component
+        Vue.component('modal', {
+            template: '#modal-template'
+        })
+
+        // start app
+        modalApp = new Vue({
+            el: '#app',
+            data: {
+                showModal: false
+            }
+        })
+</script>
+<!-------------------------------------------------------------------------- */
+/*                               /Resume Modal                               */
+/*---------------------------------------------------------------------------->
+
 
 
 <script>

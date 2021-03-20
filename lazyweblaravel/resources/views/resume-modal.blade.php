@@ -1,15 +1,3 @@
-<!doctype html>
-
-<html>
-
-<head>
-    @include('includes.imports.styles_common')
-    <link rel="stylesheet" href="/css/resume.css">
-</head>
-
-<body>
-    {{--@include('includes.layouts.navbar')--}}
-
     <!-- Personal Info -->
     <div id="resume-contents" class="section-contents" style="padding-top:0px; height:80vh;">
         <div style="width:100%; height:100%; display:flex; overflow-y:scroll;">
@@ -61,13 +49,6 @@
                             Details of my current work and personal information is not available at this time
                             due to a need for anonymity.
                         </p>
-                        <!--ul class="fa-ul mb-3">
-
-                                <li class="fa-li fa fa-check"> Entry-level RTL engineer with a little over 2 years of experience.</li>
-                                <li class="fa-li fa fa-check"> My complete CV is not open at this time. </li>
-                                <li class="fa-li fa fa-check"> Jack of all trades, Master of none.
-                                                            My work here will be focused on helping entry-level makers. </li>
-                            </ul-->
                     </section>
 
 
@@ -320,9 +301,6 @@
                     </section>
 
 
-
-
-
                     <section id="rtl" style="margin-top:50px;">
 
                         <h2 class="mb-3" style="color:#343032;"> <b> RTL / FPGA </b></h2>
@@ -342,20 +320,16 @@
                     <section id="software" style="margin-top:50px;">
                         <h2 class="mb-3" style="color:#343032;"> <b> Software </b></h2>
                         <hr>
+
                     </section>
                 </div>
-
             </div>
         </div>
+    </div>
 
 
-        <script src="{{ mix('js/app.js') }}"></script>
-        <script>
-            const app = new Vue({
-                el: '#resume-contents'
-            });
-        </script>
-
-</body>
-
-</html>
+    <script>
+        const app = new Vue({
+            el: '#resume-contents'
+        });
+    </script>

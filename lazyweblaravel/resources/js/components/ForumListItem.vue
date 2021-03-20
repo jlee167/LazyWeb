@@ -1,5 +1,5 @@
 <template>
-    <div id="container" class="card col-md-4 forum-list-item" onmouseover="" style="cursor: pointer;">
+    <div id="container" class="col-md-4 forum-list-item" onmouseover="" style="cursor: pointer;">
         <div class="user-info">
             <img class="profile-image" src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png">
         </div>
@@ -7,16 +7,12 @@
         <div class="post-contents">
             <div style="margin:auto; margin-top:20px; margin-left:5%; margin-right:5%;
                         font-family: 'Poppins', sans-serif;">
-                    <p style="font-family: 'Poppins', sans-serif; overflow:hidden; width:100%;
-                        text-overflow: ellipsis;
-
-                        /* Required for text-overflow to do anything */
-                        white-space: nowrap;
-                        overflow: hidden;
-                        max-lines:2;
+                    <p style="font-family: 'Poppins', sans-serif;
+                        text-overflow:ellipsis;width:100%; word-break:break-all; white-space:pre-line;
                         display: -webkit-box;
-                        -webkit-box-orient: vertical;
                         -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow:hidden;
                     ">{{title}}
                     </p>
             </div>
@@ -65,6 +61,7 @@
         margin-bottom:30px;
         margin-top:30px;
         overflow:hidden;
+        background-color:white;
         /*box-shadow: 1px 1px 1px gray;*/
     }
 

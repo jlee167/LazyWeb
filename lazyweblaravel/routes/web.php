@@ -102,7 +102,7 @@ Route::get('/views/{php_view_file}', function ($php_view_file) {
  */
 
 
-Route::get('/ping', function () {return "Lazyboy Web Server is running!";});
+Route::post('/ping', function () {return "Lazyboy Web Server is running!";});
 
 /* User information CRUD */
 Route::get('/members/{username}', [UserController::class, 'get_user']) ->middleware('auth');
@@ -116,6 +116,15 @@ Route::get('/forum/{forum_name}/page/{page}', [ForumController::class, 'get_post
 Route::post('/forum/{forum_name}/post', [ForumController::class, 'create_post']);
 Route::put('/forum/{forum_name}/post/{post_id}', [ForumController::class, '']);
 Route::delete('/forum/{forum_name}/post/{post_id}', [ForumController::class, '']);
+
+Route::get('/forum/{forum_name}/searched/{keyword}', [ForumController::class, 'get_posts_by_search']);
+Route::get('/forum/page_count', [ForumController::class, 'get_pagecount']);
+
+
+Route::post('/forum/comment', [ForumController::class, 'post_comment']) ->middleware('auth');
+//Route::put('/forum/comment', [ForumController::class, 'post_comment']) ->middleware('auth');
+//Route::delete('/forum/comment', [ForumController::class, 'post_comment']) ->middleware('auth');
+
 Route::post('/support_request', [ForumController::class, 'request_support']);
 
 Route::get('/friend/all', [UserController::class,'get_friends']) ->middleware('auth');

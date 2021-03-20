@@ -29,4 +29,5 @@ Vue.component('skill-bar', require('./components/SkillBar.vue').default);
 Vue.component('trending-posts', require('./components/TrendingPosts.vue').default);
 Vue.component('polls', require('./components/Polls.vue').default);
 Vue.component('forum-post', require('./components/ForumPost.vue').default);
+Vue.component('summer-note', require('./components/Summernote.vue').default);
 

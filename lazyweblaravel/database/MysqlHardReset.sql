@@ -160,8 +160,8 @@ CREATE TABLE comments (
     date            TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
     contents        MEDIUMTEXT,
     post_id         INT NOT NULL,
-    parent_id       INT NOT NULL,
-    depth           INT NOT NULL,
+    parent_id       INT DEFAULT NULL,
+    depth           INT NOT NULL DEFAULT 0,
 
     FOREIGN KEY (author)
         REFERENCES users(username)
@@ -472,6 +472,15 @@ BEGIN
                 AND guardianship.signed_protected IS TRUE
                 AND guardianship.signed_guardian IS TRUE
         );
+END $$
+
+
+/* Todo */
+CREATE PROCEDURE SearchPosts (
+    IN keyword VARCHAR(100)
+)
+BEGIN
+
 END $$
 
 

@@ -1,5 +1,8 @@
 <template>
   <div class="list-container">
+      <div class="list-header">
+            Trending
+        </div>
     <div class="list" v-for="content in contents" :key="content">
       <div class="post-item">
         <a class="font-title">
@@ -60,9 +63,24 @@ margin-left: 10px
   width: 100%;
   height: 40px;
   align-items: center;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
+  border-top: 0.5px solid;
+  border-bottom: 0.5px solid;
   border-color: #d5d5d5;
+}
+
+.list-header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  border-top: 0.5px solid;
+  border-bottom: 0.5px solid;
+  border-color: #d5d5d5;
+
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 30;
 }
 
 @media only screen and (min-width: 768px) {

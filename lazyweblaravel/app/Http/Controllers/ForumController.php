@@ -45,17 +45,46 @@ class ForumController extends Controller
     }
 
 
+
+
     /**
+     * Todo
      * Retrieve posts in the specified page and forum
      */
-    public static function get_posts_in_page(string $forum, int $page)
+    public static function get_posts_in_page(string $forum_name, int $page)
     {
-
         return DB::table('posts')
             ->where('forum', '=', 'general')
             ->orderByDesc('id')
             ->forPage($page, self::MAX_POSTS_PER_PAGE)
             ->get();
+    }
+
+
+    /**
+     * Retrieve posts in the specified page and forum
+     */
+    public static function get_posts_by_search(string $forum_name, string $keyword)
+    {
+        try {
+            return DB::table('posts')
+                ->where('forum', '=', 'general')
+                ->where('title', 'like', '%'.$keyword.'%')
+                //->orWhere('contents', 'like', '%'.$keyword.'%')
+                ->orderByDesc('id')
+                ->forPage(1, self::MAX_POSTS_PER_PAGE)
+                ->get();
+        } catch (Exception $e) {
+            return (string) $e;
+        }
+    }
+
+    /**
+     * Todo
+     */
+    public static function get_pagecount()//string $forum_name)
+    {
+        return ceil( (int)DB::table('posts')->count() / 10);
     }
 
 
@@ -75,14 +104,20 @@ class ForumController extends Controller
     }
 
 
-    public function create_comment(Request $request, string $forum_name)
+    public function post_comment(Request $request)
     {
-        $result =  DB::table('comments_' . $forum_name)->insert([
-            'author'        => Auth::user()['username'],
-            'contents'      => $request->input('content')
-        ]);
+        try {
+            $result =  DB::table('comments')->insert([
+                'author'        => (string)Auth::user()['username'],
+                'contents'      => (string)$request->input('content'),
+                'post_id'       => (int)$request->input('post_id')
+            ]);
+        }
+        catch (Exception $e) {
+            //return $e;
+        }
 
-        return view('dashboard');
+        //return view('dashboard');
     }
 
 

@@ -7,23 +7,23 @@
     <link rel="stylesheet" type="text/css" href="/css/full-page-scroll.css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        .section1 {
+        .scroll-section1 {
             background-color: #121212;
         }
 
-        .section2 {
+        .scroll-section2 {
             background-color: #98c19f;
         }
 
-        .section3 {
+        .scroll-section3 {
             background-color: #a199e2;
         }
 
-        .section4 {
+        .scroll-section4 {
             background-color: #cc938e;
         }
 
-        .section5 {
+        .scroll-section5 {
             background-color: #d2c598;
         }
 
@@ -54,14 +54,14 @@
     @include('includes.layouts.navbar')
 
     <div id="main" class="scroll-container">
-        <section class="section1">
+        <section class="scroll-section1">
             <div>
                 <h1> My Picture Goes Here </h1>
                 <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
             font-weight: 500 !important; font-size:100px;"> Hi, I'm LazyBoy!</h1>
             </div>
         </section>
-        <section class="section2">
+        <section class="scroll-section2">
             <div>
                 <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
         font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
@@ -71,7 +71,7 @@
                 </p>
             </div>
         </section>
-        <section class="section3">
+        <section class="scroll-section3">
             <div>
                 <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
         font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
@@ -81,7 +81,7 @@
                 </p>
             </div>
         </section>
-        <section class="section4">
+        <section class="scroll-section4">
             <div>
                 <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
         font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>
@@ -91,7 +91,7 @@
                 </p>
             </div>
         </section>
-        <section class="section5">
+        <section class="scroll-section5">
             <div>
                 <h1 style="font-family:'Anton', sans-serif !important; color:rgb(247, 190, 4);
         font-weight: 500 !important; font-size:35px; "> Digital Logics</h1>

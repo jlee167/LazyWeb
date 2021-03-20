@@ -1,5 +1,5 @@
 .resume-sidebar {
-    width: 0px;
+    width: 300px;
 }
 
 
@@ -38,7 +38,7 @@
 
 @media only screen and (min-width: 600px) {
     .resume-sidebar {
-        width: 200px;
+        width: 300px;
     }
     .resume-contents {
         margin-left:200px;

@@ -91,7 +91,8 @@
                     <form class="login-form" style="align:center; margin:auto; background-color:transparent;">
                         <div style="margin:0 auto; float:center;">
                             <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">ID</p>
-                            <input class="form-control" id="input_account" type="text" placeholder="Enter username" aria-describedby="search-btn" style="width:100%; height:50px;
+                            <input class="form-control" id="input_account" type="text" placeholder="Enter username"
+                                    aria-describedby="search-btn" style="width:100%; height:50px;
                                     align:center; margin-bottom:20px;">
                             <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">Password</p>
                             <input class="form-control" id="input_password" type="password" placeholder="Enter password" aria-describedby="search-btn" style="width:100%; height:50px;
@@ -100,11 +101,15 @@
                                                                     font-weight:600; font-family: 'Nunito Sans', sans-serif;"
                                                                     onclick="nonSocialLogin()">
                                                                     Login</button>
+
                         </div>
                     </form>
-                    <hr style="width:80%; margin:auto; margin-top:15px; margin-bottom:15px;">
-
-                    <table style="width:70%;align:center; margin:auto; background-color:transparent;">
+                    <div style="display:flex; flex-direction:row;">
+                        <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
+                        <p style="margin:auto;">Social Login</p>
+                        <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
+                    </div>
+                    <table style="width:70%;align:center; margin:auto; margin-top:15px; background-color:transparent;">
                         <tr style="height:50px; display:flex; justify-content:center;">
                             <td style="margin:auto;">
                                 <a id="kakao-login-btn" href="javascript:loginWithKakao()"
@@ -138,6 +143,14 @@
                             </td>
                         </tr>
                     </table>
+                    <div style="display:flex; flex-direction: row; align-items:center; justify-content:center;">
+                        <p style="vertical-align: middle; margin:0 0 0 0; font-family: 'Nunito Sans', sans-serif;">Not a memeber yet?</p>
+                        <a style="vertical-align: middle; margin:0 0 0 10px;"> <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b> </a>
+                    <!--button type="button" class="btn" style="background-color:#e7ba3e; color: white; width:100px; height:50px;
+                            font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-top: 20px; margin-bottom:20px;"
+                            onclick="">
+                            Register</button-->
+                    </div>
 
                 </div>
             </div>
@@ -179,8 +192,6 @@
                 const parts = value.split("; " + name + "=");
                 if (parts.length === 2) return parts.pop().split(";").shift();
             }
-
-
 
 
 

@@ -3,7 +3,7 @@
         <div class="forum">
             <div style="display:flex; align-items:center;">
                 <h1 style="text-align: left;">General</h1>
-                <a id="postBtn" class="btn btn-outline-success" role="button"
+                <a id="postBtn" class="btn btn-outline-info" role="button"
                     style="height:40px; margin-left:auto; white-space:nowrap;"
                     href="createpost"
                     > Create Post</a>

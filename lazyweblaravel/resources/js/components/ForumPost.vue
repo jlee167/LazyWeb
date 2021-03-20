@@ -7,12 +7,19 @@
                 <p class="font-info"> {{post.author}} </p>
             </div>
 
-            <div class="container-title">
+            <div v-if="post.title" class="container-title">
                 <p class="font-title"> {{post.title}} </p>
             </div>
 
             <div class="container-contents">
-                <div class="style-contents" v-html="post.contents" style="overflow-wrap: break-word;">  </div>
+                <div class="style-contents" v-html="post.contents" style="
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;">
+                </div>
             </div>
         </div>
     </div>
