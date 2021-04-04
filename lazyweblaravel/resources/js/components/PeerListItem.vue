@@ -1,51 +1,68 @@
 <template>
-  <div class="list-container">
-      <div class="list-header">
-            Trending
-        </div>
-    <div class="list" v-for="content in contents" :key="content">
-      <div class="post-item">
-        <a class="font-title">
-          {{ content.title }}
-        </a>
-
-        <p class="text-default">
-          {{ content.date }}
-        </p>
-      </div>
+  <div class="post-item">
+    <a class="font-title">{{ content.username }}</a>
+    <div class="status-container">
+      <p
+        v-if="content.relationship === macro_guardian"
+        class="btn btn-success text-default"
+      >
+        {{ content.relationship }}
+      </p>
+      <p
+        v-else-if="content.relationship === macro_protected"
+        class="btn btn-danger text-default"
+      >
+        {{ content.relationship }}
+      </p>
     </div>
   </div>
 </template>
 
 
+
+
 <script>
 export default {
   props: {
-    contents: Array,
+    content:            Object,
+    macro_guardian:     String,
+    macro_protected:    String,
+    emergency:          Boolean,
+  },
+
+  data: function(){
+      return{};
   },
 };
 </script>
 
 
-<style scoped>
-.font-title{
-margin-left: 10px
+<style>
+
+
+.font-title {
+  margin-left: 10px;
 }
 
-.text-default{
-    margin: auto;
-    margin-left: auto;
-    margin-right: 10px;
+.status-container {
+  margin: auto;
+  margin-left: auto;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-default {
+  margin: auto;
 }
 
 .list-container {
-  display: none;
   flex-direction: column;
+  display: flex;
   width: 300px;
   height: auto;
-  margin: 0 auto;
-  margin-left: 0px;
-  margin-top: 100px;
+  margin: auto;
   text-align: center;
   border: 0.2px solid;
   border-color: black;
@@ -62,7 +79,7 @@ margin-left: 10px
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 40px;
+  height: 60px;
   align-items: center;
   border-top: 0.5px solid;
   border-bottom: 0.5px solid;
@@ -80,23 +97,19 @@ margin-left: 10px
   border-bottom: 0.5px solid;
   border-color: #d5d5d5;
 
-  font-family: 'Nanum Pen Script', cursive;
+  font-family: "Nanum Pen Script", cursive;
   font-size: 30;
 }
 
 @media only screen and (min-width: 768px) {
   .list-container {
-    display: none;
     width: 300px;
-    margin-left:0px;
   }
 }
 
 @media only screen and (min-width: 1100px) {
   .list-container {
-    display: flex;
     width: 400px;
-    margin-left:40px;
   }
 }
 </style>

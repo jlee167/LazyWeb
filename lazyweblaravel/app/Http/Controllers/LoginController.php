@@ -10,6 +10,8 @@ use Illuminate\Routing\Redirector;
 use APP\Models\User;
 
 
+
+
 class LoginController extends BaseController
 {
     /**
@@ -30,6 +32,12 @@ class LoginController extends BaseController
         }
     }
 
+
+    /**
+     * Check if current client is logged in.
+     *
+     * @return bool true if logged in. false if not.
+     */
     public static function get_auth_state()
     {
         if (Auth::check())
@@ -40,6 +48,12 @@ class LoginController extends BaseController
 
 
 
+    /**
+     * Authenticate with Username
+     *
+     * @param  mixed    $request
+     * @return string   authentication result (JSON Object)
+     */
     public function auth_uname(Request $request)
     {
         $username = $request->input('username');
@@ -65,6 +79,13 @@ class LoginController extends BaseController
     }
 
 
+
+    /**
+     * auth_kakao
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function auth_kakao(Request $request)
     {
         $access_token = $request->token;
@@ -72,6 +93,13 @@ class LoginController extends BaseController
     }
 
 
+
+    /**
+     * auth_google
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function auth_google(Request $request)
     {
         $access_token = $request->token;

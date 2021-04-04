@@ -18,7 +18,7 @@ Opposite when not authenticated yet.
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-color:#121212 !important;
-                                            height:70px !important; padding: 0 0 0 0 ;">
+                                            width:100vw; height:70px !important; padding: 0 0 0 0 ;">
     <!-- Brand -->
     <a class="navbar-brand" style="font-family: 'Lobster', cursive !important;">
         <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
@@ -27,7 +27,7 @@ Opposite when not authenticated yet.
 
     <!-- Toggler/collapsibe Button -->
     <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"
-        style="margin-right:15px;">
+        style="margin-right:20px;">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -40,14 +40,15 @@ Opposite when not authenticated yet.
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Home</a></li>
             <li class="nav-item"> <a class="nav-link" onclick="modalApp.showModal=true;" style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
             </li>
-            <li class="nav-item"> <a class="nav-link" href="/views/main"> Products</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/views/products"> Products</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/dashboard?page=1"> Dashboard</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/support"> Support</a></li>
             <li class="nav-item">
-                <a class="nav-link" onclick="broadcast();" onmouseover="" style="cursor: pointer;">
+                <a class="nav-link" href="/views/emergency_broadcast">
                     Emergency
                 </a>
             </li>
+            <li class="nav-item"> <a class="nav-link" onclick="emergency_report();"> Report</a></li>
         </ul>
 
 
@@ -69,7 +70,7 @@ Opposite when not authenticated yet.
                     font-size:12px;
                     margin-left:5px;
                     vertical-align:middle;
-                    margin-right:15px;"
+                    margin-right:20px;"
                 href="javascript:logout();">
                 (logout)
             </a>
@@ -78,7 +79,7 @@ Opposite when not authenticated yet.
             <!-------- Display login button if login is required ------->
             <?php else: ?>
             <a id="signBtn" class="btn btn-outline-light" href="/views/login" role="button"
-                style="width:100px; height:45px; line-height:30px; margin-right:15px;">
+                style="width:100px; height:45px; line-height:30px; margin-right:20px;">
                 Sign In
             </a>
             <?php endif; ?>
@@ -92,60 +93,13 @@ Opposite when not authenticated yet.
 
 <!-------------------------------------------------------------------------- */
 /*                                Resume Modal                               */
+/*             Source: https://vuejs.org/v2/examples/modal.html              */
 /*---------------------------------------------------------------------------->
 
+
+
 <!-- template for the modal component -->
-<script type="text/x-template" id="modal-template">
-    <transition name="modal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-            <div class="modal-container">
 
-                <div class="modal-header">
-                    <slot name="header">
-                        <button class="modal-default-button" @click="$emit('close')">
-                            OK
-                          </button>
-                        default header
-                    </slot>
-                </div>
-
-                <div class="modal-body">
-                <slot name="body">
-                    default body
-                </slot>
-                </div>
-            </div>
-            </div>
-        </div>
-    </transition>
-</script>
-
-<!-- app -->
-<div id="app">
-    <!--button id="show-modal" @click="showModal = true">Show Modal</button-->
-    <!-- use the modal component, pass in the prop -->
-    <modal v-if="showModal" @close="showModal = false">
-        <div slot="body">
-            @include('resume-modal')
-        </div>
-    </modal>
-</div>
-
-<script>
-    // register modal component
-        Vue.component('modal', {
-            template: '#modal-template'
-        })
-
-        // start app
-        modalApp = new Vue({
-            el: '#app',
-            data: {
-                showModal: false
-            }
-        })
-</script>
 <!-------------------------------------------------------------------------- */
 /*                               /Resume Modal                               */
 /*---------------------------------------------------------------------------->
@@ -170,7 +124,7 @@ Opposite when not authenticated yet.
             console.log(loginRequest.responseText);
             var response = JSON.parse(loginRequest.responseText);
 
-            //Todo: Some logout verification message perhaps...
+            //Todo: Some logout verification message...
 
             console.log("Successfully Logged Out!")
             window.location.reload();
@@ -185,5 +139,19 @@ Opposite when not authenticated yet.
      */
     function broadcast(){
         window.open("http://localhost:3001", "Emergency Stream");
+    }
+
+
+    function emergency_report(){
+        var csrf = "{{ csrf_token() }}";
+        var emergencyReport = new XMLHttpRequest();
+        emergencyReport.open('POST', '/emergency/report', true);
+        emergencyReport.setRequestHeader('Content-Type', 'application/json');
+        emergencyReport.setRequestHeader('X-CSRF-TOKEN', csrf);
+        emergencyReport.onload = function() {
+            console.log(emergencyReport.responseText);
+            var response = JSON.parse(emergencyReport.responseText);
+        };
+        emergencyReport.send();
     }
 </script>

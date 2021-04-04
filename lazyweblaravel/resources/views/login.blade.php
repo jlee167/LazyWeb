@@ -9,8 +9,6 @@
         <!--  Kakao Imports -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-
-
         <script src="https://apis.google.com/js/api:client.js"></script>
 
         <script>
@@ -47,7 +45,7 @@
             align-items: center;
             background: white;
             color: #444;
-            width: 300px;
+            width: 100%;
             height: 40px;
             border-radius: 5px;
             border: thin solid rgb(180, 178, 178);
@@ -78,85 +76,82 @@
 	</head>
 
 
-
-
-    <body style="margin:0; height:100%; overflow:scroll;">
+    <body>
 
 		@include('includes.layouts.navbar')
 
 		<!--Login Information-->
-		<div class="section-contents-nopadding">
-            <div id="view-login">
-                <div id="login-manual" class="login-prompt card px-md-5 pr-md-5 pb-5 py-5">
-                    <form class="login-form" style="align:center; margin:auto; background-color:transparent;">
-                        <div style="margin:0 auto; float:center;">
-                            <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">ID</p>
-                            <input class="form-control" id="input_account" type="text" placeholder="Enter username"
-                                    aria-describedby="search-btn" style="width:100%; height:50px;
-                                    align:center; margin-bottom:20px;">
-                            <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">Password</p>
-                            <input class="form-control" id="input_password" type="password" placeholder="Enter password" aria-describedby="search-btn" style="width:100%; height:50px;
-                                    align:center; margin-bottom:20px;">
-                            <button type="button" class="btn" style="background-color:#5603ad; color: white; width:100%; height:50px;
-                                                                    font-weight:600; font-family: 'Nunito Sans', sans-serif;"
-                                                                    onclick="nonSocialLogin()">
-                                                                    Login</button>
+        <div id="view-login">
+            <div id="login-manual" class="login-prompt card">
+                <form class="login-form">
+                    <div style="margin:0 auto; float:center;">
+                        <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">ID</p>
+                        <input class="form-control" id="input_account" type="text" placeholder="Enter username"
+                                aria-describedby="search-btn" style="width:100%; height:50px;
+                                align:center; margin-bottom:20px;">
+                        <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">Password</p>
+                        <input  class="form-control" id="input_password" type="password"
+                                placeholder="Enter password" aria-describedby="search-btn"
+                                style="width:100%; height:50px; align:center; margin-bottom:20px;">
+                        <button type="button" class="btn" style="background-color:#5603ad; color: white; width:100%; height:50px;
+                                                                font-weight:600; font-family: 'Nunito Sans', sans-serif;"
+                                                                onclick="nonSocialLogin()">
+                                                                Login</button>
 
-                        </div>
-                    </form>
-                    <div style="display:flex; flex-direction:row;">
-                        <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
-                        <p style="margin:auto;">Social Login</p>
-                        <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
                     </div>
-                    <table style="width:70%;align:center; margin:auto; margin-top:15px; background-color:transparent;">
-                        <tr style="height:50px; display:flex; justify-content:center;">
-                            <td style="margin:auto;">
-                                <a id="kakao-login-btn" href="javascript:loginWithKakao()"
-                                >
-                                    <div style="display:flex; justify-content:center; align-items:center; width:300px;height:40px; border-radius:5px;
-                                        background-color:#FEE500;">
-                                        <img class="icon" src="{{asset('/images/kakao_icon.png')}}"
-                                            style="display:inline-block; width:22px; height:20px;"
-                                        >
-                                        <span class="buttonText" style="display:inline-block;">Login with Kakao</span>
-                                    </div>
-                                </a>
-                                <a href="http://alpha-developers.kakao.com/logout"></a>
-                            </td>
-                        </tr>
-
-                        <tr style="text-align:center; margin:auto; display:flex; justify-content:center;">
-                            <td style="margin:auto;">
-                                <!-- In the callback, you would hide the gSignInWrapper element on a
-                                successful sign in -->
-                                <div id="gSignInWrapper">
-                                    <div id="customBtn" class="customGPlusSignIn">
-                                        <img class="icon" src="https://developers.google.com/identity/images/g-logo.png">
-                                        <span class="buttonText"> Login with Google</span>
-                                    </div>
+                </form>
+                <div style="display:flex; flex-direction:row;">
+                    <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
+                    <p style="margin:auto;">Social Login</p>
+                    <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
+                </div>
+                <table style="width:100%;align:center; margin:auto; margin-top:15px; margin-bottom:30px; background-color:transparent;">
+                    <tr style="height:50px; display:flex; justify-content:center;">
+                        <td style="margin:auto; width:100%;">
+                            <a id="kakao-login-btn" href="javascript:loginWithKakao()"
+                            >
+                                <div style="display:flex; justify-content:center; align-items:center; width:100%;height:40px; border-radius:5px;
+                                    background-color:#FEE500;">
+                                    <img class="icon" src="{{asset('/images/kakao_icon.png')}}"
+                                        style="display:inline-block; width:22px; height:20px;"
+                                    >
+                                    <span class="buttonText" style="display:inline-block;">Login with Kakao</span>
                                 </div>
-                                <div id="name"></div>
-                                <script>
-                                    startApp();
-                                </script>
-                            </td>
-                        </tr>
-                    </table>
-                    <div style="display:flex; flex-direction: row; align-items:center; justify-content:center;">
-                        <p style="vertical-align: middle; margin:0 0 0 0; font-family: 'Nunito Sans', sans-serif;">Not a memeber yet?</p>
-                        <a style="vertical-align: middle; margin:0 0 0 10px;"> <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b> </a>
-                    <!--button type="button" class="btn" style="background-color:#e7ba3e; color: white; width:100px; height:50px;
-                            font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-top: 20px; margin-bottom:20px;"
-                            onclick="">
-                            Register</button-->
-                    </div>
+                            </a>
+                            <a href="http://alpha-developers.kakao.com/logout"></a>
+                        </td>
+                    </tr>
 
+                    <tr style="text-align:center; margin:auto; display:flex; justify-content:center;">
+                        <td style="margin:auto; width:100%;">
+                            <!-- In the callback, you would hide the gSignInWrapper element on a
+                            successful sign in -->
+                            <div id="gSignInWrapper">
+                                <div id="customBtn" class="customGPlusSignIn">
+                                    <img class="icon" src="https://developers.google.com/identity/images/g-logo.png">
+                                    <span class="buttonText"> Login with Google</span>
+                                </div>
+                            </div>
+                            <div id="name"></div>
+                            <script>
+                                startApp();
+                            </script>
+                        </td>
+                    </tr>
+                </table>
+                <div style="display:flex; flex-direction: row; align-items:center; justify-content:center; margin-bottom: 20px;">
+                    <p style="vertical-align: middle; margin:0 0 0 0; font-family: 'Nunito Sans', sans-serif;">Not a member yet?</p>
+                    <a style="vertical-align: middle; margin:0 0 0 10px;"> <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b> </a>
+                <!--button type="button" class="btn" style="background-color:#e7ba3e; color: white; width:100px; height:50px;
+                        font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-top: 20px; margin-bottom:20px;"
+                        onclick="">
+                        Register</button-->
                 </div>
             </div>
-
-            @include('includes.layouts.footer')
         </div>
+
+        @include('includes.layouts.footer')
+        @include('includes.layouts.modal')
 
 
 

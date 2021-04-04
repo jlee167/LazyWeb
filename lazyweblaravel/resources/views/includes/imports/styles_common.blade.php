@@ -33,7 +33,15 @@
 <!-- Initialize Vue Application -->
 <script src="{{ mix('js/app.js') }}"></script>
 
+
+
+
 <style>
+
+/* -------------------------------------------------------------------------- */
+/*              Source: https://vuejs.org/v2/examples/modal.html              */
+/* -------------------------------------------------------------------------- */
+
     .modal-mask {
         position: fixed;
         z-index: 9998;
@@ -41,7 +49,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, .5);
+        background-color: rgba(0, 0, 0, 0.95);
         display: table;
         transition: opacity .3s ease;
     }
@@ -52,23 +60,30 @@
     }
 
     .modal-container {
-        width: 80%;/* 300px; */
+        width: 80%;
+        max-width: 1300px;
         margin: 0px auto;
-        padding: 20px 30px;
-        background-color: #fff;
+        /*padding: 20px 30px;*/
+        background-color: transparent;
         border-radius: 2px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         transition: all .3s ease;
         font-family: Helvetica, Arial, sans-serif;
     }
 
-    .modal-header h3 {
-        margin-top: 0;
+    .modal-header {
+        margin: 0px 0px 0px 0px;
+        padding: 0 0 0 0 !important;
         color: #42b983;
+        background-color: transparent;
+        border-bottom:0px !important;
     }
 
     .modal-body {
-        margin: 20px 0;
+        /*margin: 10px 0; */
+        padding: 0px 0px 0px 0px;
+        margin: 0px 0px 0px 0px;
+        background-color:white;
     }
 
     .modal-default-button {
@@ -85,11 +100,11 @@
     */
 
     .modal-enter {
-        opacity: 0;
+        opacity: 0.5;
     }
 
     .modal-leave-active {
-        opacity: 0;
+        opacity: 0.5;
     }
 
     .modal-enter .modal-container,

@@ -5,11 +5,23 @@
 }
 
 .chat-textarea {
-    width: 100%;
+    width: auto;
+	margin:0 0 0 0;
     flex: 1;
     float:center;
     background-color: #202020;
-    min-height:300px;
+}
+
+.chat-textarea::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-textarea::-webkit-scrollbar-thumb {
+	background-color: #2f3542;
+}
+
+.chat-textarea::-webkit-scrollbar-track {
+	background-color: grey;
 }
 
 .chat-font {
@@ -28,5 +40,9 @@
 
 .chat-inputarea {
     width: 100%;
-    height: 300px;
+    height: 100px;
+	display:flex;
+	justify-content:center;
+	align-items:center;
 }
+

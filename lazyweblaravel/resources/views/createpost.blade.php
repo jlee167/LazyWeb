@@ -27,13 +27,13 @@
             <form   action="/forum/general/post" enctype="multipart/form-data" method="POST"
                     style="margin:auto; margin-top:100px; width:60%;height:60%;">
                 @csrf
-                <select id="type" name="type" style="padding-right:10px;
+                <select id="forum_name" name="type" style="padding-right:10px;
                     padding-left:10px; margin-left:15px; margin-top:auto;
                     margin-bottom:auto; height:40px; vertical-align:center;
                     border-radius: 5px 5px 5px 5px;
                     ">
-                    <option value="GENERAL_FORUM">General</option>
-                    <option value="TECH_FORUM">Tech</option>
+                    <option value="general">General</option>
+                    <option value="tech">Tech</option>
                 </select>
                 <input type="hidden" id="post_root" name="post_root" value="0">
                 <input type="hidden" id="post_parent" name="post_parent" value="0">
@@ -57,11 +57,11 @@
                 lineWrapping: true,
 			});
 
-
             function clickFunc(){
                 let csrf = "{{ csrf_token() }}";
                 var postRequest = new XMLHttpRequest();
-                postRequest.open('POST', '/forum/general/post');
+                var forum_name = document.getElementById('forum_name').value;
+                postRequest.open('POST', '/forum/' + forum_name + '/post');
                 postRequest.setRequestHeader('Content-Type', 'application/json');
                 postRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
                 postRequest.onload = function(){
@@ -81,5 +81,6 @@
 
 
         @include('includes.layouts.footer')
+        @include('includes.layouts.modal')
 	</body>
 <html>

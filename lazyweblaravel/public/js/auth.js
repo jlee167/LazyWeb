@@ -156,7 +156,7 @@ window.authWithUname = function (csrf, username, password, redirectUrl) {
       console.log("Successfully authenticated by LazyWeb!");
       window.location.href = redirectUrl;
     } else {
-      console.log("Login Failed!");
+      window.alert("Login Failed!");
     }
   };
 
@@ -165,6 +165,12 @@ window.authWithUname = function (csrf, username, password, redirectUrl) {
     "password": password
   }));
 };
+/* -------------------------------------------------------------------------- */
+
+/*                              /Login Functions                              */
+
+/* -------------------------------------------------------------------------- */
+
 /* -------------------------------------------------------------------------- */
 
 /*                          Cookie Handler Functions                          */
@@ -191,6 +197,11 @@ window.getCookie = function (key) {
 
   return result;
 };
+/* -------------------------------------------------------------------------- */
+
+/*                          Cookie Handler Functions                          */
+
+/* -------------------------------------------------------------------------- */
 
 /***/ }),
 

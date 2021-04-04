@@ -5,6 +5,14 @@
                 <img src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png"
                     class="user-img">
                 <p class="font-info"> {{post.author}} </p>
+                <div class="container-date-icons">
+                    <p style="vertical-align:center; margin: 0 0 0 0; margin-right:10px;">date</p>
+                    <img src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png"
+                    class="crud-icon">
+                    <img src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png"
+                    class="crud-icon">
+
+                </div>
             </div>
 
             <div v-if="post.title" class="container-title">
@@ -13,12 +21,8 @@
 
             <div class="container-contents">
                 <div class="style-contents" v-html="post.contents" style="
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        display: -webkit-box;
-                        -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 2;">
+                        text-overflow:ellipsis;width:100%; word-break:break-all; white-space:pre-line;
+                        overflow: hidden;">
                 </div>
             </div>
         </div>
@@ -66,6 +70,19 @@
         border-bottom: 1px solid rgb(139, 139, 139);
     }
 
+    .container-date-icons{
+        width:auto;
+        height:60px;
+        display:flex;
+        flex-direction:row;
+        align-self: stretch;
+        align-items:center;
+        justify-content:flex-end;
+        border-bottom: 1px solid rgb(139, 139, 139);
+        flex-grow:1;
+        padding-right:15px;
+    }
+
 
     .container-title{
         width:90%;
@@ -111,6 +128,15 @@
         height:40px;
         border-radius:50%;
         margin-left:20px;
+    }
+
+    .crud-icon{
+        display:inline-block;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        margin-left:2px;
+        margin-right:2px;
     }
 
 

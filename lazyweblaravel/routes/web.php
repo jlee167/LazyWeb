@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,9 +23,7 @@ use Laravel\Socialite\Facades\Socialite;
 */
 
 
-/**
- *  Redirect to main page for default address
- */
+/* Default Routes */
 Route::get('/', function () {
     return view('main');
 })->name('main');
@@ -34,9 +31,10 @@ Route::get('/', function () {
 
 
 
-/**
- *  Routes that need authentication
- */
+/* -------------------------------------------------------------------------- */
+/*                            Authentication Routes                           */
+/* -------------------------------------------------------------------------- */
+
 Route::get('/views/login', function () {
     if (Auth::check())
         return redirect()->intended();
@@ -54,12 +52,12 @@ route::post('/auth/kakao', function(Request $request) {
     $accessToken =  trim($request->get('accessToken'));
     $user =  Socialite::driver('kakao')->userFromToken($accessToken);
     $query_result = DB::table('users')
-                            ->insert([
-                                'auth_provider' => 'Kakao',
-                                'uid_oauth'      => $user->getId(),
-                                'faceshot_url'  => $user->getAvatar(),
-                                'email'         => $user->getEmail(),
-                            ]);
+                    ->insert([
+                        'auth_provider' => 'Kakao',
+                        'uid_oauth'      => $user->getId(),
+                        'faceshot_url'  => $user->getAvatar(),
+                        'email'         => $user->getEmail(),
+                    ]);
     return $query_result;
 });
 
@@ -72,12 +70,48 @@ route::post('/auth/google', function(Request $request) {
 
 
 
-/**
- *  View Routes
- *  Return views from blade tempaltes
- */
+route::post('/sqltest', function(Request $request) {
+    $mysqli = new mysqli("localhost","root","","lazyboyserver");
+    // Check connection
+    if ($mysqli -> connect_errno) {
+        echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+        exit();
+    }
+    //return "SELECT id FROM users where username = '{$request->input("query")}';";
+    // Perform query
+    if ($result = $mysqli -> query("SELECT id FROM users where username = '{$request->input("query")}';")) {
+        while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+    }
+    else {
+        echo 'NOOOO';
+    }
+
+    $mysqli -> close();
+});
+
+
+/* -------------------------------------------------------------------------- */
+/*                           /Authentication Routes                           */
+/* -------------------------------------------------------------------------- */
+
+
+
+
+
+/* -------------------------------------------------------------------------- */
+/*                                 View Routes                                */
+/* -------------------------------------------------------------------------- */
+
 Route::get('/views/broadcast', function () {
     return view('broadcast');
+})->middleware('auth');
+
+
+Route::get('/views/emergency_broadcast', function () {
+    return view('emergency_broadcast');
 })->middleware('auth');
 
 
@@ -86,62 +120,76 @@ Route::get('/views/createpost', function () {
 })->middleware('auth');
 
 
+Route::get('/views/peers', function () {
+    return view('peers');
+})->middleware('auth');
+
+
 /* Routes for views that do not require authentication */
 Route::get('/views/{php_view_file}', function ($php_view_file) {
     return view($php_view_file);
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                /View Routes                                */
+/* -------------------------------------------------------------------------- */
 
 
 
-/**
- *  REST API calls
- * ----------------------------------------
- *
- *  See REST API Documentation for details.
- */
 
 
+/* -------------------------------------------------------------------------- */
+/*                               Rest API Routes                              */
+/* -------------------------------------------------------------------------- */
+
+
+/* ---------------------------- Server Heartbeat ---------------------------- */
 Route::post('/ping', function () {return "Lazyboy Web Server is running!";});
 
-/* User information CRUD */
-Route::get('/members/{username}', [UserController::class, 'get_user']) ->middleware('auth');
-Route::post('/members/{username}', [UserController::class, 'register_user']);
-Route::put('/members/{username}', [UserController::class, 'update_user']) ->middleware('auth');
-Route::delete('/members/{username}', [UserController::class, 'remove_user']) ->middleware('auth');
 
-/* Forum & Support page CRUD */
-Route::get('/forum/{forum_name}/post/{post_id}', [ForumController::class, 'retrieve_post']);
-Route::get('/forum/{forum_name}/page/{page}', [ForumController::class, 'get_posts_in_page']);
-Route::post('/forum/{forum_name}/post', [ForumController::class, 'create_post']);
-Route::put('/forum/{forum_name}/post/{post_id}', [ForumController::class, '']);
-Route::delete('/forum/{forum_name}/post/{post_id}', [ForumController::class, '']);
+/* -------------------------- User information CRUD ------------------------- */
+Route::get      ('/members/{username}', [UserController::class, 'get_user'])        ->middleware('auth');
+Route::post     ('/members/{username}', [UserController::class, 'register_user']);
+Route::put      ('/members/{username}', [UserController::class, 'update_user'])     ->middleware('auth');
+Route::delete   ('/members/{username}', [UserController::class, 'remove_user'])     ->middleware('auth');
 
-Route::get('/forum/{forum_name}/searched/{keyword}', [ForumController::class, 'get_posts_by_search']);
-Route::get('/forum/page_count', [ForumController::class, 'get_pagecount']);
+/* ------------------------ Forum & Support page CRUD ----------------------- */
+Route::get      ('/forum/{forum_name}/post/{post_id}',  [ForumController::class, 'retrieve_post']);
+Route::get      ('/forum/{forum_name}/page/{page}',     [ForumController::class, 'get_posts_in_page']);
+Route::post     ('/forum/{forum_name}/post',            [ForumController::class, 'create_post']);
+Route::put      ('/forum/{forum_name}/post/{post_id}',  [ForumController::class, '']);
+Route::delete   ('/forum/{forum_name}/post/{post_id}',  [ForumController::class, '']);
 
+Route::get      ('/forum/{forum_name}/searched/{keyword}',  [ForumController::class, 'get_posts_by_search']);
+Route::get      ('/forum/{forum_name}/page_count',          [ForumController::class, 'get_pagecount']);
+Route::post     ('/forum/comment',                          [ForumController::class, 'post_comment'])           ->middleware('auth');
 
-Route::post('/forum/comment', [ForumController::class, 'post_comment']) ->middleware('auth');
-//Route::put('/forum/comment', [ForumController::class, 'post_comment']) ->middleware('auth');
-//Route::delete('/forum/comment', [ForumController::class, 'post_comment']) ->middleware('auth');
+Route::post     ('/support_request',    [ForumController::class, 'request_support']);
 
-Route::post('/support_request', [ForumController::class, 'request_support']);
-
+/*
 Route::get('/friend/all', [UserController::class,'get_friends']) ->middleware('auth');
 Route::post('/friend/{uid}', [UserController::class, 'add_friend']) ->middleware('auth');
 Route::put('/friend/{uid}', [UserController::class, 'respond_friend_request']) ->middleware('auth');
 Route::delete('/friend/{uid}', [UserController::class, 'delete_friend']) ->middleware('auth');
+*/
 
-Route::get('/members/guardian/all', [UserController::class,'get_guardians']) ->middleware('auth');
-Route::post('/members/guardian/{uid}', [UserController::class,'add_guardian']) ->middleware('auth');
-Route::put('/members/guardian/{uid}', [UserController::class,'confirm_guardian_request']) ->middleware('auth');
-Route::delete('/members/guardian/{uid}', [UserController::class,'delete_guardian']) ->middleware('auth');
+/* ----------------------- Guardianship Management API ---------------------- */
+Route::get      ('/members/guardian/all',       [UserController::class,'get_guardians'])            ->middleware('auth');
+Route::post     ('/members/guardian/{uid}',     [UserController::class,'add_guardian'])             ->middleware('auth');
+Route::put      ('/members/guardian/{uid}',     [UserController::class,'confirm_guardian_request']) ->middleware('auth');
+Route::delete   ('/members/guardian/{uid}',     [UserController::class,'delete_guardian'])          ->middleware('auth');
+Route::get      ('/members/protected/all',      [UserController::class,'get_protecteds'])           ->middleware('auth');
+Route::post     ('/members/protected/{uid}',    [UserController::class,'add_protected'])            ->middleware('auth');
+Route::put      ('/members/protected/{uid}',    [UserController::class,'confirm_protected_request'])->middleware('auth');
+Route::delete   ('/members/protected/{uid}',    [UserController::class,'delete_protected'])         ->middleware('auth');
 
-Route::get('/members/protected/all', [UserController::class,'get_protecteds']) ->middleware('auth');
-Route::post('/members/protected/{uid}', [UserController::class,'add_protected']) ->middleware('auth');
-Route::put('/members/protected/{uid}', [UserController::class,'confirm_protected_request']) ->middleware('auth');
-Route::delete('/members/protected/{uid}', [UserController::class,'delete_protected']) ->middleware('auth');
 
-Route::post('/emergency/report', [UserController::class,'emergency_report']) ->middleware('auth');
-Route::get('/emergency/{uid}/status', [UserController::class,'get_status']) ->middleware('auth');
-Route::get('/emergency/{uid}/stream_key', [UserController::class,'get_streamkey']) ->middleware('auth');
+/* ---------------------------- Emergency Actions --------------------------- */
+Route::post     ('/emergency/report',               [UserController::class,'emergency_report']) ->middleware('auth');
+Route::get      ('/emergency/{uid}/status',         [UserController::class,'get_status'])       ->middleware('auth');
+Route::get      ('/emergency/{uid}/stream_token',   [UserController::class,'get_stream_token']) ->middleware('auth');
+
+
+/* -------------------------------------------------------------------------- */
+/*                              /Rest API Routes                              */
+/* -------------------------------------------------------------------------- */

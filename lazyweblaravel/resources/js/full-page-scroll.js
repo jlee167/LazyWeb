@@ -1,8 +1,12 @@
 /************************************************************************
-* This file is from:  https://github.com/amendoa/fullPageScrollPureJS
+* Original Source:  https://github.com/amendoa/fullPageScrollPureJS
 *************************************************************************/
 
-/***** License from the author
+/************************************************************************
+* Modified by LazyBoy (lazyboyindustries.main@gmail.com)
+*************************************************************************/
+
+/***** License from the original author
 
 
     The MIT License (MIT)

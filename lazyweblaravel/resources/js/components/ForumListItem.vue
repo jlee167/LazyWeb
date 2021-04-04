@@ -18,7 +18,9 @@
             </div>
 
             <div style="margin:auto; margin-bottom:10px; margin-left:5%;">
-                <p style="font-family: 'Poppins', sans-serif; margin:auto; margin-top:10px;"> by {{author}} </p>
+                <p style="display:inline-block;font-family: 'Poppins', sans-serif; margin:auto; margin-top:10px;"> by {{author}} </p>
+                <img class="profile-image-small"
+                     src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png">
             </div>
         </div>
 
@@ -45,6 +47,14 @@
         margin-left:auto;
         margin-right:auto;
         border-radius:50%;
+    }
+
+    .profile-image-small{
+        width:20px;
+        height:20px;
+        margin-left:5px;
+        border-radius:50%;
+        display: none;
     }
 
 
@@ -97,5 +107,16 @@
         flex-direction:column;
         width:50px; space-between:20px;
         justify-content: center;
+    }
+
+
+
+    @media only screen and (max-width: 500px) {
+        .user-info{
+            display:none;
+        }
+        .profile-image-small{
+            display:inline-block;
+        }
     }
 </style>

@@ -30,4 +30,5 @@ Vue.component('trending-posts', require('./components/TrendingPosts.vue').defaul
 Vue.component('polls', require('./components/Polls.vue').default);
 Vue.component('forum-post', require('./components/ForumPost.vue').default);
 Vue.component('summer-note', require('./components/Summernote.vue').default);
-
+Vue.component('peer-list', require('./components/PeerList.vue').default);
+Vue.component('peer-list-item', require('./components/PeerListItem.vue').default);

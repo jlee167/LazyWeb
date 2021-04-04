@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 
 
 
@@ -251,16 +252,8 @@ class UserController extends Controller
      */
     static public function get_guardians(Request $request)
     {
-        $result =
-            DB::table('users')
-            ->select('firstname', 'lastname', 'email', 'username')
-            ->where('users.id', function ($query_friends) {
-                $query_friends
-                    ->select('uid_guardian')
-                    ->from('guardianship')
-                    ->where('uid_protected', '=', Auth::id());
-            })
-            ->get();
+        $username = Auth::user()->username;
+        $result = DB::select("CALL GetGuardians('${username}')");
         return json_encode($result);
     }
 
@@ -323,16 +316,8 @@ class UserController extends Controller
      */
     static public function get_protecteds(Request $request)
     {
-        $result =
-            DB::table('users')
-            ->select('firstname', 'lastname', 'email', 'username')
-            ->where('users.id', function ($query_friends) {
-                $query_friends
-                    ->select('uid_protected')
-                    ->from('guardianship')
-                    ->where('uid_guardian', '=', Auth::id());
-            })
-            ->get();
+        $username = Auth::user()->username;
+        $result = DB::select("CALL GetProtecteds('${username}')");
         return json_encode($result);
     }
 
@@ -401,23 +386,35 @@ class UserController extends Controller
      * File emergency report
      *
      * @return  void
+     *
+     * @deprecated
+     *      Not used by web server anymore.
+     *      Stream server implements this functionality instead.
      */
     static public function emergency_report(Request $request)
     {
-        $result = DB::table('reports')
+        DB::table('reports')
             ->insert([
                 'uid' => Auth::id(),
                 'status' => 'DANGER_URGENT_RESPONSE',
                 'response' => 'RESPONSE_REQUIRED',
+                'stream_key' =>
+                        json_decode(DB::table('users')
+                        ->select('stream_key')
+                        ->where('id', Auth::id())
+                        ->get())[0]->stream_key,
                 'responders' => strval(
                     DB::table('guardianship')
                         ->select('uid_guardian')
                         ->where('uid_protected', Auth::id())
                         ->get()
-                ),
-                'stream_key' => Hash::make("secret"),
-                'description' => $request->extra_message,
+                )
             ]);
+
+        $result = DB::table('users')
+                    ->where('id', Auth::id())
+                    ->update(['status' => 'DANGER_URGENT']);
+
         return $result;
     }
 
@@ -450,7 +447,7 @@ class UserController extends Controller
      *
      * @return  void
      */
-    static public function get_streamkey($uid)
+    static public function get_stream_token($uid)
     {
         if (
             !empty(DB::table('guardianship')
@@ -460,10 +457,11 @@ class UserController extends Controller
             or
             Auth::id() == $uid
         ) {
-            return  json_encode(DB::table('reports')
-                ->select('stream_key')
-                ->where('uid', $uid)
-                ->get());
+            $stream_tokens = REDIS::get('stream_'.(String)$uid);
+            //@Todo
+            $user_token = $stream_tokens['index'];
+            unset($stream_tokens);
+            return $stream_tokens;
         }
     }
 

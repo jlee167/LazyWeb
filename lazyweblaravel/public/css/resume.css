@@ -1,17 +1,32 @@
 .resume-sidebar {
-    width: 300px;
+    height:100%;
+    min-width: 300px;
+    overflow-x: hidden;
+    margin-bottom:0px;
+    padding-bottom:0px;
 }
 
 
 .resume-contents {
     margin-left:0px;
     max-width:1000px;
-    width:100vw;
     padding-left:50px;
     padding-right:50px;
     padding-top:50px;
+    overflow-x:hidden;
 }
 
+.resume-contents::-webkit-scrollbar {
+    width: 5px;
+}
+
+.resume-contents::-webkit-scrollbar-thumb {
+	background-color: #2f3542;
+}
+
+.resume-contents::-webkit-scrollbar-track {
+	background-color: rgb(173, 173, 173);
+}
 
 .section-margin {
     margin-top:80px;
@@ -35,7 +50,7 @@
     margin: 30px;
 }
 
-
+/*
 @media only screen and (min-width: 600px) {
     .resume-sidebar {
         width: 300px;
@@ -56,4 +71,5 @@
         width:100vw - 300px;
     }
 }
+*/
 

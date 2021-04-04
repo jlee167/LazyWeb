@@ -45,8 +45,6 @@ class ForumController extends Controller
     }
 
 
-
-
     /**
      * Todo
      * Retrieve posts in the specified page and forum
@@ -54,7 +52,7 @@ class ForumController extends Controller
     public static function get_posts_in_page(string $forum_name, int $page)
     {
         return DB::table('posts')
-            ->where('forum', '=', 'general')
+            ->where('forum', '=', $forum_name)
             ->orderByDesc('id')
             ->forPage($page, self::MAX_POSTS_PER_PAGE)
             ->get();
@@ -82,9 +80,9 @@ class ForumController extends Controller
     /**
      * Todo
      */
-    public static function get_pagecount()//string $forum_name)
+    public static function get_pagecount(string $forum_name)
     {
-        return ceil( (int)DB::table('posts')->count() / 10);
+        return ceil( (int)DB::table('posts')->where('forum', '=', $forum_name)->count() / 10);
     }
 
 
@@ -148,9 +146,9 @@ class ForumController extends Controller
     }
 
 
-    public function delete_post(string $forum_name, string $id)
+    public function delete_post(string $id)
     {
-        $post = DB::table('forum_' . $forum_name)->select('')->where('id', '=', intval($id));
+        $post = DB::table('posts')->select('')->where('id', '=', intval($id));
         /* Todo: Check if response is empty */
 
         /* Todo: Delete this test snippet */
@@ -158,9 +156,9 @@ class ForumController extends Controller
     }
 
 
-    public function update_post(string $forum_name, string $id)
+    public function update_post(string $id)
     {
-        $post = DB::table('forum_' . $forum_name)->where('id', '=', intval($id));
+        $post = DB::table('posts')->where('id', '=', intval($id));
         /* Todo: Check if response is empty */
 
         /* Todo: Delete this test snippet */
@@ -178,4 +176,5 @@ class ForumController extends Controller
         ]);
         return json_encode($post);
     }
+
 }

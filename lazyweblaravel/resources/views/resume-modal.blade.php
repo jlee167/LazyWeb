@@ -1,9 +1,9 @@
     <!-- Personal Info -->
-    <div id="resume-contents" class="section-contents" style="padding-top:0px; height:80vh;">
-        <div style="width:100%; height:100%; display:flex; overflow-y:scroll;">
-            <div class="resume-sidebar" style="overflow-y:hidden; position:fixed; background-color:#bc5c3c; height:80%;
+    <div class="section-contents" style="padding-top:0px; height:80vh;">
+        <div style="width:100%; height:100%; display:flex; overflow:hidden;">
+            <div class="resume-sidebar" style="overflow-y:hidden; background-color:#bc5c3c;
                                                     display:inline-flex; flex-direction:column; justify-content: center;
-                                                    text-align:center; margin-top:0px;">
+                                                    text-align:center; margin-top:0px; width:300px;">
                 <div style="display:flex; flex-direction:row; justify-content:center; overflow:hidden;">
                     <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
                         style="min-width:120px; min-height:120px;">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="resume-contents" style="display:inline-block; margin-top:0px;">
+            <div class="resume-contents" style="display:inline-block; margin-top:0px; overflow-y:scroll;">
                 <div style="overflow:hidden;">
                     <section id="profile">
                         <h2 class="mb-6" style="color:#343032;"> <b> Profile </b></h2>
@@ -52,11 +52,6 @@
                     </section>
 
 
-                    <section id="">
-
-                    </section>
-
-
                     <section class="section-margin" id="skills">
                         <h2 class="mb-7" style="color:#343032;"> <b> Skills </b></h2>
                         <hr style="border-width:3px; color:#d6c102;">
@@ -70,8 +65,6 @@
                                     <td colspan="2">
                                         <h5 style="text-align:center; color:#343032;">Platforms</h3>
                                     </td>
-
-
                                 </tr>
                                 <tr>
                                     <td
@@ -327,9 +320,3 @@
         </div>
     </div>
 
-
-    <script>
-        const app = new Vue({
-            el: '#resume-contents'
-        });
-    </script>

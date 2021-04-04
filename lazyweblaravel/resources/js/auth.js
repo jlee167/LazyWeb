@@ -4,12 +4,13 @@
 /* -------------------------------------------------------------------------- */
 
 /**
- *  Todo
- * @param {*} csrf
- * @param {*} token
- * @param {*} authenticator
+ *
+ * @param {String} csrf
+ * @param {String} accessToken
+ * @param {String} provider
+ * @param {String} redirectUrl
  */
- window.authWithOauth2 = function (csrf, accessToken, provider, redirectUrl){
+ window.authWithOauth2 = function (csrf, accessToken, provider, redirectUrl) {
     /* Sign in and return to previous url on success. */
     let loginRequest = new XMLHttpRequest();
     var authUri = '/auth/' + provider;
@@ -47,7 +48,7 @@
  * @param {*} username
  * @param {*} password
  */
-window.authWithUname = function (csrf, username, password, redirectUrl){
+window.authWithUname = function (csrf, username, password, redirectUrl) {
 
     /* Sign in and return to previous url on success. */
     let loginRequest = new XMLHttpRequest();
@@ -62,7 +63,7 @@ window.authWithUname = function (csrf, username, password, redirectUrl){
             window.location.href = redirectUrl;
         }
         else {
-            console.log("Login Failed!");
+            window.alert("Login Failed!");
         }
     };
 
@@ -71,6 +72,16 @@ window.authWithUname = function (csrf, username, password, redirectUrl){
         "password" : password
     }));
 }
+
+
+/* -------------------------------------------------------------------------- */
+/*                              /Login Functions                              */
+/* -------------------------------------------------------------------------- */
+
+
+
+
+
 
 
 
@@ -82,7 +93,7 @@ window.authWithUname = function (csrf, username, password, redirectUrl){
 /**
  * Returns Cookie specified by key
  *
- * @param {*} key
+ * @param {String} key
  */
 window.getCookie = function(key) {
     cookies = decodeURIComponent(document.cookie).split(';');
@@ -95,3 +106,8 @@ window.getCookie = function(key) {
     }
     return result;
 }
+
+
+/* -------------------------------------------------------------------------- */
+/*                          Cookie Handler Functions                          */
+/* -------------------------------------------------------------------------- */

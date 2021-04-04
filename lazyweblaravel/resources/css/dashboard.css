@@ -7,6 +7,30 @@
     margin-left:auto;
 }
 
+.bounce {
+    animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+    0% {
+        transform: translateX(0px);
+    }
+    20% {
+        transform: translateX(-3px);
+    }
+    40% {
+        transform: translateX(-6px);
+    }
+    60% {
+        transform: translateX(-9px);
+    }
+    80% {
+        transform: translateX(-12px);
+    }
+    100% {
+        transform: translateX(-15px);
+    }
+}
 
 @media only screen and (min-width: 1500px){
     .chatbot-container{

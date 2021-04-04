@@ -8,6 +8,7 @@
       v-on:click="
         if (auth_state){
             post_action(post_id, getContent());
+            resetEditor();
         }
         else{
             redirect();
@@ -34,12 +35,16 @@ export default {
       placeholder: "comment",
       tabsize: 2,
       height: 250,
+      lineNumbers: true,
       lineWrapping: true,
     });
   },
   methods: {
     getContent: function () {
       return $("#summernote").summernote("code");
+    },
+    resetEditor: function() {
+        $("#summernote").summernote("reset");
     }
   },
 };

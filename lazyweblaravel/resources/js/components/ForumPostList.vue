@@ -2,14 +2,13 @@
     <div>
         <div class="forum">
             <div style="display:flex; align-items:center;">
-                <h1 style="text-align: left;">General</h1>
+                <h1 style="text-align: left;">{{forum_name}}</h1>
                 <a id="postBtn" class="btn btn-outline-info" role="button"
                     style="height:40px; margin-left:auto; white-space:nowrap;"
-                    href="createpost"
+                    v-bind:href="'createpost?forum=' + forum_name"
                     > Create Post</a>
-                     <!--v-on:click="write_post_callback();"-->
             </div>
-            <div v-for="post in posts" :key="post">
+            <div v-for="post in posts" :key="post.id">
                 <forum-list-item
                     v-on:click.native="onclick_callback(post.id);"
                     v-bind:title=post.title
@@ -33,11 +32,10 @@
         components: { ForumListItem },
 
         props : {
-            forum_name: String,
-            posts: Array,
-            num_items: Number,
-            onclick_callback: Function,
-            write_post_callback:Function
+            forum_name:             String,
+            posts:                  Array,
+            num_items:              Number,
+            onclick_callback:       Function
         },
 
        data() {
@@ -47,7 +45,7 @@
         },
 
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component2 mounted.')
         }
     }
 </script>
@@ -58,28 +56,34 @@
             width: 80%;
     }
 
-    @media only screen and (min-width: 400px) {
-        .forum{
-            width: 420px;
-        }
-    }
-
-    @media only screen and (min-width: 768px) {
-        .forum{
-            width: 700px;
-        }
-    }
-
-    @media only screen and (min-width: 1100px) {
-        .forum{
-            width: 600px;
-        }
-    }
-
-
     @media only screen and (min-width: 1700px) {
         .forum{
             width: 800px;
         }
     }
+
+    @media only screen and (max-width: 1700px) {
+        .forum{
+            width: 680px;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .forum{
+            width: 500px;
+        }
+    }
+
+    @media only screen and (max-width: 500px) {
+        .forum{
+            width: 90vw;
+        }
+    }
+
+    @media only screen and (max-width: 400px) {
+        .forum{
+            width: 90vw;
+        }
+    }
+
 </style>

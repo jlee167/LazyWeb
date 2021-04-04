@@ -1,15 +1,34 @@
 <template>
   <div>
-    <div v-for="user in users" :key="user"
+    <div
+      v-for="user in users"
+      :key="user"
       class="user-list-item"
       style="listItemStyle"
     >
-      <div class="item-inner">
-        <img
-          v-bind:src="user.imageUrl"
-          style="width: 35px; height: 35px"
-        />
-        <p class="font-username" style="margin-left:15px; margin-top:auto; margin-bottom:auto;">{{ user.name }}</p>
+      <div class="container-user">
+        <div class="container-metadata">
+          <img v-bind:src="user.imageUrl" class="profile-img" />
+          <p
+            class="font-username"
+            style="
+              margin: 0 0 0 0;
+              margin-left: 15px;
+              height: 100%;
+              padding-bottom: 2px;
+            "
+          >
+            {{ user.name }}
+          </p>
+        </div>
+        <div
+          v-if="user.status == 'ONLINE'"
+          class="status-light status-light-away"
+        ></div>
+        <div
+          v-if="user.status == 'AWAY'"
+          class="status-light status-light-online"
+        ></div>
       </div>
     </div>
   </div>
@@ -38,9 +57,13 @@ export default {
       return str_display + str_width + str_height;
     },
   },
+  data: function() {
+      return {
+      };
+  },
 
   mounted() {
-      console.log("User List Mounted!");
+    console.log("User List Mounted!");
   },
 
   methods: {
@@ -55,13 +78,45 @@ export default {
 
 
 <style scoped>
-.item-inner {
+.profile-img {
+  width: 35px;
+  height: 35px;
+}
+
+.status-light {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 20px;
+}
+
+.status-light-online {
+  background-color: rgb(14, 175, 14);
+}
+
+.status-light-away {
+  background-color: orange;
+}
+
+.container-metadata {
   display: flex;
   flex-direction: row;
-  justify-content: left;
   align-items: center;
-  margin-left:15px;
-  margin-bottom:20px;
+  justify-content: left;
+  margin: auto;
+  margin-left: 0;
+}
+
+.container-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 15px;
+  margin-bottom: 20px;
 }
 
 .font-username {

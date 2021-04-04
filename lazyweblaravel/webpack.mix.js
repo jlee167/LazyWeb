@@ -30,6 +30,11 @@ mix.postCss('resources/css/login.css', 'public/css', [
 ]);
 mix.postCss('resources/css/dashboard.css', 'public/css', [
 ]);
+mix.postCss('resources/css/support.css', 'public/css', [
+]);
+
+mix.postCss('resources/css/main.css', 'public/css', [
+]);
 
 
 mix.postCss('resources/css/full-page-scroll.css', 'public/css', [
