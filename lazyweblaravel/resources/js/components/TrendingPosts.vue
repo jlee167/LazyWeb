@@ -1,11 +1,11 @@
 <template>
   <div class="list-container">
       <div class="list-header">
-            Trending
+            {{title}}
         </div>
     <div class="list" v-for="content in contents" :key="content">
       <div class="post-item">
-        <a class="font-title">
+        <a class="font-title" onmouseover="" style="cursor: pointer; color:blue;" v-on:click="content.callback(content.id, content.forum)">
           {{ content.title }}
         </a>
 
@@ -22,6 +22,12 @@
 export default {
   props: {
     contents: Array,
+    title:    String
+  },
+  data: function () {
+    return {
+
+    };
   },
 };
 </script>

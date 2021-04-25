@@ -38,7 +38,7 @@
     @include('includes.layouts.navbar')
 
     <div class="section-contents" style="overflow:hidden; display:flex; flex-direction:row;
-                                            background-color:rgb(250, 202, 246);">
+                                            background-color:rgb(250, 202, 246); margin-top:0px !important;">
         <div id="support_sidebar" class="resume-sidebar" style="background-color:#9a6ea5;
                                                                 min-width:70px;
                                                                 width:70px;
@@ -47,6 +47,7 @@
                                                                 flex-direction:column;
                                                                 text-align:center;
                                                                 margin-top:0px;
+                                                                padding-top:70px;
                                                                 ">
 
             <a style="display:flex; flex-direction:column; margin-top:40px;"
@@ -77,7 +78,7 @@
 
         <div style="width:auto; margin-top:30px; margin-left:40px; overflow:hidden; max-width: 600px;">
             <!-- FAQ View -->
-            <section id="FAQ">
+            <section id="FAQ" style="padding-top:70px;">
                 <div>
                     <h3 style="color:#343032"> F.A.Q </h3>
                     <hr>
@@ -99,7 +100,7 @@
 
 
             <!-- Request View -->
-            <section id="request_view">
+            <section id="request_view" style="padding-top:70px;">
                 <div>
                     <h3 style="color:#343032"> Make your requests here! </h3>
                     <hr>
@@ -130,6 +131,9 @@
                             <option value="LEGAL">Legal</option>
                         </select>
 
+                        <label for="email" style="width:100%;font-family: 'Nunito' !important;
+                        font-weight: 650 !important;">Your Email</label><br>
+                        <input type="text" id="email" name="email" style="width:100%; min-width:500px;"><br><br>
 
                         <label for="contents" style="width:100%;
                                             font-family: 'Nunito' !important;
@@ -178,6 +182,7 @@
             var type_sel = document.getElementById("type");
             var type = type_sel.options[type_sel.selectedIndex].value;
             var text = document.getElementById("summernote").value;
+            var contact = document.getElementById("email").value;
 
             /* Acquire CSRF Token from server */
             var csrf = "{{ csrf_token() }}";
@@ -190,16 +195,18 @@
             xmlRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
 
             xmlRequest.onload = function() {
+                console.log(xmlRequest.responseText);
                 if (xmlRequest.responseText == 'true') {
                     window.alert("Your request has been submitted!");
                 }
-                window.location.href = '/views/support';
+                //window.location.href = '/views/support';
             }
 
             xmlRequest.send(
                 JSON.stringify({
                     "type"      : String(type),
-                    "contents"  : text
+                    "contents"  : text,
+                    "contact"   : contact
                 })
             )
         }

@@ -47,7 +47,7 @@
 
         <div style="display:flex; flex-direction:column;">
             <p style="color:white; white-space:nowrap;">Want to participate in my projects?</p>
-            <a id="signBtn" class="btn btn-outline-success" href="" role="button"
+            <a id="signBtn" class="btn btn-outline-success" href="/views/register" role="button"
                 style="width:130px; height:45px; line-height:30px;">
                 Sign up!
             </a>

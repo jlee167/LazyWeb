@@ -12,19 +12,19 @@
                     style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;"> LazyBoy </h2>
                 <hr style="border-top: 1px solid; width:80%; border-width:1px; color:white;">
                 <a href="#profile" style="color:white;">
-                    <h5 class="mb-3"><b>Overview</b> <br></h2>
+                    <h5 class="mb-3"><b>Overview</b> </h2>
                 </a>
                 <a href="#skills" style="color:white;">
-                    <h5 class="mb-3"><b>Skills</b><br></h2>
+                    <h5 class="mb-3"><b>Skills</b></h2>
                 </a>
                 <a href="#rtl" style="color:white;">
-                    <h5 class="mb-3"><b>RTL</b><br></h2>
+                    <h5 class="mb-3"><b>RTL</b></h2>
                 </a>
                 <a href="#hardware" style="color:white;">
-                    <h5 class="mb-3"> <b>Hardware</b><br></h2>
+                    <h5 class="mb-3"> <b>Hardware</b></h2>
                 </a>
                 <a href="#software" style="color:white;">
-                    <h5 class="mb-3"><b>Software</b><br></h2>
+                    <h5 class="mb-3"><b>Software</b></h2>
                 </a>
 
                 <hr style="border-top: 1px solid; width:80%; border-width:1px; color:white;">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="resume-contents" style="display:inline-block; margin-top:0px; overflow-y:scroll;">
+            <div class="resume-contents" style=" margin-top:0px; overflow-y:scroll;">
                 <div style="overflow:hidden;">
                     <section id="profile">
                         <h2 class="mb-6" style="color:#343032;"> <b> Profile </b></h2>
@@ -70,36 +70,36 @@
                                     <td
                                         style="padding-top:20px; padding-bottom:20px;
                                                         padding-left:20px; padding-right:20px; border-right:1px solid;">
-                                        <p style="display:inline-block; margin-bottom:0px;">Sytemverilog</p>
-                                        <br>
-                                        <skill-bar v-bind:level='2'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Verilog</p>
-                                        <br>
-                                        <skill-bar v-bind:level='2'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">VHDL</p>
-                                        <br>
-                                        <skill-bar v-bind:level='0'></skill-bar><br>
+                                        <p style=" ">Sytemverilog</p>
+
+                                        <skill-bar v-bind:level='2'></skill-bar>
+                                        <p style=" ">Verilog</p>
+
+                                        <skill-bar v-bind:level='2'></skill-bar>
+                                        <p style=" ">VHDL</p>
+
+                                        <skill-bar v-bind:level='0'></skill-bar>
                                     </td>
                                     <td style="padding-top:20px; padding-bottom:20px;
                                                     padding-left:20px; padding-right:20px;">
-                                        <p style="display:inline-block; margin-bottom:0px;">Artix7/Kintex7</p>
-                                        <br>
-                                        <skill-bar v-bind:level='2'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Zynq Ultrascale+</p>
-                                        <br>
-                                        <skill-bar v-bind:level='1'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Lattice FPGA</p>
-                                        <br>
-                                        <skill-bar v-bind:level='0'></skill-bar><br>
+                                        <p style=" ">Artix7/Kintex7</p>
+
+                                        <skill-bar v-bind:level='2'></skill-bar>
+                                        <p style=" ">Zynq Ultrascale+</p>
+
+                                        <skill-bar v-bind:level='1'></skill-bar>
+                                        <p style=" ">Lattice FPGA</p>
+
+                                        <skill-bar v-bind:level='0'></skill-bar>
                                     </td>
                                     <td style="padding-top:20px; padding-bottom:20px;
                                                     padding-left:20px; padding-right:20px; vertical-align:top;">
-                                        <p style="display:inline-block; margin-bottom:0px;">Cortex-M</p>
-                                        <br>
-                                        <skill-bar v-bind:level='1'></skill-bar><br>
-                                        <p style="display:inline-block; margin-bottom:0px;">Cortex-A</p>
-                                        <br>
-                                        <skill-bar v-bind:level='0'></skill-bar><br>
+                                        <p style=" ">Cortex-M</p>
+
+                                        <skill-bar v-bind:level='1'></skill-bar>
+                                        <p style=" ">Cortex-A</p>
+
+                                        <skill-bar v-bind:level='0'></skill-bar>
                                     </td>
                                 </tr>
                             </table>
@@ -117,29 +117,29 @@
                             <tr>
                                 <td style="padding-top:20px; padding-bottom:20px;
                                                 padding-left:20px; padding-right:20px;">
-                                    <p style="display:inline-block; margin-bottom:0px;">C</p>
-                                    <br>
-                                    <skill-bar v-bind:level='1'></skill-bar><br>
-                                    <p style="display:inline-block; margin-bottom:0px;">C++</p>
-                                    <br>
-                                    <skill-bar v-bind:level='0'></skill-bar><br>
-                                    <p style="display:inline-block; margin-bottom:0px;">Python</p>
-                                    <br>
-                                    <skill-bar v-bind:level='1'></skill-bar><br>
+                                    <p style=" ">C</p>
+
+                                    <skill-bar v-bind:level='1'></skill-bar>
+                                    <p style=" ">C++</p>
+
+                                    <skill-bar v-bind:level='0'></skill-bar>
+                                    <p style=" ">Python</p>
+
+                                    <skill-bar v-bind:level='1'></skill-bar>
                                 </td>
 
 
                                 <td style="padding-top:20px; padding-bottom:20px;
                                                 padding-left:20px; padding-right:20px; vertical-align:top;">
-                                    <p style="display:inline-block; margin-bottom:0px;">Java</p>
-                                    <br>
-                                    <skill-bar v-bind:level='0'></skill-bar><br>
-                                    <p style="display:inline-block; margin-bottom:0px;">C#</p>
-                                    <br>
-                                    <skill-bar v-bind:level='0'></skill-bar><br>
-                                    <p style="display:inline-block; margin-bottom:0px;">x86/ARM Assembly</p>
-                                    <br>
-                                    <skill-bar v-bind:level='0'></skill-bar><br>
+                                    <p style=" ">Java</p>
+
+                                    <skill-bar v-bind:level='0'></skill-bar>
+                                    <p style=" ">C#</p>
+
+                                    <skill-bar v-bind:level='0'></skill-bar>
+                                    <p style=" ">x86/ARM Assembly</p>
+
+                                    <skill-bar v-bind:level='0'></skill-bar>
                                 </td>
                             </tr>
                         </table>
@@ -153,13 +153,13 @@
                             </tr>
                             <tr>
                                 <td style="padding-top:20px; padding-bottom:20px; text-align:center;">
-                                    <p style="display:inline-block; margin-bottom:0px;">Linux</p>
-                                    <br>
-                                    <p style="display:inline-block; margin-bottom:0px;">Android</p>
-                                    <br>
-                                    <p style="display:inline-block; margin-bottom:0px;">RTOS</p>
-                                    <br>
-                                    <p style="display:inline-block; margin-bottom:0px;">Windows</p>
+                                    <p style=" ">Linux</p>
+
+                                    <p style=" ">Android</p>
+
+                                    <p style=" ">RTOS</p>
+
+                                    <p style=" ">Windows</p>
                                 </td>
 
                             </tr>
@@ -179,18 +179,18 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Digital Electronics<br>Analog Electronics<br>CMOS Circuit<br>PCB
-                                        Artwork<br>Firmware<br>Device Driver<br><br></td>
-                                    <td>Embedded Linux<br>Digital Camera<br>ASIC<br><br></td>
-                                    <td>Qt5 GUI<br>.NET Windows GUI<br>Android Mobile Dev<br>Basic
-                                        Networking<br><br><br><br></td>
-                                    <td>Atmel SAM / TI C2000<br>Cortex-A Processors w/Linux<br>Logic
-                                        Analyzer<br>Oscilloscope<br>Beagle Analyzer<br><br><br></td>
+                                    <td>Digital ElectronicsAnalog ElectronicsCMOS CircuitPCB
+                                        ArtworkFirmwareDevice Driver</td>
+                                    <td>Embedded LinuxDigital CameraASIC</td>
+                                    <td>Qt5 GUI.NET Windows GUIAndroid Mobile DevBasic
+                                        Networking</td>
+                                    <td>Atmel SAM / TI C2000Cortex-A Processors w/LinuxLogic
+                                        AnalyzerOscilloscopeBeagle Analyzer</td>
                                     <td> </td>
-                                    <td>UART<br>I2C<br>SPI<br>USB 1.0/2.0<br>Ethernet<br>IR Light
-                                        Communication<br>MIPI/Parallel<br>Camera Interface</td>
+                                    <td>UARTI2CSPIUSB 1.0/2.0EthernetIR Light
+                                        CommunicationMIPI/ParallelCamera Interface</td>
                                     <td></td>
-                                    <td>TCP<br>UDP<br><br><br><br><br><br><br></td>
+                                    <td>TCPUDP</td>
                                 </tr>
                             </table>
 
@@ -206,18 +206,18 @@
                                     <tr>
                                         <td style="padding-top:20px; padding-bottom:20px;
                                                 padding-left:20px; padding-right:20px;">
-                                            <p style="display:inline-block; margin-bottom:0px;">HTML</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">CSS</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">Javascript</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">PHP</p>
-                                            <br>
-                                            <skill-bar v-bind:level='1'></skill-bar><br>
+                                            <p style=" ">HTML</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">CSS</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">Javascript</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">PHP</p>
+
+                                            <skill-bar v-bind:level='1'></skill-bar>
                                         </td>
 
                                     </tr>
@@ -233,15 +233,15 @@
                                     <tr>
                                         <td style="padding-top:20px; padding-bottom:20px;
                                                 padding-left:20px; padding-right:20px;">
-                                            <p style="display:inline-block; margin-bottom:0px;">MySQL / MariaDB</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">MongoDB</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">ArangoDB</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
+                                            <p style=" ">MySQL / MariaDB</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">MongoDB</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">ArangoDB</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
                                         </td>
 
                                     </tr>
@@ -257,15 +257,15 @@
                                     <tr>
                                         <td style="padding-top:20px; padding-bottom:20px;
                                                 padding-left:20px; padding-right:20px;">
-                                            <p style="display:inline-block; margin-bottom:0px;">Bootstrap</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">Apache</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">REST API</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
+                                            <p style=" ">Bootstrap</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">Apache</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
+                                            <p style=" ">REST API</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
                                         </td>
 
                                     </tr>
@@ -282,12 +282,12 @@
                                     <tr>
                                         <td style="padding-top:20px; padding-bottom:20px;
                                                     padding-left:20px; padding-right:20px;">
-                                            <p style="display:inline-block; margin-bottom:0px;">Laravel</p>
-                                            <br>
-                                            <skill-bar v-bind:level='1'></skill-bar><br>
-                                            <p style="display:inline-block; margin-bottom:0px;">NodeJS</p>
-                                            <br>
-                                            <skill-bar v-bind:level='0'></skill-bar><br>
+                                            <p style=" ">Laravel</p>
+
+                                            <skill-bar v-bind:level='1'></skill-bar>
+                                            <p style=" ">NodeJS</p>
+
+                                            <skill-bar v-bind:level='0'></skill-bar>
                                         </td>
                                     </tr>
                                 </table>

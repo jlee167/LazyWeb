@@ -14,6 +14,20 @@
       >
         {{ content.relationship }}
       </p>
+
+      <p
+        v-if="content.relationship === macro_guardian"
+        class="btn btn-warning text-default"
+      >
+        Accept
+      </p>
+
+      <p
+        v-if="content.relationship === macro_guardian"
+        class="btn btn-danger text-default"
+      >
+        Decline
+      </p>
     </div>
   </div>
 </template>

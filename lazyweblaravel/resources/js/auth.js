@@ -3,6 +3,7 @@
 /*                               Login Functions                              */
 /* -------------------------------------------------------------------------- */
 
+
 /**
  *
  * @param {String} csrf
@@ -10,7 +11,7 @@
  * @param {String} provider
  * @param {String} redirectUrl
  */
- window.authWithOauth2 = function (csrf, accessToken, provider, redirectUrl) {
+window.authWithOauth2 = function (csrf, accessToken, provider, redirectUrl) {
     /* Sign in and return to previous url on success. */
     let loginRequest = new XMLHttpRequest();
     var authUri = '/auth/' + provider;
@@ -22,15 +23,14 @@
     loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
     loginRequest.onload = function() {
         console.log(loginRequest.responseText);
-        /*
+        var response = JSON.parse(loginRequest.responseText);
         if (response.authenticated == true) {
             console.log("Successfully authenticated by LazyWeb!");
             window.location.href = redirectUrl;
         }
         else {
-            console.log("Login Failed!");
+            window.alert(response.error);
         }
-        */
     };
 
 
@@ -63,7 +63,7 @@ window.authWithUname = function (csrf, username, password, redirectUrl) {
             window.location.href = redirectUrl;
         }
         else {
-            window.alert("Login Failed!");
+            window.alert(response.error);
         }
     };
 
@@ -79,6 +79,44 @@ window.authWithUname = function (csrf, username, password, redirectUrl) {
 /* -------------------------------------------------------------------------- */
 
 
+
+
+
+
+/* -------------------------------------------------------------------------- */
+/*                           User Register Functions                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ *
+ * @param {*} csrf
+ * @param {*} userInfo
+ * @param {*} redirectUrl
+ */
+window.sendRegisterRequest = function (csrf, userInfo ,redirectUrl) {
+    /* Sign in and return to previous url on success. */
+    let registerRequest = new XMLHttpRequest();
+    registerRequest.open('POST', '/members/' + userInfo.username, true);
+    registerRequest.setRequestHeader('Content-Type', 'application/json');
+    registerRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
+    registerRequest.onload = function() {
+        console.log(registerRequest.responseText);
+        var response = JSON.parse(registerRequest.responseText);
+        if (response.registered == true) {
+            console.log("Successfully registered user!");
+            //window.location.href = redirectUrl;
+        }
+        else {
+            window.alert(response.error);
+        }
+    };
+
+    console.log(userInfo);
+    registerRequest.send(JSON.stringify(userInfo));
+}
+/* -------------------------------------------------------------------------- */
+/*                          /User Register Functions                          */
+/* -------------------------------------------------------------------------- */
 
 
 

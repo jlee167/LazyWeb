@@ -61,7 +61,7 @@ CREATE TABLE users (
 
     faceshot_url    VARCHAR(200) DEFAULT NULL,
 
-    email           VARCHAR(50) UNIQUE NOT NULL,
+    email           VARCHAR(50) UNIQUE DEFAULT NULL,
     cell            VARCHAR(20) DEFAULT NULL,
     stream_id       VARCHAR(32) UNIQUE DEFAULT NULL,
     stream_key      VARCHAR(32) NOT NULL, /* Todo: Make Bcrypt Hash */
@@ -174,7 +174,7 @@ CREATE TABLE posts (
                         'general',
                         'tech'
                     ),
-    title           VARCHAR(50) NOT NULL,
+    title           VARCHAR(100) NOT NULL,
     author          VARCHAR(20) NOT NULL,
     date            TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
     view_count      INT NOT NULL DEFAULT 0,
@@ -203,12 +203,11 @@ CREATE TABLE comments (
 
 CREATE TABLE support_request (
     id       INT auto_increment PRIMARY KEY,
-    uid      INT NOT NULL,
+    uid      INT DEFAULT NULL,
+    contact  VARCHAR(60) NOT NULL,
     type     ENUM ('REPAIR', 'TECH_SUPPORT', 'REFUND', 'LEGAL'),
-    status   ENUM('PENDING', 'RESPONDED', 'RESOLVED'),
-    contents MEDIUMTEXT,
-
-    FOREIGN KEY (uid) REFERENCES users(id) ON UPDATE CASCADE
+    status   ENUM('PENDING', 'RESPONDED', 'RESOLVED') DEFAULT 'PENDING',
+    contents MEDIUMTEXT
 ) ENGINE=INNODB;
 
 
@@ -371,6 +370,7 @@ END $$
 
 
 
+
 CREATE PROCEDURE GetStreamKey(
     IN username VARCHAR(30)
 )
@@ -379,6 +379,7 @@ BEGIN
     FROM    users
     WHERE   users.username=username;
 END $$
+
 
 
 
@@ -392,6 +393,7 @@ BEGIN
     FROM   users
     WHERE  users.username = username;
 END $$
+
 
 
 
@@ -507,6 +509,23 @@ END $$
 
 
 
+CREATE PROCEDURE GetPendingRequests(
+    IN uid INT
+)
+BEGIN
+
+    SELECT *
+    FROM   guardianship
+    WHERE   ( guardianship.uid_protected = uid
+                AND guardianship.signed_protected IS FALSE )
+            OR ( guardianship.uid_guardian = uid
+                AND guardianship.signed_guardian IS FALSE );
+
+END $$
+
+
+
+
 CREATE PROCEDURE ReportEmergency(
     IN username VARCHAR(60)
 )
@@ -575,7 +594,6 @@ BEGIN
             AND users.status = "danger_urgent";
 */
 END $$
-
 
 
 
@@ -739,6 +757,36 @@ BEGIN
     );
 END $$
 
+
+
+
+CREATE PROCEDURE GetTrendingPosts(
+)
+BEGIN
+    SELECT id,
+           title,
+           forum,
+           DATE(date) AS date
+    FROM   posts
+    WHERE  date BETWEEN ( Now() - INTERVAL 7 day ) AND Now()
+    ORDER  BY view_count DESC
+    LIMIT  10;
+END$$
+
+
+
+
+CREATE PROCEDURE GetTopPosts(
+)
+BEGIN
+    SELECT id,
+           title,
+           forum,
+           DATE(date) AS date
+    FROM   posts
+    ORDER  BY view_count DESC
+    LIMIT  10;
+END$$
 
 
 

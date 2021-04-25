@@ -22,20 +22,20 @@
                 // Request scopes in addition to 'profile' and 'email'
                 //scope: 'additional_scope'
                 });
-
                 attachSignin(document.getElementById('customBtn'));
             });
             };
 
             function attachSignin(element) {
-                console.log(element.id);
-                auth2.attachClickHandler(element, {},
-                    function(googleUser) {
-                        document.getElementById('name').innerText = "Signed in: " +
-                            googleUser.getBasicProfile().getName();
-                    }, function(error) {
-                        alert(JSON.stringify(error, undefined, 2));
-                    });
+            console.log(element.id);
+            auth2.attachClickHandler(element, {},
+                function(googleUser) {
+                    document.getElementById('name').innerText = "Signed in: " +
+                        googleUser.getBasicProfile().getName();
+                    googleLogin(googleUser.getAuthResponse().id_token);
+                }, function(error) {
+                    alert(JSON.stringify(error, undefined, 2));
+                });
             }
         </script>
         <style type="text/css">
@@ -108,26 +108,25 @@
                 <table style="width:100%;align:center; margin:auto; margin-top:15px; margin-bottom:30px; background-color:transparent;">
                     <tr style="height:50px; display:flex; justify-content:center;">
                         <td style="margin:auto; width:100%;">
-                            <a id="kakao-login-btn" href="javascript:loginWithKakao()"
-                            >
-                                <div style="display:flex; justify-content:center; align-items:center; width:100%;height:40px; border-radius:5px;
+                            <a class="hover-no-effect" id="kakao-login-btn" href="javascript:loginWithKakao()">
+                                <div class="btn-hover-shadow" style="display:flex; justify-content:center; align-items:center; width:100%;height:40px; border-radius:5px;
                                     background-color:#FEE500;">
                                     <img class="icon" src="{{asset('/images/kakao_icon.png')}}"
                                         style="display:inline-block; width:22px; height:20px;"
                                     >
-                                    <span class="buttonText" style="display:inline-block;">Login with Kakao</span>
+                                    <span class="buttonText"> Login with Kakao</span>
                                 </div>
                             </a>
                             <a href="http://alpha-developers.kakao.com/logout"></a>
                         </td>
                     </tr>
 
-                    <tr style="text-align:center; margin:auto; display:flex; justify-content:center;">
+                    <tr style="text-align:center; margin:auto; margin-top:5px; display:flex; justify-content:center;">
                         <td style="margin:auto; width:100%;">
                             <!-- In the callback, you would hide the gSignInWrapper element on a
                             successful sign in -->
                             <div id="gSignInWrapper">
-                                <div id="customBtn" class="customGPlusSignIn">
+                                <div class="btn-hover-shadow" id="customBtn" class="customGPlusSignIn">
                                     <img class="icon" src="https://developers.google.com/identity/images/g-logo.png">
                                     <span class="buttonText"> Login with Google</span>
                                 </div>
@@ -141,7 +140,7 @@
                 </table>
                 <div style="display:flex; flex-direction: row; align-items:center; justify-content:center; margin-bottom: 20px;">
                     <p style="vertical-align: middle; margin:0 0 0 0; font-family: 'Nunito Sans', sans-serif;">Not a member yet?</p>
-                    <a style="vertical-align: middle; margin:0 0 0 10px;"> <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b> </a>
+                    <a style="vertical-align: middle; margin:0 0 0 10px;" href="/views/register"> <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b> </a>
                 <!--button type="button" class="btn" style="background-color:#e7ba3e; color: white; width:100px; height:50px;
                         font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-top: 20px; margin-bottom:20px;"
                         onclick="">
@@ -172,9 +171,8 @@
             function loginWithKakao() {
                 Kakao.Auth.login({
                 success: function(authObj) {
-                    alert(JSON.stringify(authObj))
                     var token_kakao = Kakao.Auth.getAccessToken();
-                    console.log(token_kakao);
+                    kakaoLogin(token_kakao);
                 },
                 fail: function(err) {
                     alert(JSON.stringify(err))
@@ -208,8 +206,7 @@
         /*                            Authentication Functions                        */
         /* -------------------------------------------------------------------------- */
 
-
-            var csrf = "{{ csrf_token() }}";
+        var csrf = "{{ csrf_token() }}";
 
             /* ---------------------- Login with Username/Password ---------------------- */
             function nonSocialLogin(){

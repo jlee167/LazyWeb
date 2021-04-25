@@ -104,15 +104,30 @@
                 </div>
             </div>
             <div class="chat-inputarea">
-                <form id="form" style="margin:auto; margin-bottom:20px; width:80%; height:100px; display:flex; flex-direction:row; justify-content:center;
+                <form id="form" style="margin:auto; padding-top:15px; padding-bottom:15px; width:100%; height:70px; display:flex; flex-direction:row;
+								justify-content:center;">
+
+                    <input id="input" type="text" autocomplete="off"
+                    style="background-color:transparent; margin-right:20px; margin-left:20px;
+                    border-style:solid;
+                    border-left-width:0px; border-right-width:0px; border-top-width:0px !important; border-bottom-width:1;
+                    outline:none;
+                    height:30px; color:white;" placeholder="Message">
+           <br>
+
+                    <button class="btn btn-outline-light" type="submit" style="border-radius:5px; margin-right:20px; ">send</button>
+                </div>
+            </div>
+            <!--div class="chat-inputarea">
+                <form id="form" style="margin:auto; margin-bottom:20px; padding-top:15px; padding-bottom:15px; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center;
 								align-items:center;">
 
-                    <textarea id="input" type="text" style="height:50px; border-radius:5px;" placeholder="Message">
+                    <textarea id="input" type="text" style="height:80px; border-radius:5px;" placeholder="Message">
 						</textarea><br>
 
-                    <button style="height:50px; border-radius:5px;">send</button>
+                    <button type="submit" style="height:100%; border-radius:5px;">send</button>
                 </form>
-            </div>
+            </div-->
         </div>
     </div>
 

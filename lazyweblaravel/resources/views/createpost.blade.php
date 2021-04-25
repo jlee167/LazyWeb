@@ -25,7 +25,7 @@
 
 		<div style="margin:auto; width:100vw;height:100vh; margin-top:100px;">
             <form   action="/forum/general/post" enctype="multipart/form-data" method="POST"
-                    style="margin:auto; margin-top:100px; width:60%;height:60%;">
+                    style="margin:auto; margin-top:100px;  width:60%;height:60%;">
                 @csrf
                 <select id="forum_name" name="type" style="padding-right:10px;
                     padding-left:10px; margin-left:15px; margin-top:auto;
@@ -44,7 +44,7 @@
 				<label for="content" style="width:100%">Content</label><br>
                 <textarea id="summernote" name="content" style="width:100%; min-width:500px; height:60%;"></textarea><br>
 
-				<input class="btn btn-primary" onclick="clickFunc();"  value="submit" style="float:right; margin-top:15px; width: 100px;">
+				<input class="btn btn-primary" onclick="clickFunc();"  value="submit" style="float:right; margin-top:15px;margin-bottom:50px; width: 100px;">
 			</form>
 		</div>
 

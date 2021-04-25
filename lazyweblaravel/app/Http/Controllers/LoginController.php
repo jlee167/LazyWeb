@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Redirector;
 use APP\Models\User;
-
+use App\Http\Controllers\OauthTokenController as Oauth;
 
 
 
@@ -28,7 +29,7 @@ class LoginController extends BaseController
                 "authenticated"     => true,
             ]);
         } else {
-            return $this->auth_uname($request);
+            return $this->authWithUname($request);
         }
     }
 
@@ -47,14 +48,13 @@ class LoginController extends BaseController
     }
 
 
-
     /**
      * Authenticate with Username
      *
      * @param  mixed    $request
      * @return string   authentication result (JSON Object)
      */
-    public function auth_uname(Request $request)
+    public function authWithUname(Request $request)
     {
         $username = $request->input('username');
         $password = $request->input('password');
@@ -73,88 +73,119 @@ class LoginController extends BaseController
                 "token"           => "/",
                 "href"            => redirect()->intended()->getTargetUrl(),
                 "authenticated"   => false,
+                "error"           => "Error: Invalid Credential!"
             ];
         }
         return json_encode($retval);
     }
 
 
-
     /**
-     * auth_kakao
+     * authWithKakao
      *
      * @param  mixed $request
      * @return void
      */
-    public function auth_kakao(Request $request)
+    public function authWithKakao(Request $request)
     {
-        $access_token = $request->token;
-        oauth_kakao($access_token);
-    }
+        $kakaoUser = Oauth::getKakaoUser($request->accessToken);
+        $user = DB::table('users')
+            ->where('auth_provider', '=', 'Kakao')
+            ->where('uid_oauth', '=', $kakaoUser['uid'])
+            ->first();
 
 
-
-    /**
-     * auth_google
-     *
-     * @param  mixed $request
-     * @return void
-     */
-    public function auth_google(Request $request)
-    {
-        $access_token = $request->token;
-        oauth_google($access_token);
-    }
-
-
-    /**
-     * Authenticate users with Kakao tokens
-     *
-     * @param Request $request      // Contains login credentials
-     */
-    public function oauth_kakao(string $access_token)
-    {
-        /*
-            Make Rest API Request to Kakao.
-            Response includes account information for user registration and sign in process.
-		 */
-        $authorization = 'Authorization: Bearer ' . $access_token;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_token));
-        curl_setopt($ch, CURLOPT_URL, 'https://kapi.kakao.com/v2/user/me');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-
-        // Get http response
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        //echo "access_token: " . $access_token . "\n";
-        //echo 'http code: ' . $http_code . "\n";
-        //echo $result;
-        $result = json_decode($result, true);
-
-        $uid = $result["id"];
-        $name = $result["properties"]["nickname"];
-        $email = $result["kakao_account"]["email"];
-        $profile_picture = $result["kakao_account"]["profile"]["thumbnail_image_url"];
-
-        if (!$result) {
-            echo 'No response from Kakao Auth Server \n';
-            exit;
+        try {
+            if (Auth::loginUsingId($user->id)) {
+                return json_encode([
+                    "token"             => Auth::check(),
+                    "href"              => route('main'),
+                    "authenticated"     => true,
+                ]);
+            } else {
+                return json_encode([
+                    "token"             => Auth::check(),
+                    "href"              => route('main'),
+                    "authenticated"     => false,
+                    "error"             => "Invalid Credential"
+                ]);
+            }
+        } catch (\Exception $e) {
+            return json_encode([
+                "authenticated"     => false,
+                "error"             => "Server Error: Unexpected exception"
+            ]);
         }
     }
 
 
     /**
-     * Authenticate users with Google tokens
+     * authWithGoogle
      *
-     * @param Request $request      // Contains login credentials
+     * @param  mixed $request
+     * @return void
      */
-    public function oauth_google(Request $request)
+    public function authWithGoogle(Request $request)
     {
+        try {
+            $client = new \Google_Client();
+            $client->setClientId('1083086831094-qatr04h8rnthlm9501q2oa45mjkjh4r0.apps.googleusercontent.com');
+            $client->setClientSecret('fGLi65s6_vDNunavqdCFrZom');
+            if ($request->accessToken) {
+                $payload = $client->verifyIdToken($request->accessToken);
+            }
+
+            if ($payload) {
+                $uid = $payload['sub'];
+                $email = $payload['email'];
+                $verified = $payload['email_verified'];
+                $name = $payload['name'];
+                $profile_picture = $payload['picture'];
+            } else {
+                // Invalid ID token
+                return "PHP server error: Invalid access token\n";
+            }
+
+            if ($verified == 0) {
+                return 'Google token is not verified \n';
+            }
+        } catch (\Exception $e) {
+            return "error@!";
+        }
+
+
+        $user = DB::table('users')
+            ->where('auth_provider', '=', 'Google')
+            ->where('uid_oauth', '=', $payload['sub'])
+            ->first();
+
+        if ($user == NULL)
+            return json_encode([
+                "token"             => Auth::check(),
+                "href"              => route('main'),
+                "authenticated"     => false,
+                "error"             => "User does not exist!"
+            ]);
+
+        try {
+            if (Auth::loginUsingId($user->id)) {
+                return json_encode([
+                    "token"             => Auth::check(),
+                    "href"              => route('main'),
+                    "authenticated"     => true,
+                ]);
+            } else {
+                //@Todo
+            }
+        } catch (\Exception $e) {
+            return json_encode([
+                "authenticated"     => false,
+                "error"             => "Server Error: Unexpected exception"
+            ]);
+        }
     }
+
+
 
 
     /**

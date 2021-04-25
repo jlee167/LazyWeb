@@ -28,7 +28,7 @@ class ForumController extends Controller
     {
         $forum = 'forum_' . trim($forum);
         $num_rows =  DB::table($forum)->count();
-        $num_pages = (int)ceil($num_rows/10);
+        $num_pages = (int)ceil($num_rows / 10);
 
         if (empty($page_requested))
             $result = self::DEFAULT_PAGE;
@@ -66,9 +66,8 @@ class ForumController extends Controller
     {
         try {
             return DB::table('posts')
-                ->where('forum', '=', 'general')
-                ->where('title', 'like', '%'.$keyword.'%')
-                //->orWhere('contents', 'like', '%'.$keyword.'%')
+                ->where('forum', '=', $forum_name)
+                ->where('title', 'like', '%' . $keyword . '%')
                 ->orderByDesc('id')
                 ->forPage(1, self::MAX_POSTS_PER_PAGE)
                 ->get();
@@ -82,11 +81,35 @@ class ForumController extends Controller
      */
     public static function get_pagecount(string $forum_name)
     {
-        return ceil( (int)DB::table('posts')->where('forum', '=', $forum_name)->count() / 10);
+        return ceil((int)DB::table('posts')->where('forum', '=', $forum_name)->count() / 10);
     }
 
 
-    public function create_post(Request $request, string $forum_name)
+
+    public static function getTopPosts(Request $request)
+    {
+        try {
+            return DB::select("CALL GetTopPosts()");
+        } catch (Exception $e) {
+
+        }
+    }
+
+    public static function getTrendingPosts(Request $request)
+    {
+        try {
+            return DB::select("CALL GetTrendingPosts()");
+        } catch (Exception $e) {
+
+        }
+    }
+
+
+    /* -------------------------------------------------------------------------- */
+    /*                               CRUD Functions                               */
+    /* -------------------------------------------------------------------------- */
+
+    public function createPost(Request $request, string $forum_name)
     {
         try {
             DB::table('posts')->insert([
@@ -96,47 +119,30 @@ class ForumController extends Controller
                 'view_count'    => strval(0),
                 'contents'      => $request->input('content')
             ]);
-            } catch (Exception $e) {
-                return "Create Post Fail!";
-            }
+        } catch (Exception $e) {
+            return "Create Post Fail!";
+        }
     }
 
 
-    public function post_comment(Request $request)
-    {
-        try {
-            $result =  DB::table('comments')->insert([
-                'author'        => (string)Auth::user()['username'],
-                'contents'      => (string)$request->input('content'),
-                'post_id'       => (int)$request->input('post_id')
-            ]);
-        }
-        catch (Exception $e) {
-            //return $e;
-        }
-
-        //return view('dashboard');
-    }
-
-
-    public function retrieve_post(string $forum_name, string $id)
+    public function retrievePost(string $forum_name, string $post_id)
     {
         try {
             $post = DB::table('posts')
-                        ->where('id', '=', intval($id))
-                        ->where('forum', '=', $forum_name)
-                        ->get();
+                ->where('id', '=', intval($post_id))
+                ->where('forum', '=', $forum_name)
+                ->get();
             $comments = DB::table('comments')
-                        ->where('post_id', '=', intval($id))
-                        ->get();
-        }
-        catch (Exception $e) {
+                ->where('post_id', '=', intval($post_id))
+                ->get();
+        } catch (Exception $e) {
             return $e;
         }
-        /* Todo: Check if response is empty */
 
+        DB::table('posts')
+            ->where('id', '=', intval($post_id))
+            ->increment('view_count');
 
-        /* Todo: Delete this test snippet */
         return json_encode(
             [
                 'post'      => $post,
@@ -146,35 +152,113 @@ class ForumController extends Controller
     }
 
 
-    public function delete_post(string $id)
+    public function updatePost(Request $request, string $post_id)
     {
-        $post = DB::table('posts')->select('')->where('id', '=', intval($id));
-        /* Todo: Check if response is empty */
-
-        /* Todo: Delete this test snippet */
-        return json_encode($post);
+        try {
+            $result = DB::table('posts')
+                ->where('id', '=', intval($post_id))
+                ->update([
+                    'title'         => $request->input('title'),
+                    'author'        => Auth::user()['username'],
+                    'contents'      => $request->input('content')
+                ]);
+            return json_encode($result);
+        } catch (Exception $e) {
+            return json_encode($e);
+        }
     }
 
 
-    public function update_post(string $id)
+    public function deletePost(string $post_id)
     {
-        $post = DB::table('posts')->where('id', '=', intval($id));
-        /* Todo: Check if response is empty */
-
-        /* Todo: Delete this test snippet */
-        return json_encode($post);
+        try {
+            $post = DB::table('posts')->where('id', '=', intval($post_id))->delete();
+            return json_encode($post);
+        } catch (Exception $e) {
+            return json_encode($e);
+        }
     }
 
 
-    public function request_support(Request $request)
+    public function postComment(Request $request)
     {
-        $post = DB::table('support_request')->insert([
-            'uid'       => Auth::id(),
-            'type'      => $request->type,
-            'status'    => 'PENDING',
-            'contents'  => $request->contents
-        ]);
-        return json_encode($post);
+        try {
+            $result =  DB::table('comments')->insert([
+                'author'        => (string)Auth::user()['username'],
+                'contents'      => (string)$request->input('content'),
+                'post_id'       => (int)$request->input('post_id')
+            ]);
+        } catch (Exception $e) {
+            //return $e;
+        }
+
+        //return view('dashboard');
     }
 
+
+    public function retrieve_comment(Request $request)
+    {
+        // Void. retrive_post function also retrieves comments.
+    }
+
+
+    //@todo
+    public function update_comment(Request $request, string $id)
+    {
+        try {
+            $result =  DB::table('comments')
+                        ->where('id', '=', intval($id))
+                        ->update([
+                            'author'        => (string)Auth::user()['username'],
+                            'contents'      => (string)$request->input('content'),
+                            'post_id'       => (int)$request->input('post_id')
+                        ]);
+        } catch (Exception $e) {
+            //return $e;
+        }
+    }
+
+
+    //@todo
+    public function delete_comment(Request $request)
+    {
+        try {
+            $result =  DB::table('comments')->insert([
+                'author'        => (string)Auth::user()['username'],
+                'contents'      => (string)$request->input('content'),
+                'post_id'       => (int)$request->input('post_id')
+            ]);
+        } catch (Exception $e) {
+            //return $e;
+        }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                               /CRUD Functions                              */
+    /* -------------------------------------------------------------------------- */
+
+
+
+
+    /**
+     * requestSupport
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function requestSupport(Request $request)
+    {
+        try{
+            $post = DB::table('support_request')->insert([
+                'uid'       => Auth::id(),
+                'type'      => $request->type,
+                'status'    => 'PENDING',
+                'contact'   => $request->contact,
+                'contents'  => $request->contents
+            ]);
+            return json_encode($post);
+        } catch (Exception $e) {
+            return json_encode($e);
+        }
+    }
 }

@@ -16,11 +16,6 @@
 
     <!-- Page specific stylesheet(s) -->
     <link rel="stylesheet" href="/css/dashboard.css">
-
-
-    <style>
-
-    </style>
 </head>
 
 
@@ -54,10 +49,10 @@
     <script>
         function searchPosts(keyword) {
             var searchRequest = new XMLHttpRequest();
-            searchRequest.open('GET', '/forum/general/searched/' + String(keyword).trim());
+            searchRequest.open('GET', '/forum/' + forumApp.forum_name + '/searched/' + String(keyword).trim());
             searchRequest.onload = function() {
                 var results = JSON.parse(searchRequest.responseText);
-                console.log(forumApp.posts);
+                console.log(forumApp.forum_name);
                 forumApp.posts = [];
                 console.log(forumApp.posts);
                 for(post in results) {
@@ -69,7 +64,7 @@
                 }
             };
             searchRequest.send( JSON.stringify({
-                forum: 'general',
+                forum: forumApp.forum_name,
                 keyword: keyword
             }));
 
@@ -172,14 +167,16 @@
                             <input type="hidden" id="post_root" name="post_root" value="0">
                             <input type="hidden" id="post_parent" name="post_parent" value="0">
 
-                            <label for="content" style="width:100%; font-family: 'Oswald', sans-serif; font-weight: bold; font-size:20;">
-                                Post Comment</label><br>
-                            <br>
 
                             <?php if (LoginController::get_auth_state()): ?>
+                                <label for="content" style="width:100%; font-family: 'Oswald', sans-serif; font-weight: bold; font-size:20;">
+                                    Post Comment</label><br>
+                                <br>
                                 <summer-note v-bind:post_action="post_action" v-bind:post_id="post_id" v-bind:auth_state="true" v-bind:redirect="redirect_auth"></summer-note>
                             <?php else: ?>
-                                <summer-note v-bind:post_action="post_action" v-bind:post_id="post_id" v-bind:auth_state="false" v-bind:redirect="redirect_auth"></summer-note>
+                                <label for="content" style="width:100%; font-family: 'Oswald', sans-serif; font-weight: bold; font-size:20;">
+                                Login to post comment!</label><br>
+                                <!--summer-note v-bind:post_action="post_action" v-bind:post_id="post_id" v-bind:auth_state="false" v-bind:redirect="redirect_auth"></summer-note-->
                             <?php endif; ?>
 
 
@@ -226,14 +223,20 @@
             <!-- Todo: Work on this section -->
             <div style="display:inline-block; text-align:center; margin-left:0px; margin-right:auto;">
                 <!-- Trending Posts -->
-                <trending-posts v-bind:contents="contents">
+                <trending-posts
+                    v-bind:title    ="title_top_posts"
+                    v-bind:contents ="top_posts"
+                >
                 </trending-posts>
 
                 <!-- Polls -->
                 <div id="polls" class="container-forum-side">
                 </div>
 
-                <trending-posts v-bind:contents="contents">
+                <trending-posts
+                    v-bind:title    ="title_trending_posts"
+                    v-bind:contents ="trending_posts"
+                >
                 </trending-posts>
             </div>
         </div>
@@ -301,21 +304,12 @@
                 page_count:         0,
                 current_page:       0,
                 page_index:         [],
+                title_top_posts:    "TOP POSTS",
+                title_trending_posts: "TRENDING POSTS",
 
-                contents: [{
-                    title: "Trending1",
-                    date: "xx-af-xx"
-                },
-                {
-                    title: "mytitle",
-                    date: "xx-xx-xx"
-                },
-                {
-                    title: "Trending2",
-                    date: "xx-af-xx"
-                }
+                trending_posts:     [],
+                top_posts:          []
 
-                ]
             },
 
             mounted: function(){
@@ -342,6 +336,48 @@
 
 
 
+        function xhttpRequest(reqType, uri, data, callback){
+            var req = new XMLHttpRequest();
+            req.open(reqType, uri);
+            req.setRequestHeader('Content-Type', 'application/json');
+            req.setRequestHeader('X-CSRF-TOKEN', csrf);
+            req.onload = function() {
+                callback(req);
+            }
+            req.send(data);
+        }
+
+
+
+        xhttpRequest('GET', '/forum/all_forums/top_posts', null, function(req){
+            console.log('TOP POST:' + req.responseText);
+            var res = JSON.parse(req.responseText);
+            for (var iter = 0; iter < res.length; iter++) {
+                forumApp.top_posts.push({
+                    title: res[iter].title,
+                    date: res[iter].date,
+                    callback: transToPost,
+                    id: res[iter].id,
+                    forum: res[iter].forum
+                });
+            }
+        });
+
+
+        xhttpRequest('GET', '/forum/all_forums/trending_posts', null, function(req){
+            console.log('TRENDING POST:' + req.responseText);
+            var res = JSON.parse(req.responseText);
+            for (var iter = 0; iter < res.length; iter++) {
+                forumApp.trending_posts.push({
+                    title: res[iter].title,
+                    date: res[iter].date,
+                    callback: transToPost,
+                    id: res[iter].id,
+                    forum: res[iter].forum
+                });
+            }
+        });
+
 
 
         function transToForum(){
@@ -353,9 +389,11 @@
         }
 
 
-        function transToPost(post_id){
+        function transToPost(post_id, forum = null){
+            if (!forum)
+                forum = document.getElementById('forum_name').value.trim();
             var postRequest = new XMLHttpRequest();
-            postRequest.open('GET', '/forum/' + document.getElementById('forum_name').value.trim() + '/post/' + String(post_id).trim());
+            postRequest.open('GET', '/forum/' + forum + '/post/' + String(post_id).trim());
             postRequest.setRequestHeader('Content-Type', 'application/json');
             postRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
             postRequest.onload = function() {

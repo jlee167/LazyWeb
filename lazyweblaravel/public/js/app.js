@@ -357,6 +357,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -366,10 +394,18 @@ __webpack_require__.r(__webpack_exports__);
     contents: Array,
     macro_guardian: String,
     macro_protected: String,
-    emergency: Boolean
+    emergency: Boolean,
+    callback_accept: Function,
+    callback_decline: Function,
+    callback_request_guardian: Function,
+    callback_request_protected: Function,
+    callback_refresh_ui: Function
   },
   data: function data() {
-    return {};
+    return {
+      guardian_username: "",
+      protected_username: ""
+    };
   }
 });
 
@@ -384,6 +420,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -610,7 +660,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    contents: Array
+    contents: Array,
+    title: String
+  },
+  data: function data() {
+    return {};
   }
 });
 
@@ -816,7 +870,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.font-title[data-v-1cb6caea]{\n    margin-left: 10px\n}\n.status-container[data-v-1cb6caea]{\n    margin: auto;\n    margin-left: auto;\n    margin-right: 10px;\n    display:flex;\n    align-items: center;\n    justify-content: center;\n}\n.text-default[data-v-1cb6caea]{\n    margin:auto;\n}\n.list-container[data-v-1cb6caea] {\n  flex-direction: column;\n  display: flex;\n  width: 300px;\n  height: auto;\n  margin: auto;\n  text-align: center;\n  border: 0.2px solid;\n  border-color: black;\n  background-color: white;\n  box-shadow: 1px 1px 1px gray;\n  overflow: hidden;\n}\n.list[data-v-1cb6caea] {\n  width: 100%;\n}\n.post-item[data-v-1cb6caea] {\n  display: flex;\n  flex-direction: row;\n  width: 100%;\n  height: 60px;\n  align-items: center;\n  border-top: 0.5px solid;\n  border-bottom: 0.5px solid;\n  border-color: #d5d5d5;\n}\n.list-header[data-v-1cb6caea] {\n  display: flex;\n  flex-direction: row;\n  width: 100%;\n  height: 80px;\n  align-items: center;\n  justify-content: center;\n  border-top: 0.5px solid;\n  border-bottom: 0.5px solid;\n  border-color: #d5d5d5;\n\n  font-family: 'Nanum Pen Script', cursive;\n  font-size: 30;\n}\n@media only screen and (min-width: 768px) {\n.list-container[data-v-1cb6caea] {\n    width: 300px;\n}\n}\n@media only screen and (min-width: 1100px) {\n.list-container[data-v-1cb6caea] {\n\n    width: 400px;\n}\n}\n", ""]);
+exports.push([module.i, "\n.font-title[data-v-1cb6caea] {\n  margin-left: 10px;\n  width:150px;\n  justify-content: left;\n  text-align: left;\n}\n.status-container[data-v-1cb6caea] {\n  margin: auto;\n  margin-right: auto;\n  margin-left: 10px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.auth-container[data-v-1cb6caea] {\n  margin: auto;\n  margin-left: auto;\n  margin-right: 10px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.text-default[data-v-1cb6caea] {\n  margin: auto;\n}\n.list-container[data-v-1cb6caea] {\n  flex-direction: column;\n  display: flex;\n  width: 400px;\n  height: auto;\n  margin: auto;\n  text-align: center;\n  border: 0.2px solid;\n  border-color: black;\n  background-color: white;\n  box-shadow: 1px 1px 1px gray;\n  overflow: hidden;\n}\n.list[data-v-1cb6caea] {\n  width: 100%;\n}\n.request-container[data-v-1cb6caea] {\n  display: flex;\n  flex-direction: row;\n}\n.post-item[data-v-1cb6caea] {\n  display: flex;\n  flex-direction: row;\n  width: 100%;\n  height: 60px;\n  align-items: center;\n  border-top: 0.5px solid;\n  border-bottom: 0.5px solid;\n  border-color: #d5d5d5;\n}\n.list-header[data-v-1cb6caea] {\n  display: flex;\n  flex-direction: row;\n  width: 100%;\n  height: 80px;\n  align-items: center;\n  justify-content: center;\n  border-top: 0.5px solid;\n  border-bottom: 0.5px solid;\n  border-color: #d5d5d5;\n\n  font-family: \"Nanum Pen Script\", cursive;\n  font-size: 30;\n}\n@media only screen and (min-width: 768px) {\n.list-container[data-v-1cb6caea] {\n    width: 400px;\n}\n}\n@media only screen and (min-width: 1100px) {\n.list-container[data-v-1cb6caea] {\n    width: 600px;\n}\n}\n", ""]);
 
 // exports
 
@@ -2523,46 +2577,190 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "list-container" },
-    _vm._l(_vm.contents, function(content) {
-      return _c("div", { key: content, staticClass: "list" }, [
-        _c("div", { staticClass: "post-item" }, [
-          _c("a", { staticClass: "font-title" }, [
-            _vm._v(_vm._s(content.username))
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "status-container" }, [
-            content.relationship === _vm.macro_guardian
-              ? _c("p", { staticClass: "btn btn-success text-default" }, [
-                  _vm._v(
-                    "\n                  " +
-                      _vm._s(content.relationship) +
-                      "\n              "
-                  )
-                ])
-              : content.relationship === _vm.macro_protected
-              ? _c("p", { staticClass: "btn btn-danger text-default" }, [
-                  _vm._v(
-                    "\n                  " +
-                      _vm._s(content.relationship) +
-                      "\n              "
-                  )
-                ])
-              : _vm._e(),
+    [
+      _vm._l(_vm.contents, function(content) {
+        return _c("div", { key: content, staticClass: "list" }, [
+          _c("div", { staticClass: "post-item" }, [
+            _c("div", { staticClass: "font-title" }, [
+              _vm._v(_vm._s(content.username))
+            ]),
             _vm._v(" "),
-            content.relationship === _vm.macro_protected &&
-            content.status !== "FINE"
-              ? _c("p", [
-                  _vm._v("\n                  Emergency\n              ")
-                ])
+            _c("div", { staticClass: "status-container" }, [
+              content.relationship === _vm.macro_guardian
+                ? _c(
+                    "p",
+                    {
+                      staticClass: "btn btn-success text-default",
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "80px",
+                        height: "30px",
+                        "font-size": "10px"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n          " +
+                          _vm._s(content.relationship) +
+                          "\n        "
+                      )
+                    ]
+                  )
+                : content.relationship === _vm.macro_protected
+                ? _c(
+                    "p",
+                    {
+                      staticClass: "btn btn-danger text-default",
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "80px",
+                        height: "30px",
+                        "font-size": "10px"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n          " +
+                          _vm._s(content.relationship) +
+                          "\n        "
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              content.relationship === _vm.macro_protected &&
+              content.status !== "FINE"
+                ? _c("p", [_vm._v("\n          Emergency\n        ")])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            content.authorized == false
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "auth-container",
+                    staticStyle: { display: "inline" }
+                  },
+                  [
+                    _c("a", { staticStyle: { display: "inline" } }, [
+                      _vm._v(" Accept ")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticStyle: { display: "inline" } }, [
+                      _vm._v("|")
+                    ]),
+                    _vm._v(" "),
+                    _c("a", { staticStyle: { display: "inline" } }, [
+                      _vm._v(" Decline ")
+                    ])
+                  ]
+                )
               : _vm._e()
           ])
         ])
+      }),
+      _vm._v(" "),
+      _c("table", { staticStyle: { width: "auto" } }, [
+        _c("tr", [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.guardian_username,
+                  expression: "guardian_username"
+                }
+              ],
+              domProps: { value: _vm.guardian_username },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.guardian_username = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.callback_request_guardian(_vm.guardian_username)
+                  }
+                }
+              },
+              [_vm._v("\n          Request\n        ")]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.protected_username,
+                  expression: "protected_username"
+                }
+              ],
+              domProps: { value: _vm.protected_username },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.protected_username = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.callback_request_protected(
+                      _vm.protected_username
+                    )
+                  }
+                }
+              },
+              [_vm._v("\n          Request\n        ")]
+            )
+          ])
+        ])
       ])
-    }),
-    0
+    ],
+    2
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("label", [_vm._v("Add Guardian")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("label", [_vm._v("Add Protected")])])
+  }
+]
 render._withStripped = true
 
 
@@ -2597,6 +2795,18 @@ var render = function() {
         : _vm.content.relationship === _vm.macro_protected
         ? _c("p", { staticClass: "btn btn-danger text-default" }, [
             _vm._v("\n      " + _vm._s(_vm.content.relationship) + "\n    ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.content.relationship === _vm.macro_guardian
+        ? _c("p", { staticClass: "btn btn-warning text-default" }, [
+            _vm._v("\n      Accept\n    ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.content.relationship === _vm.macro_guardian
+        ? _c("p", { staticClass: "btn btn-danger text-default" }, [
+            _vm._v("\n      Decline\n    ")
           ])
         : _vm._e()
     ])
@@ -2783,15 +2993,26 @@ var render = function() {
     { staticClass: "list-container" },
     [
       _c("div", { staticClass: "list-header" }, [
-        _vm._v("\n          Trending\n      ")
+        _vm._v("\n          " + _vm._s(_vm.title) + "\n      ")
       ]),
       _vm._v(" "),
       _vm._l(_vm.contents, function(content) {
         return _c("div", { key: content, staticClass: "list" }, [
           _c("div", { staticClass: "post-item" }, [
-            _c("a", { staticClass: "font-title" }, [
-              _vm._v("\n        " + _vm._s(content.title) + "\n      ")
-            ]),
+            _c(
+              "a",
+              {
+                staticClass: "font-title",
+                staticStyle: { cursor: "pointer", color: "blue" },
+                attrs: { onmouseover: "" },
+                on: {
+                  click: function($event) {
+                    return content.callback(content.id, content.forum)
+                  }
+                }
+              },
+              [_vm._v("\n        " + _vm._s(content.title) + "\n      ")]
+            ),
             _vm._v(" "),
             _c("p", { staticClass: "text-default" }, [
               _vm._v("\n        " + _vm._s(content.date) + "\n      ")

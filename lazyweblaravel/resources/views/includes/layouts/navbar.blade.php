@@ -38,7 +38,8 @@ Opposite when not authenticated yet.
         <!-- Menu -->
         <ul id="menu-links" class="navbar-nav mr-auto">
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Home</a></li>
-            <li class="nav-item"> <a class="nav-link" onclick="modalApp.showModal=true;" style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
+            <li class="nav-item"> <a    class="nav-link" onclick="modalApp.showModal=true; document.body.style.overflowY='hidden';"
+                                        style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
             </li>
             <li class="nav-item"> <a class="nav-link" href="/views/products"> Products</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/dashboard?page=1"> Dashboard</a></li>
