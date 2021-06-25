@@ -8,6 +8,9 @@
 
 //require('./bootstrap');
 
+
+import Vue from 'vue';
+
 window.Vue = require('vue');
 
 /**
@@ -21,14 +24,15 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component('user-list-display', require('./components/UserListDisplay.vue').default);
-Vue.component('video-js', require('./components/VideoJs.vue').default);
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('forum-post-list', require('./components/ForumPostList.vue').default);
-Vue.component('forum-chat', require('./components/ForumChat.vue').default);
 Vue.component('skill-bar', require('./components/SkillBar.vue').default);
+Vue.component('peer-list', require('./components/PeerList.vue').default);
+Vue.component('product-desc-view', require('./components/ProductDescView.vue').default);
+Vue.component('video-js', require('./components/VideoJs.vue').default);
+Vue.component('forum-post-list', require('./components/ForumPostList.vue').default);
 Vue.component('trending-posts', require('./components/TrendingPosts.vue').default);
-Vue.component('polls', require('./components/Polls.vue').default);
 Vue.component('forum-post', require('./components/ForumPost.vue').default);
 Vue.component('summer-note', require('./components/Summernote.vue').default);
-Vue.component('peer-list', require('./components/PeerList.vue').default);
-Vue.component('peer-list-item', require('./components/PeerListItem.vue').default);
+Vue.component('product-card', require('./components/ProductCard.vue').default);
+
+
+

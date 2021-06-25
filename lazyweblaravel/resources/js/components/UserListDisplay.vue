@@ -21,10 +21,12 @@
             {{ user.name }}
           </p>
         </div>
+
         <div
           v-if="user.status == 'ONLINE'"
           class="status-light status-light-away"
         ></div>
+
         <div
           v-if="user.status == 'AWAY'"
           class="status-light status-light-online"
@@ -57,9 +59,8 @@ export default {
       return str_display + str_width + str_height;
     },
   },
-  data: function() {
-      return {
-      };
+  data: function () {
+    return {};
   },
 
   mounted() {

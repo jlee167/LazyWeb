@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Redirector;
 use APP\Models\User;
-use App\Http\Controllers\OauthTokenController as Oauth;
+use App\Http\Controllers\OauthController as Oauth;
 
 
 
@@ -94,7 +94,6 @@ class LoginController extends BaseController
             ->where('uid_oauth', '=', $kakaoUser['uid'])
             ->first();
 
-
         try {
             if (Auth::loginUsingId($user->id)) {
                 return json_encode([
@@ -129,7 +128,7 @@ class LoginController extends BaseController
     {
         try {
             $client = new \Google_Client();
-            $client->setClientId('1083086831094-qatr04h8rnthlm9501q2oa45mjkjh4r0.apps.googleusercontent.com');
+            $client->setClientId('494240878735-c8eo6b0m0t8fhd8vo2lcj0a9v6ena7bp.apps.googleusercontent.com');
             $client->setClientSecret('fGLi65s6_vDNunavqdCFrZom');
             if ($request->accessToken) {
                 $payload = $client->verifyIdToken($request->accessToken);

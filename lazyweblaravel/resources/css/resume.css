@@ -1,19 +1,28 @@
 .resume-sidebar {
-    height:100%;
     min-width: 300px;
+    width: 300px;
+    height: 100%;
     overflow-x: hidden;
-    margin-bottom:0px;
-    padding-bottom:0px;
+    overflow-y: hidden;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    background-color: #bc5c3c;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 
-
 .resume-contents {
-    margin-left:0px;
-    max-width:1000px;
-    padding-left:50px;
-    padding-right:50px;
-    padding-top:50px;
-    overflow-x:hidden;
+    margin-top: 0px;
+    margin-left: 0px;
+    max-width: 1000px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 50px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .resume-contents::-webkit-scrollbar {
@@ -21,34 +30,52 @@
 }
 
 .resume-contents::-webkit-scrollbar-thumb {
-	background-color: #2f3542;
+    background-color: #2f3542;
 }
 
 .resume-contents::-webkit-scrollbar-track {
-	background-color: rgb(173, 173, 173);
+    background-color: rgb(173, 173, 173);
 }
 
 .section-margin {
-    margin-top:80px;
+    margin-top: 80px;
+    overflow: auto;
 }
 
-
 .sub-section-margin {
-    margin-top:50px;
-    margin-bottom:50px;
+    margin-top: 50px;
+    margin-bottom: 50px;
     overflow: hidden;
 }
 
-
 .sub-section-header {
-    margin-bottom:30px;
+    margin-bottom: 30px;
 }
-
 
 .title-font {
-    color:white;
+    color: white;
     margin: 30px;
+    font-weight: 600;
+    font-family: 'Nunito Sans', sans-serif;
+    margin-bottom: 7px;
 }
+
+.divider-sidebar {
+    border-top: 1px solid;
+    width: 80%;
+    border-width: 1px;
+    color: white;
+}
+
+.section-link {
+    color: white;
+}
+
+.section-title-underline {
+    border-width: 3px;
+    color: #d6c102;
+}
+
 
 /*
 @media only screen and (min-width: 600px) {
@@ -72,4 +99,3 @@
     }
 }
 */
-

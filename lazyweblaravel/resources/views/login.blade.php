@@ -1,238 +1,91 @@
 <!doctype html>
 
-<html style="height:100%;">
-	<head>
-        <!-- Login -->
-        @include('includes.imports.styles_common')
-        <link rel="stylesheet" href="/css/login.css">
+<html>
 
-        <!--  Kakao Imports -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-        <script src="https://apis.google.com/js/api:client.js"></script>
+<head>
+    <!-- CSS -->
+    @include('includes.imports.styles_common')
+    <link rel="stylesheet" href="/css/login.css">
 
-        <script>
-            var googleUser = {};
-            var startApp = function() {
-            gapi.load('auth2', function(){
-                // Retrieve the singleton for the GoogleAuth library and set up the client.
-                auth2 = gapi.auth2.init({
-                client_id: '1083086831094-qatr04h8rnthlm9501q2oa45mjkjh4r0.apps.googleusercontent.com',
-                cookiepolicy: 'single_host_origin',
-                // Request scopes in addition to 'profile' and 'email'
-                //scope: 'additional_scope'
-                });
-                attachSignin(document.getElementById('customBtn'));
-            });
-            };
+    <!-- OAuth CDN -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script src="https://apis.google.com/js/api:client.js"></script>
 
-            function attachSignin(element) {
-            console.log(element.id);
-            auth2.attachClickHandler(element, {},
-                function(googleUser) {
-                    document.getElementById('name').innerText = "Signed in: " +
-                        googleUser.getBasicProfile().getName();
-                    googleLogin(googleUser.getAuthResponse().id_token);
-                }, function(error) {
-                    alert(JSON.stringify(error, undefined, 2));
-                });
-            }
-        </script>
-        <style type="text/css">
-        #customBtn {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            color: #444;
-            width: 100%;
-            height: 40px;
-            border-radius: 5px;
-            border: thin solid rgb(180, 178, 178);
-            white-space: nowrap;
-        }
-        #customBtn:hover {
-            cursor: pointer;
-        }
-        span.label {
-            font-family: serif;
-            font-weight: normal;
-        }
-        img.icon {
-            display: inline-block;
-            width: 17px;
-            height: 17px;
-        }
-        span.buttonText {
-            display: inline-block;
-            vertical-align: middle;
-            padding-left: 10px;
-            font-size: 14px;
-            color:black;
-            /* Use the Roboto font that is loaded in the <head> */
-            font-family: 'Roboto', sans-serif;
-        }
-        </style>
-	</head>
+    <!-- Page Specific Scripts -->
+    @include('includes.imports.csrf')
+    <script>
+        let redirectUrl = "{{url()->previous()}}";
+    </script>
+
+    <script src="{{ mix('js/login.js') }}"></script>
+    <script defer src="{{ mix('js/login-oauth-ui.js') }}"> </script>
+</head>
 
 
-    <body>
+<body>
 
-		@include('includes.layouts.navbar')
+    @include('includes.layouts.navbar')
 
-		<!--Login Information-->
-        <div id="view-login">
-            <div id="login-manual" class="login-prompt card">
-                <form class="login-form">
-                    <div style="margin:0 auto; float:center;">
-                        <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">ID</p>
-                        <input class="form-control" id="input_account" type="text" placeholder="Enter username"
-                                aria-describedby="search-btn" style="width:100%; height:50px;
-                                align:center; margin-bottom:20px;">
-                        <p style="font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-bottom:7px;">Password</p>
-                        <input  class="form-control" id="input_password" type="password"
-                                placeholder="Enter password" aria-describedby="search-btn"
-                                style="width:100%; height:50px; align:center; margin-bottom:20px;">
-                        <button type="button" class="btn" style="background-color:#5603ad; color: white; width:100%; height:50px;
-                                                                font-weight:600; font-family: 'Nunito Sans', sans-serif;"
-                                                                onclick="nonSocialLogin()">
-                                                                Login</button>
+    <!--Login Information-->
+    <div id="view-login">
+        <div id="login-manual" class="login-prompt card">
+            <form class="login-form">
+                <div style="margin:0 auto; float:center;">
+                    <p class="login-label">ID</p>
+                    <input class="form-control login-form-input" id="input_account" type="text"
+                        placeholder="Enter username" aria-describedby="search-btn">
 
-                    </div>
-                </form>
-                <div style="display:flex; flex-direction:row;">
-                    <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
-                    <p style="margin:auto;">Social Login</p>
-                    <hr style="width:20%; margin:auto; margin-top:15px; margin-bottom:15px;">
+                    <p class="login-label">Password</p>
+                    <input class="form-control login-form-input" id="input_password" type="password"
+                        placeholder="Enter password" aria-describedby="search-btn">
+                    <button id="loginBtn" type="button" class="btn" onclick="nonSocialLogin()"> Login</button>
                 </div>
-                <table style="width:100%;align:center; margin:auto; margin-top:15px; margin-bottom:30px; background-color:transparent;">
-                    <tr style="height:50px; display:flex; justify-content:center;">
-                        <td style="margin:auto; width:100%;">
-                            <a class="hover-no-effect" id="kakao-login-btn" href="javascript:loginWithKakao()">
-                                <div class="btn-hover-shadow" style="display:flex; justify-content:center; align-items:center; width:100%;height:40px; border-radius:5px;
-                                    background-color:#FEE500;">
-                                    <img class="icon" src="{{asset('/images/kakao_icon.png')}}"
-                                        style="display:inline-block; width:22px; height:20px;"
-                                    >
-                                    <span class="buttonText"> Login with Kakao</span>
-                                </div>
-                            </a>
-                            <a href="http://alpha-developers.kakao.com/logout"></a>
-                        </td>
-                    </tr>
+            </form>
 
-                    <tr style="text-align:center; margin:auto; margin-top:5px; display:flex; justify-content:center;">
-                        <td style="margin:auto; width:100%;">
-                            <!-- In the callback, you would hide the gSignInWrapper element on a
-                            successful sign in -->
-                            <div id="gSignInWrapper">
-                                <div class="btn-hover-shadow" id="customBtn" class="customGPlusSignIn">
-                                    <img class="icon" src="https://developers.google.com/identity/images/g-logo.png">
-                                    <span class="buttonText"> Login with Google</span>
-                                </div>
+            <div style="display:flex; flex-direction:row;">
+                <hr class="label-wrapper-line">
+                <p style="m-auto">Social Login</p>
+                <hr class="label-wrapper-line">
+            </div>
+
+            <table id="oAuthSection">
+                <tr style="height:50px; display:flex; justify-content:center;">
+                    <td style="margin:auto; width:100%;">
+                        <a id="kakaoAuthBtn" class="hover-no-effect" href="javascript:loginWithKakao()">
+                            <div id="kakaoBtnBackground" class="btn-hover-shadow">
+                                <img class="icon" src="{{asset('/images/kakao_icon.png')}}"
+                                    style="display:inline-block; width:22px; height:20px;">
+                                <span class="buttonText"> Login with Kakao</span>
                             </div>
-                            <div id="name"></div>
-                            <script>
-                                startApp();
-                            </script>
-                        </td>
-                    </tr>
-                </table>
-                <div style="display:flex; flex-direction: row; align-items:center; justify-content:center; margin-bottom: 20px;">
-                    <p style="vertical-align: middle; margin:0 0 0 0; font-family: 'Nunito Sans', sans-serif;">Not a member yet?</p>
-                    <a style="vertical-align: middle; margin:0 0 0 10px;" href="/views/register"> <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b> </a>
-                <!--button type="button" class="btn" style="background-color:#e7ba3e; color: white; width:100px; height:50px;
-                        font-weight:600; font-family: 'Nunito Sans', sans-serif; margin-top: 20px; margin-bottom:20px;"
-                        onclick="">
-                        Register</button-->
-                </div>
+                        </a>
+                        <a href="http://alpha-developers.kakao.com/logout"></a>
+                    </td>
+                </tr>
+
+                <tr style="text-align:center; margin:auto; margin-top:5px; display:flex; justify-content:center;">
+                    <td style="margin:auto; width:100%;">
+                        <div id="gSignInWrapper">
+                            <div class="btn-hover-shadow" id="googleAuthBtn" class="customGPlusSignIn">
+                                <img class="icon" src="https://developers.google.com/identity/images/g-logo.png">
+                                <span class="buttonText"> Login with Google</span>
+                            </div>
+                        </div>
+                        <div id="name"></div>
+                    </td>
+                </tr>
+            </table>
+            <div
+                style="display:flex; flex-direction: row; align-items:center; justify-content:center; margin-bottom: 20px;">
+                <p style="vertical-align: middle; margin:0 0 0 0; font-family: 'Nunito Sans', sans-serif;">Not a member
+                    yet?</p>
+                <a style="vertical-align: middle; margin:0 0 0 10px;" href="/views/register">
+                    <b style="color:blue; font-family: 'Nunito Sans', sans-serif;">Sign up now!</b>
+                </a>
             </div>
         </div>
+    </div>
 
-        @include('includes.layouts.footer')
-        @include('includes.layouts.modal')
-
-
-
-
-        <script src="/js/auth.js" type="text/javascript"></script>
-        <script>
-
-        /* -------------------------------------------------------------------------- */
-        /*                           OAuth Modules Initialized                        */
-        /* -------------------------------------------------------------------------- */
-
-
-
-        /* ---------------------------- Kakao Oauth Setup ---------------------------- */
-
-            /* Set JavaScript Key of current app */
-            Kakao.init('fcbc674142c20da29ab5dfe6d1aae93f');
-            function loginWithKakao() {
-                Kakao.Auth.login({
-                success: function(authObj) {
-                    var token_kakao = Kakao.Auth.getAccessToken();
-                    kakaoLogin(token_kakao);
-                },
-                fail: function(err) {
-                    alert(JSON.stringify(err))
-                },
-                })
-            }
-
-            function getCookie(name) {
-                const value = "; " + document.cookie;
-                const parts = value.split("; " + name + "=");
-                if (parts.length === 2) return parts.pop().split(";").shift();
-            }
-
-
-
-        /* ---------------------------- Google OAuth Setup --------------------------- */
-
-
-        /* -------------------------------------------------------------------------- */
-        /*                           /OAuth Modules Initialized                       */
-        /* -------------------------------------------------------------------------- */
-
-
-
-
-
-
-
-
-        /* -------------------------------------------------------------------------- */
-        /*                            Authentication Functions                        */
-        /* -------------------------------------------------------------------------- */
-
-        var csrf = "{{ csrf_token() }}";
-
-            /* ---------------------- Login with Username/Password ---------------------- */
-            function nonSocialLogin(){
-                var username = document.getElementById('input_account').value;
-                var password = document.getElementById('input_password').value;
-                authWithUname(csrf, username, password, "{{url()->previous()}}");
-            }
-
-
-            /* ------------------------ Login with Kakao Account ------------------------ */
-            function kakaoLogin(accessToken){
-                authWithOauth2(csrf, accessToken, 'kakao', "{{url()->previous()}}");
-            }
-
-
-            /* ------------------------ Login with Google Account ----------------------- */
-            function googleLogin(accessToken){
-                authWithOauth2(csrf, accessToken, 'google', "{{url()->previous()}}");
-            }
-
-
-        /* -------------------------------------------------------------------------- */
-        /*                            /Authentication Functions                       */
-        /* -------------------------------------------------------------------------- */
-
-
-        </script>
-	</body>
+    @include('includes.layouts.footer')
+</body>
 <html>

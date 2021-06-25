@@ -1,105 +1,71 @@
-<!doctype html>
-
 <html>
-
-<!--------------------------------------------------------------------------- */
-/*                                    HEAD                                    */
-/* ---------------------------------------------------------------------------->
-
 
 <head>
     @include('includes.imports.styles_common')
+    @include('includes.imports.csrf')
 
     <!------------------ include libraries(jQuery, bootstrap) ------------------>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
+
+    <link rel="stylesheet" href="/css/support.css">
+    <script src="/js/support.js"></script>
 </head>
 
 
-<!--------------------------------------------------------------------------- */
-/*                                   /HEAD                                    */
-/* ---------------------------------------------------------------------------->
-
-
-
-
-
-
-
-
-
-
-<!--------------------------------------------------------------------------- */
-/*                                    BODY                                    */
-/* ---------------------------------------------------------------------------->
 
 
 <body>
     @include('includes.layouts.navbar')
 
-    <div class="section-contents" style="overflow:hidden; display:flex; flex-direction:row;
-                                            background-color:rgb(250, 202, 246); margin-top:0px !important;">
-        <div id="support_sidebar" class="resume-sidebar" style="background-color:#9a6ea5;
-                                                                min-width:70px;
-                                                                width:70px;
-                                                                min-height:100vh;
-                                                                height:auto;
-                                                                flex-direction:column;
-                                                                text-align:center;
-                                                                margin-top:0px;
-                                                                padding-top:70px;
-                                                                ">
+    <div class="section-contents background-support">
 
-            <a style="display:flex; flex-direction:column; margin-top:40px;"
-                href="#FAQ">
-                <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
-                    style="margin:auto; width:32px; height:32px;">
-                <p style="margin:auto;color:white; line-height:12px; font-size:12px; margin-top:5px;">FAQ</p>
+        <div id="support_sidebar" class="sidebar-support-page">
+            <a class="sidebar-item" href="#FAQ" style="text-decoration: none;">
+                <img class="sidebar-image" src="{{asset('/images/question-circle.svg')}}">
+                <p class="sidebar-text">FAQ</p>
             </a>
 
-            <a style="display:flex; flex-direction:column; margin-top:40px;"
-                href="#request_view">
-                <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
-                    style="margin:auto; width:32px; height:32px;">
-                <p style="margin:auto; color:white; line-height:12px; font-size:12px; margin-top:5px; ">Make a Request
-                </p>
+            <a class="sidebar-item" href="#request_view" style="text-decoration: none;">
+                <img class="sidebar-image" src="{{asset('/images/chat-dots.svg')}}">
+                <p class="sidebar-text"> Make a Request </p>
             </a>
         </div>
 
 
-        <!--
-        Main Contents Section
-
-        Conditional Rendering
-        @Views      FAQ, Request
-        @Condition  Button Click from sidebar
-        @Trigger    (id:'support_sidebar')
-        -->
-
-        <div style="width:auto; margin-top:30px; margin-left:40px; overflow:hidden; max-width: 600px;">
-            <!-- FAQ View -->
+        <div class="contents-support">
+            <!-- FAQ Section -->
             <section id="FAQ" style="padding-top:70px;">
                 <div>
                     <h3 style="color:#343032"> F.A.Q </h3>
                     <hr>
 
-                    <h6> Why so lazy?</h6>
-                    <img src="https://i.kym-cdn.com/photos/images/newsfeed/001/062/734/964.jpg" style="width:300px; height:300px;">
-
-
-                    <h6> <br><br>Any plan for this year?</h6>
-                    <p> I will focus on devloping low-code hardware/software to help IOT start-ups.
+                    <h6>
+                        Any further plan for this year?
+                    </h6>
+                    <p>
+                        I will focus on devloping low-code hardware/software to help IOT start-ups.
                         Many of these companies have trouble with supply of embedded engineers.
-                        My new projects will hopefully ease up the HW/FW prototyping stages, which would encouge
-                        more entrepreneurs to try new idea without financial burdens. <br><br><br><br>
+                        My new projects will hopefully ease up the HW/FW prototyping stages,
+                        which would encouge more entrepreneurs to try new idea without financial
+                        burdens.
+                        <br><br>
                     </p>
 
-
+                    <h6> Why are some source codes of your project not available?</h6>
+                    <img src="https://i.kym-cdn.com/photos/images/newsfeed/001/062/734/964.jpg"
+                        style="width:300px; height:300px;">
+                    <p>
+                        <br>
+                        By my own laziness, I pushed some personal credentials to some of my Github
+                        repositories. I deleted existing repositories and made a fresh one with according
+                        ignore parameters. Some works got lost in the way. Sorry!
+                    </p>
                 </div>
             </section>
 
 
-            <!-- Request View -->
+            <!-- Request Section -->
             <section id="request_view" style="padding-top:70px;">
                 <div>
                     <h3 style="color:#343032"> Make your requests here! </h3>
@@ -114,35 +80,29 @@
                     <p style="color:red;"> Note </p>
 
                     <p>
-                        I may waiver the fee for projects that are also of my personal benefit as it is.
+                        I may waiver the fee for projects that are also of my personal benefit.
                         <br>
                     </p>
 
-                    <form action="/support_request" enctype="multipart/form-data" method="POST" style="width:600px;">
+                    <form class="w-100" action="/support_request" enctype="multipart/form-data" method="POST">
                         @csrf
                         <input type="hidden" id="postToken" name="postToken">
 
-                        <label style="width:100%; font-family: 'Nunito' !important;
-                                                            font-weight: 650 !important;">Category </label><br>
-                        <select id="type" name="type" style="margin-bottom:40px;">
-                            <option value="REPAIR">Repair</option>
-                            <option value="TECH_SUPPORT">Tech Support</option>
-                            <option value="REFUND">Refund</option>
-                            <option value="LEGAL">Legal</option>
+                        <label>Category </label><br>
+                        <select id="type" name="type" style="margin-bottom:20px;">
+                            <option value="REPAIR"> Repair </option>
+                            <option value="TECH_SUPPORT"> Tech Support </option>
+                            <option value="REFUND"> Refund </option>
+                            <option value="LEGAL"> Legal </option>
                         </select>
 
-                        <label for="email" style="width:100%;font-family: 'Nunito' !important;
-                        font-weight: 650 !important;">Your Email</label><br>
-                        <input type="text" id="email" name="email" style="width:100%; min-width:500px;"><br><br>
+                        <label for="email">Your Email</label><br>
+                        <input class="input-small" type="text" id="email" name="email"><br><br>
 
-                        <label for="contents" style="width:100%;
-                                            font-family: 'Nunito' !important;
-                                            font-weight: 650 !important;">
-                            State Your Issues
-                        </label><br>
-                        <textarea id="summernote" name="contents" style="width:100%; height:60%;"></textarea><br>
-                        <input class="btn btn-outline-info" type="button" value="submit" onclick="submit_request();"
-                            style="float:right; width: 100px; margin-bottom:40px;">
+                        <label for="contents">State Your Issues</label><br>
+                        <textarea id="summernote" name="contents"></textarea><br>
+                        <input class="btn btn-info btn-form-submit" type="button" value="submit"
+                            onclick="submit_request();">
                     </form>
                 </div>
             </section>
@@ -151,7 +111,6 @@
 
     <!-- Footer -->
     @include('includes.layouts.footer')
-    @include('includes.layouts.modal')
 
 
     <script>
@@ -159,6 +118,7 @@
         $('#summernote').summernote({
             placeholder: 'State your issues',
             tabsize: 4,
+            width: 600,
             height: 300,
             codemirror: {
                 mode: 'text/html',
@@ -167,81 +127,8 @@
                 theme: 'darkly'
             }
         });
-
-
-        /**
-         * Submit support request with information provided in the form
-         *
-         * @param   None
-         * @return  None
-         *
-         */
-        function submit_request(){
-
-            /* Get user input from the form */
-            var type_sel = document.getElementById("type");
-            var type = type_sel.options[type_sel.selectedIndex].value;
-            var text = document.getElementById("summernote").value;
-            var contact = document.getElementById("email").value;
-
-            /* Acquire CSRF Token from server */
-            var csrf = "{{ csrf_token() }}";
-
-            /*  Submit support request with AJAX.
-                This Javascript routine was used instead of form due to unnecessary page refresh. */
-            var xmlRequest = new XMLHttpRequest();
-            xmlRequest.open('POST', '/support_request', true);
-            xmlRequest.setRequestHeader('Content-Type', 'application/json');
-            xmlRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
-
-            xmlRequest.onload = function() {
-                console.log(xmlRequest.responseText);
-                if (xmlRequest.responseText == 'true') {
-                    window.alert("Your request has been submitted!");
-                }
-                //window.location.href = '/views/support';
-            }
-
-            xmlRequest.send(
-                JSON.stringify({
-                    "type"      : String(type),
-                    "contents"  : text,
-                    "contact"   : contact
-                })
-            )
-        }
     </script>
-
-
-<script>
-    /**
-     * SQL Injection Test
-     *
-     * @param {*} csrf
-     *
-     * @todo: Move to a separate file
-     */
-    /* Sign in and return to previous url on success. */
-    var sqlInjection = new XMLHttpRequest();
-    sqlInjection.open('POST', '/sqltest', true);
-    sqlInjection.setRequestHeader('Content-Type', 'application/json');
-    sqlInjection.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
-    sqlInjection.onload = function() {
-        console.log("injection result:");
-        console.log(sqlInjection.responseText);
-    };
-
-    sqlInjection.send(JSON.stringify({
-        "query": "u' or 1=1 union select username from users union select cell from users; #"
-    }));
-
-</script>
-
-
 </body>
 
-<!--------------------------------------------------------------------------- */
-/*                                    /BODY                                    */
-/* ---------------------------------------------------------------------------->
 
 </html>

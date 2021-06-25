@@ -8,10 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
-use App\Http\Controllers\OauthTokenController as Oauth;
-
-
-
+use App\Http\Controllers\OauthController as Oauth;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -36,14 +35,18 @@ class UserController extends Controller
      */
     static public function getUser($username)
     {
-        /*  Retrieve a user specified by id
-            Query returns empty set or a single user */
-        $query_result = DB::table('users')
-            ->where('username', '=', (string)$username)
-            ->get();
+        if (Auth::check()) {
+            if (Auth::user() == $username) {
+                $query_result = DB::table('users')
+                    ->where('username', '=', (string)$username)
+                    ->get();
 
-        /* Todo: return only relevant information */
-        return json_encode($query_result);
+                /* Todo: return only relevant information */
+                return json_encode($query_result);
+            }
+        } else {
+            /* Todo: Give less info */
+        }
     }
 
 
@@ -53,56 +56,68 @@ class UserController extends Controller
      *
      * @param  mixed $request
      * @param  mixed $username
-     * @return void
+     * @return JSON
      */
     static public function registerUser(Request $request, $username)
     {
-        $catch_duplicate_uname = DB::table('users')
-                            ->where('username', '=', $username)
-                            ->first();
-        if ($catch_duplicate_uname) {
+        $duplicateUname = DB::table('users')
+            ->where('username', '=', $username)
+            ->first();
+        if ($duplicateUname) {
             return json_encode([
-                'registered'=> false,
+                'registered' => false,
                 'error'     => 'Existing Username!'
             ]);
         }
 
+        $duplicateEmail = DB::table('users')
+            ->where('email', '=', $request->email)
+            ->first();
+        if ($duplicateEmail) {
+            return json_encode([
+                'registered' => false,
+                'error'     => 'Existing Email!'
+            ]);
+        }
 
-        try{
+
+        try {
             $uid_oauth = null;
-            if ($request->auth_provider =='Google'){
+            if ($request->auth_provider == 'Google') {
                 $user = Oauth::getGoogleUser($request->accessToken);
                 $uid_oauth = $user['uid'];
-            }
-            else if ($request->auth_provider =='Kakao'){
+            } else if ($request->auth_provider == 'Kakao') {
                 $user = Oauth::getKakaoUser($request->accessToken);
                 $uid_oauth = $user['uid'];
             }
 
-            if ($request->auth_provider != 'None')
-            {
+            if ($request->auth_provider != 'None') {
                 $catch_duplicate_oauth = DB::table('users')
-                                ->where('auth_provider', '=', $request->auth_provider)
-                                ->where('uid_oauth', '=', $uid_oauth)
-                                ->first();
-                if ($catch_duplicate_oauth){
+                    ->where('auth_provider', '=', $request->auth_provider)
+                    ->where('uid_oauth', '=', $uid_oauth)
+                    ->first();
+                if ($catch_duplicate_oauth) {
                     return json_encode([
-                        'registered'=> false,
+                        'registered' => false,
                         'error'     => 'Already registered social login account!'
                     ]);
                 }
             }
 
-            $query_result =
-                DB::table('users')->insert(
-                    [
-                        'username'      => $username,
-                        'password'      => Hash::make($request->password),
-                        'auth_provider' => $request->auth_provider,
-                        'uid_oauth'     => $uid_oauth,
-                        'stream_key'    => str_random(32)
-                    ]
+
+
+            $query_result = DB::table('users')->insert(
+                [
+                    'username'      => $username,
+                    'password'      => Hash::make($request->password),
+                    'email'         => $request->email,
+                    'auth_provider' => $request->auth_provider,
+                    'uid_oauth'     => $uid_oauth,
+                    'stream_key'    => str_random(32)
+                ]
             );
+
+            Http::get("http://127.0.0.1:3001/jwtgen/".$username);
 
             if ($query_result)
                 return json_encode([
@@ -112,82 +127,79 @@ class UserController extends Controller
                 return json_encode([
                     'registered' => false,
                 ]);
-        } catch (Exception $e) {
-            return json_encode($e);
+        } catch (QueryException $e) {
+            dd($e);
+            return json_encode([
+                'registered' => false,
+                'error' => "Unexpected database query exception occured"
+            ]);
         }
     }
 
 
+
+
+
     /**
-     *  - Summary
-     *      Delete a user from database
+     * Update current user's personal information.
+     *
+     * @param  mixed $request
+     * @param  mixed $username
+     * @return void
+     */
+    static public function updateUser(Request $request, $username)
+    {
+        $query_result = DB::table('users')
+            ->where('username', '=', (string)$username)
+            ->update([
+                'firstname'     => $request->firstname,
+                'lastname'      => $request->lastname,
+                'username'      => $request->username,
+                'password'      => Hash::make($request->password),
+                'auth_provider' => $request->auth_provider,
+                'id_external'   => $request->id_external,
+                'faceshot_url'  => $request->faceshot_url,
+                'email'         => $request->email,
+                'cell'          => $request->cell,
+                'stream_id'     => $request->stream_id,
+                'status'        => $request->status,
+                'response'      => $request->response,
+                'privacy'       => $request->privacy,
+                'proxy_enable'  => $request->proxy_enable,
+                'password_hint' => $request->password_hint,
+                'hint_answer'   => $request->hint_answer
+            ]);
+
+        if ($query_result)
+            return json_encode([
+                'updated' => true
+            ]);
+        else
+            return json_encode([
+                'updated' => false,
+            ]);
+    }
+
+
+
+
+    /**
+     *  Delete a user from database
      *
      *  @param string $username     unique username of an user
      *
      */
     static public function deleteUser($username)
     {
-        /*  Retrieve a user specified by id
-            Query returns empty set or a single user */
-        $query_result = DB::table('users')
-            ->where('username', '=', (string)$username)
-            ->delete();
+        $query_result = DB::table('users')->insert(
+            [
+                'id' => Auth::id()
+            ]
+        );
 
         /* Todo: Determine what to return after deletion */
         return json_encode($query_result);
     }
-
-
-
-    /**
-     * updateUser
-     *
-     * @param  mixed $uid
-     * @param  mixed $user_info
-     * @return void
-     */
-    static public function updateUser($uid, $user_info)
-    {
-        $query_result = DB::table('users')
-            ->where('username', '=', (string)$uid)
-            ->update([
-                'firstname'     => $user_info->firstname,
-                'lastname'      => $user_info->lastname,
-                'username'      => $user_info->username,
-                'password'      => Hash::make($user_info->password),
-                'auth_provider' => $user_info->auth_provider,
-                'id_external'   => $user_info->id_external,
-                'faceshot_url'  => $user_info->faceshot_url,
-                'email'         => $user_info->email,
-                'cell'          => $user_info->cell,
-                'stream_id'     => $user_info->stream_id,
-                'status'        => $user_info->status,
-                'response'      => $user_info->response,
-                'privacy'       => $user_info->privacy,
-                'proxy_enable'  => $user_info->proxy_enable,
-                'password_hint' => $user_info->password_hint,
-                'hint_answer'   => $user_info->hint_answer
-            ]);
-    }
-
-
-    public function getUserAccount()
-    {
-        $this->getUser(Auth::id());
-    }
-
-
-    public function deleteUserAccount()
-    {
-        $this->deleteUser(Auth::id());
-    }
-
-
-    public function updateUserAccount(Request $request, $uid)
-    {
-        $this->updateUser($request->my_info, Auth::id());
-    }
-
 
 
 
@@ -198,10 +210,10 @@ class UserController extends Controller
     /**
      * Return all guardians of a user
      *
-     * @param   request
-     * @return  json        // Json object containing current user's guardian list
+     * @param   Request $request
+     * @return  JSON    (Current user's guardian list)
      */
-    static public function get_guardians(Request $request)
+    static public function getGuardians(Request $request)
     {
         $username = Auth::user()->username;
         $result = DB::select("CALL GetGuardians('${username}')");
@@ -209,20 +221,23 @@ class UserController extends Controller
     }
 
 
+
+
     /**
      * Send a guardianship request to the user specified by uid
      *
-     * @param   uid     // Id of the user to send guardianship request to
-     * @return  void
+     * @param  Request  $request
+     * @param  int      $uid
+     * @return JSON     (result of guardianshp request)
      */
-    static public function add_guardian(Request $request, $uid)
+    static public function addGuardian(Request $request, $uid)
     {
         try {
             $result = DB::table('guardianship')
                 ->insert([
                     'uid_protected' => Auth::id(),
                     'uid_guardian' => $uid,
-                    'signed_protected' => '1'
+                    'signed_protected' => 'ACCEPTED'
                 ]);
             return json_encode([
                 'status'    => 'ok',
@@ -237,39 +252,20 @@ class UserController extends Controller
     }
 
 
-    /**
-     * Accept a guardianship request
-     *
-     * @param   uid     // Id of the user who sent the request
-     * @return  bool    //
-     */
-    static public function acceptGuardian(Request $request, $uid)
-    {
-        $result = DB::table('guardianship')
-            ->where('uid_protected', '=', strval($uid))
-            ->where('uid_guardian', '=', Auth::id())
-            ->update([
-                'signed_protected' => strval($request->response)
-            ]);
-        return (strval($request->response));
-    }
-
 
     /**
-     * Accept a guardianship request
+     * respondPeerRequest
      *
-     * @param   uid     // Id of the user who sent the request
-     * @return  bool    //
+     * @param  Request  $request
+     * @return void
      */
-    static public function acceptProtected(Request $request, $uid)
+    static public function respondPeerRequest(Request $request)
     {
+        $requestID = strval($request->input("requestID"));
+        $uid = strval(Auth::id());
+        $response = $request->input("response");
 
-        $result = DB::table('guardianship')
-            ->where('uid_guardian', '=', strval($uid))
-            ->where('uid_protected', '=', Auth::id())
-            ->update([
-                'signed_guardian' => strval($request->response)
-            ]);
+        $result = DB::select("CALL RespondPeerRequest('${requestID}','${uid}', '${response}')");
         return (strval($request->response));
     }
 
@@ -295,7 +291,7 @@ class UserController extends Controller
      * @param   uid     // Id of the user to be deleted from friendlist
      * @return  void
      */
-    static public function delete_guardian(Request $request, $uid)
+    static public function deleteGuardian(Request $request, $uid)
     {
         $result = DB::table('guardianship')
             ->where('uid_protected', '=', Auth::id())
@@ -310,7 +306,7 @@ class UserController extends Controller
      * @param   request
      * @return  json        // Json object containing current user's protected client list
      */
-    static public function get_protecteds(Request $request)
+    static public function getProtecteds(Request $request)
     {
         $username = Auth::user()->username;
         $result = DB::select("CALL GetProtecteds('${username}')");
@@ -324,14 +320,14 @@ class UserController extends Controller
      * @param   uid     // Id of the user to send request to
      * @return  void
      */
-    static public function add_protected(Request $request, $uid)
+    static public function addProtected(Request $request, $uid)
     {
         try {
             $result = DB::table('guardianship')
                 ->insert([
                     'uid_protected' => $uid,
                     'uid_guardian' => Auth::id(),
-                    'signed_guardian' => '1'
+                    'signed_guardian' => 'ACCEPTED'
                 ]);
             return json_encode([
                 'status'    => 'ok',
@@ -352,7 +348,7 @@ class UserController extends Controller
      * @param   uid     // Id of the user to be deleted from client list
      * @return  void
      */
-    static public function delete_protected(Request $request, $uid)
+    static public function deleteProtected(Request $request, $uid)
     {
         $result = DB::table('guardianship')
             ->where('uid_guardian', '=', Auth::id())
@@ -388,10 +384,10 @@ class UserController extends Controller
                 'status' => 'DANGER_URGENT_RESPONSE',
                 'response' => 'RESPONSE_REQUIRED',
                 'stream_key' =>
-                        json_decode(DB::table('users')
-                        ->select('stream_key')
-                        ->where('id', Auth::id())
-                        ->get())[0]->stream_key,
+                json_decode(DB::table('users')
+                    ->select('stream_key')
+                    ->where('id', Auth::id())
+                    ->get())[0]->stream_key,
                 'responders' => strval(
                     DB::table('guardianship')
                         ->select('uid_guardian')
@@ -401,8 +397,8 @@ class UserController extends Controller
             ]);
 
         $result = DB::table('users')
-                    ->where('id', Auth::id())
-                    ->update(['status' => 'DANGER_URGENT']);
+            ->where('id', Auth::id())
+            ->update(['status' => 'DANGER_URGENT']);
 
         return $result;
     }
@@ -413,7 +409,7 @@ class UserController extends Controller
      *
      * @return  void
      */
-    static public function get_status($uid)
+    static public function getStatus($uid)
     {
         if (
             !empty(DB::table('guardianship')
@@ -436,7 +432,7 @@ class UserController extends Controller
      *
      * @return  void
      */
-    static public function get_stream_token($uid)
+    static public function getStreamToken($uid)
     {
         if (
             !empty(DB::table('guardianship')
@@ -446,7 +442,7 @@ class UserController extends Controller
             or
             Auth::id() == $uid
         ) {
-            $stream_tokens = REDIS::get('stream_'.(String)$uid);
+            $stream_tokens = REDIS::get('stream_' . (string)$uid);
             //@Todo
             $user_token = $stream_tokens['index'];
             unset($stream_tokens);
@@ -457,4 +453,5 @@ class UserController extends Controller
     /* -------------------------------------------------------------------------- */
     /*                      /Emergency system management APIs                     */
     /* -------------------------------------------------------------------------- */
+
 }

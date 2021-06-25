@@ -1,19 +1,18 @@
 <template>
-  <div class="editor" style="width: 100%; height: 500px; margin: 0 0 0 0">
+  <div id="container" class="editor">
     <div id="summernote"></div>
     <input
       class="btn btn-outline-success"
       value="submit"
       style="float: right; margin-top: 15px; width: 100px"
       v-on:click="
-        if (auth_state){
-            post_action(post_id, getContent());
-            resetEditor();
+        if (auth_state) {
+          post_action(post_id, getContent());
+          resetEditor();
+        } else {
+          redirect();
         }
-        else{
-            redirect();
-        }
-    "
+      "
     />
   </div>
 </template>
@@ -25,7 +24,7 @@ export default {
     post_action: Function,
     post_id: Number,
     auth_state: Boolean,
-    redirect: Function
+    redirect: Function,
   },
   data() {
     return {};
@@ -43,13 +42,18 @@ export default {
     getContent: function () {
       return $("#summernote").summernote("code");
     },
-    resetEditor: function() {
-        $("#summernote").summernote("reset");
-    }
+    resetEditor: function () {
+      $("#summernote").summernote("reset");
+    },
   },
 };
 </script>
 
 
-<style>
+<style scoped>
+#container {
+  width: 100%;
+  height: 500px;
+  margin: 0 0 0 0;
+}
 </style>

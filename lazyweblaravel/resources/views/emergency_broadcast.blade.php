@@ -1,12 +1,5 @@
 <!doctype html>
 
-<?php
-	use Illuminate\Support\Facades\View;
-	use Illuminate\Routing\UrlGenerator;
-?>
-
-
-
 <html>
 
 <!-----------------------------------------------------------------------------
@@ -42,12 +35,132 @@
         integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous">
     </script>
 
-
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f">
     </script>
+
     <script type="text/javascript"
         src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f&libraries=services,clusterer,drawing">
     </script>
+
+    @include('includes.imports.csrf')
+
+
+
+    <style type="text/css">
+        .marquee-background {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            width: 100vw;
+            height: 50px;
+            background-color: rgba(117, 115, 0, 0.8);
+            overflow: hidden;
+        }
+
+        .marquee {
+            width: 80vw;
+            font-size: 30px;
+            white-space: nowrap;
+            position: relative;
+            color: rgb(238, 255, 0);
+            vertical-align: middle;
+            margin: auto;
+            animation: police-line-scroll 32s linear infinite;
+        }
+
+        @keyframes police-line-scroll {
+            from {
+                transform: translateX(10%);
+            }
+
+            to {
+                transform: translateX(-90%);
+            }
+        }
+
+        #container-top {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            height: calc(100vh - 50px);
+            width: 100%;
+            margin: 0 0 0 0;
+            align-content: space-between;
+            background-color: red;
+            overflow-x: hidden;
+        }
+
+        .user-type {
+            color: white;
+            margin-top: 50px;
+            margin-left: 15px;
+            font-size: 14px;
+        }
+
+        .user-list {
+            width: 250px;
+            height: 100%;
+            background-color: #5d31ff;
+        }
+
+        .video-js {
+            flex: 1 0 auto;
+            height: 100%;
+            vertical-align: top;
+            margin-left: auto;
+        }
+
+        #map {
+            display: inline-block;
+            width: 400px;
+            height: 100%;
+            vertical-align: top;
+            margin-right: auto;
+        }
+
+        #messages {
+            color: white;
+            padding-left: 15px;
+            padding-right: 15px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #form {
+            margin: auto;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        #input {
+            background-color: transparent;
+            margin-right: 20px;
+            margin-left: 20px;
+            border-style: solid;
+            border-left-width: 0px;
+            border-right-width: 0px;
+            border-top-width: 0px !important;
+            border-bottom-width: 1;
+            outline: none;
+            height: 30px;
+            color: white;
+        }
+
+        .title-live-chat {
+            color: white;
+            font-size: 100%;
+        }
+
+        .btn-send-chat {
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+    </style>
 </head>
 
 <!-----------------------------------------------------------------------------
@@ -62,85 +175,101 @@
                                      Body
 ------------------------------------------------------------------------------->
 
-<body style="margin:0">
-    <div id="resume-contents" style="display:flex;
-        flex-direction:row;
-        flex-wrap:wrap;
-        height:100vh;
-        width:100%;
-        margin:0 0 0 0;
-        align-content:space-between;
-        background-color:red;">
-
-        <div style="width:250px; height:100%; background-color:#5d31ff;">
+<body style="margin:0; overflow-x:hidden;overflow-y:hidden;">
+    <div id="container-top">
+        <!-- User List -->
+        <div class="user-list">
             <div style="margin-top:20px;">
-                <p style="color:white; margin-top:30px; margin-left:15px; font-size:14px;"> Moderators </p>
-                <user-list-display v-bind:users="users"></user-list-display>
+                <p class="user-type"> Operators </p>
+                <user-list-display v-bind:users="operators"></user-list-display>
 
-                <p style="color:white;  margin-top:50px; margin-left:15px; font-size:14px;"> Guardians </p>
-                <user-list-display v-bind:users="users"></user-list-display>
+                <p class="user-type"> Guardians </p>
+                <user-list-display v-bind:users="guardians"></user-list-display>
             </div>
         </div>
 
+        <!-- Video Player-->
+        <video id="emergency_broadcast" width=320 height=240 class="video-js" controls></video>
 
-        <video id="emergency_broadcast" width=320 height=240 class="video-js" controls
-            style="flex: 1 0 auto; height:100%; vertical-align:top; margin-left:auto;">
-        </video>
-
-
-        <!-- Company Info-->
-        <div id="map" style="display:inline-block; width:400px; height:100%; vertical-align:top; margin-right:auto;">
-        </div>
+        <!-- Kakao Map -->
+        <div id="map"></div>
 
 
-        <div class="chat-container" style="height:100%; display:flex; flex-direction:column;">
-            <div class="chat-top-bar"
-                style="display:flex; flex-direction:row; justify-content:center; align-items:center;">
-                <b style="color:white; font-size:100%;">Live Chat</b>
+        <!-- Live Chat -->
+        <div class="chat-container">
+            <div class="chat-top-bar">
+                <b class="title-live-chat">Live Chat</b>
             </div>
-            <div id="text-area" class="chat-textarea" style="overflow-y:scroll;">
-                <div id="messages"
-                    style="color:white; padding-left:15px; padding-right:15px; text-overflow:ellipsis;white-space:nowrap;">
-                </div>
+            <div id="text-area" class="chat-textarea">
+                <div id="messages"></div>
             </div>
             <div class="chat-inputarea">
-                <form id="form" style="margin:auto; padding-top:15px; padding-bottom:15px; width:100%; height:70px; display:flex; flex-direction:row;
-								justify-content:center;">
-
-                    <input id="input" type="text" autocomplete="off"
-                    style="background-color:transparent; margin-right:20px; margin-left:20px;
-                    border-style:solid;
-                    border-left-width:0px; border-right-width:0px; border-top-width:0px !important; border-bottom-width:1;
-                    outline:none;
-                    height:30px; color:white;" placeholder="Message">
-           <br>
-
-                    <button class="btn btn-outline-light" type="submit" style="border-radius:5px; margin-right:20px; ">send</button>
-                </div>
-            </div>
-            <!--div class="chat-inputarea">
-                <form id="form" style="margin:auto; margin-bottom:20px; padding-top:15px; padding-bottom:15px; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center;
-								align-items:center;">
-
-                    <textarea id="input" type="text" style="height:80px; border-radius:5px;" placeholder="Message">
-						</textarea><br>
-
-                    <button type="submit" style="height:100%; border-radius:5px;">send</button>
+                <form id="form">
+                    <input id="input" type="text" autocomplete="off" placeholder="Message"> <br>
+                    <button class="btn-send-chat" class="btn btn-outline-light" type="submit">send</button>
                 </form>
-            </div-->
+            </div>
         </div>
     </div>
 
 
-    <script>
+    <div class="marquee-background">
+        <p class="marquee">
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            /// Rescue attempt in progress ///
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </p>
+    </div>
+
+    <script src="/js/jwt.js"></script>
+    <script defer>
+        //let token = jwt.sign({ username: "asdfadsfadfs" }, "adfasfasdf");
+        //console.log(jwt.verify(token, "adfasfasdf"));
+
         /* -------------------------------------------------------------------------- */
-        /*                                    VUE Init                                */
+        /*                             VUE Application                                */
         /* -------------------------------------------------------------------------- */
         broadcastApp = new Vue ({
-            el: '#resume-contents',
+            el: '#container-top',
             data: {
                 /* Small number of users. Just use array instead of map */
-                users: [
+                operators: [
+                    {
+                        imageUrl: '{{asset('/images/GitHub-Mark-Light-32px.png')}}',
+                        name: "lazyboy",
+                        status: 'AWAY'
+                    },
+                    {
+                        imageUrl: '{{asset('/images/GitHub-Mark-Light-32px.png')}}',
+                        name: "lazyboy2",
+                        status: 'ONLINE'
+                    }
+                ],
+                guardians: [
                     {
                         imageUrl: '{{asset('/images/GitHub-Mark-Light-32px.png')}}',
                         name: "lazyboy",
@@ -175,7 +304,7 @@
                     }
                 });
 
-                socket.on('chat message', function(msg) {
+                socket.on('response', function(msg) {
                     var item = document.createElement('p');
                     item.textContent = msg;
                     item.style.cssText='text-overflow:ellipsis;width:100%; word-break:break-all; white-space:pre-line;';
@@ -186,7 +315,7 @@
             }
         });
         /* -------------------------------------------------------------------------- */
-        /*                                  /VUE Init                                 */
+        /*                            /VUE Application                                */
         /* -------------------------------------------------------------------------- */
 
 
@@ -227,6 +356,27 @@
         /* -------------------------------------------------------------------------- */
         /*                               /Modules Init                                */
         /* -------------------------------------------------------------------------- */
+        /*
+        let urlParams = new URLSearchParams(window.location.search);
+        let protected = urlParams.get('protected');
+        var jwt = null;
+
+        let jwtRequest = new XMLHttpRequest();
+        jwtRequest.open("GET", "/emergency/" + protected + "/web_token", true);
+        jwtRequest.setRequestHeader("Content-Type", "application/json");
+        jwtRequest.setRequestHeader("X-CSRF-TOKEN", csrf);
+        jwtRequest.onload = function () {
+            try {
+                window.alert(jwtRequest.responseText);
+                let res = JSON.parse(jwtRequest.responseText);
+                jwt = res.webToken;
+            } catch (err) {
+                window.alert(err);
+                return;
+            }
+        };
+        jwtRequest.send();
+        */
     </script>
 </body>
 

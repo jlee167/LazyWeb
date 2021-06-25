@@ -93,11 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-/* -------------------------------------------------------------------------- */
-
-/*                               Login Functions                              */
-
-/* -------------------------------------------------------------------------- */
+/* ----------------------------- Login / Logout ----------------------------- */
 
 /**
  *
@@ -135,9 +131,9 @@ window.authWithOauth2 = function (csrf, accessToken, provider, redirectUrl) {
 /**
  * Login with username and password
  *
- * @param {*} csrf
- * @param {*} username
- * @param {*} password
+ * @param {String} csrf
+ * @param {String} username
+ * @param {String} password
  */
 
 
@@ -165,23 +161,40 @@ window.authWithUname = function (csrf, username, password, redirectUrl) {
     "password": password
   }));
 };
-/* -------------------------------------------------------------------------- */
+/**
+ * Login with username and password
+ *
+ * @param {String} csrf
+ * @param {String} username
+ * @param {String} password
+ */
 
-/*                              /Login Functions                              */
 
-/* -------------------------------------------------------------------------- */
+window.logout = function () {
+  var csrf = "{{ csrf_token() }}";
+  var loginRequest = new XMLHttpRequest();
+  loginRequest.open('POST', '/logout', true);
+  loginRequest.setRequestHeader('Content-Type', 'application/json');
+  loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
 
-/* -------------------------------------------------------------------------- */
+  loginRequest.onload = function () {
+    console.log(loginRequest.responseText);
+    var response = JSON.parse(loginRequest.responseText); //@Todo: Some logout verification message...
 
-/*                           User Register Functions                          */
+    console.log("Successfully Logged Out!");
+    window.location.reload();
+  };
 
-/* -------------------------------------------------------------------------- */
+  loginRequest.send();
+};
+/* ------------------------------ Registration ------------------------------ */
 
 /**
+ * Send user registration request to the server.
  *
- * @param {*} csrf
- * @param {*} userInfo
- * @param {*} redirectUrl
+ * @param {String} csrf
+ * @param {String} userInfo
+ * @param {String} redirectUrl
  */
 
 
@@ -195,28 +208,19 @@ window.sendRegisterRequest = function (csrf, userInfo, redirectUrl) {
   registerRequest.onload = function () {
     console.log(registerRequest.responseText);
     var response = JSON.parse(registerRequest.responseText);
+    console.log(response);
 
     if (response.registered == true) {
-      console.log("Successfully registered user!"); //window.location.href = redirectUrl;
+      window.alert("Successfully registered user!");
+      window.location.href = redirectUrl;
     } else {
       window.alert(response.error);
     }
   };
 
-  console.log(userInfo);
   registerRequest.send(JSON.stringify(userInfo));
 };
-/* -------------------------------------------------------------------------- */
-
-/*                          /User Register Functions                          */
-
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
-/*                          Cookie Handler Functions                          */
-
-/* -------------------------------------------------------------------------- */
+/* ----------------------------- Cookie Handler ----------------------------- */
 
 /**
  * Returns Cookie specified by key
@@ -238,11 +242,6 @@ window.getCookie = function (key) {
 
   return result;
 };
-/* -------------------------------------------------------------------------- */
-
-/*                          Cookie Handler Functions                          */
-
-/* -------------------------------------------------------------------------- */
 
 /***/ }),
 

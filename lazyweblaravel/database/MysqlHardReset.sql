@@ -59,12 +59,14 @@ CREATE TABLE users (
     auth_provider   ENUM('Google', 'Kakao', 'None') NOT NULL,
     uid_oauth       VARCHAR(50),
 
-    faceshot_url    VARCHAR(200) DEFAULT NULL,
+    image_url       VARCHAR(200) DEFAULT NULL,
+    image           LONGBLOB DEFAULT NULL,
 
     email           VARCHAR(50) UNIQUE DEFAULT NULL,
     cell            VARCHAR(20) DEFAULT NULL,
     stream_id       VARCHAR(32) UNIQUE DEFAULT NULL,
-    stream_key      VARCHAR(32) NOT NULL, /* Todo: Make Bcrypt Hash */
+    stream_key      VARCHAR(32) NOT NULL, /* @Todo: Make Bcrypt Hash */
+    webToken        VARCHAR(200),
     status          ENUM(
                         'DANGER_URGENT',
                         'FINE'
@@ -90,6 +92,14 @@ CREATE TABLE users (
 
     INDEX(status, response)
 
+) ENGINE=INNODB;
+
+
+CREATE TABLE deleted_users (
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    request_timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
 
@@ -121,10 +131,11 @@ CREATE TABLE camera_registered (
 
 
 
-CREATE TABLE AS_records (
+CREATE TABLE repair_history (
     reference_no    INT AUTO_INCREMENT  PRIMARY KEY,
     cam_id          INT NOT NULL,
     description     MEDIUMTEXT,
+    date            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (cam_id) REFERENCES camera_registered(cam_id) ON UPDATE CASCADE
 ) ENGINE=INNODB;
@@ -162,7 +173,8 @@ CREATE TABLE stream_webtokens (
     uid                 INT NOT NULL,
     token               VARCHAR(200) NOT NULL,
 
-    UNIQUE KEY (stream_id, uid)
+    UNIQUE KEY (stream_id, uid),
+    FOREIGN KEY (stream_id) REFERENCES streams(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=INNODB;
 
 
@@ -176,7 +188,7 @@ CREATE TABLE posts (
                     ),
     title           VARCHAR(100) NOT NULL,
     author          VARCHAR(20) NOT NULL,
-    date            TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
+    date            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     view_count      INT NOT NULL DEFAULT 0,
     contents        MEDIUMTEXT,
 
@@ -201,6 +213,18 @@ CREATE TABLE comments (
 
 
 
+CREATE TABLE post_likes (
+    post_id         INT NOT NULL,
+    uid             INT NOT NULL,
+
+    PRIMARY KEY (post_id, uid),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+    /* FOREIGN KEY (uid) REFERENCES users(uid) ON UPDATE CASCADE */
+) ENGINE=INNODB;
+
+
+
+
 CREATE TABLE support_request (
     id       INT auto_increment PRIMARY KEY,
     uid      INT DEFAULT NULL,
@@ -212,26 +236,17 @@ CREATE TABLE support_request (
 
 
 
-/*
-CREATE TABLE friendship (
-    id                  INT AUTO_INCREMENT PRIMARY KEY,
-    uid_user1           INT NOT NULL,
-    uid_user2           INT NOT NULL,
-    signed_user1        BOOLEAN NOT NULL DEFAULT TRUE,
-    signed_user2        BOOLEAN NOT NULL DEFAULT FALSE
-) ENGINE=INNODB;
-*/
-
-
 
 CREATE TABLE guardianship (
     id                  INT AUTO_INCREMENT PRIMARY KEY,
     uid_guardian        INT NOT NULL,
     uid_protected       INT NOT NULL,
-    signed_protected    BOOLEAN NOT NULL DEFAULT FALSE,
-    signed_guardian     BOOLEAN NOT NULL DEFAULT FALSE,
+    signed_protected    ENUM('WAITING', 'ACCEPTED', 'DENIED') NOT NULL DEFAULT 'WAITING',
+    signed_guardian     ENUM('WAITING', 'ACCEPTED', 'DENIED') NOT NULL DEFAULT 'WAITING',
 
-    CONSTRAINT no_duplicate UNIQUE (uid_guardian, uid_protected)
+    CONSTRAINT no_duplicate UNIQUE (uid_guardian, uid_protected),
+    INDEX (uid_guardian),
+    INDEX (uid_protected)
 ) ENGINE=INNODB;
 
 
@@ -245,14 +260,35 @@ CREATE TABLE products(
     title               VARCHAR(30) NOT NULL,
     description         MEDIUMTEXT,
     price_credits       INT UNSIGNED NOT NULL,
-    quantity_available  INT UNSIGNED,
     active              BOOLEAN NOT NULL
+) ENGINE=INNODB;
+
+
+CREATE TABLE warehouses(
+    id              INT PRIMARY KEY,
+    distributor     VARCHAR(200),
+    location        MEDIUMTEXT NOT NULL
+) ENGINE=INNODB;
+
+
+CREATE TABLE product_stocks(
+    id                  INT PRIMARY KEY,
+    warehouse_id        INT NOT NULL,
+    product_id          INT NOT NULL,
+    quantity_available  INT UNSIGNED,
+    last_purchase       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE,
+    CONSTRAINT FOREIGN KEY (warehouse_id) REFERENCES warehouses(id) ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
 
 
 
-CREATE TABLE rating(
+
+
+
+CREATE TABLE ratings(
     id                  INT PRIMARY KEY,
     uid                 INT NOT NULL,
     product_id          INT NOT NULL,
@@ -270,7 +306,7 @@ CREATE TABLE rating(
     Accounting Tables
 */
 
-CREATE TABLE credit(
+CREATE TABLE credits(
     uid                 INT PRIMARY KEY,
     credits             INT UNSIGNED NOT NULL,
     last_update         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -281,27 +317,26 @@ CREATE TABLE credit(
 
 
 
-CREATE TABLE transactions_products (
-    id              INT PRIMARY KEY,
-    uid             INT NOT NULL,
-    product_id      INT NOT NULL,
-    quantity        INT UNSIGNED NOT NULL,
-    price_credits   INT UNSIGNED NOT NULL,
-    date            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    authorized      BOOLEAN NOT NULL DEFAULT false,
+CREATE TABLE product_purchases (
+    id                  INT PRIMARY KEY,
+    uid                 INT NOT NULL,
+    product_id          INT NOT NULL,
+    quantity            INT UNSIGNED NOT NULL,
+    credits_expended    INT UNSIGNED NOT NULL,
+    date                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    authorized          BOOLEAN NOT NULL DEFAULT false,
 
      FOREIGN KEY (product_id) REFERENCES products(id),
      FOREIGN KEY (uid) REFERENCES users(id)
-
 ) ENGINE=INNODB;
 
 
 
 
-CREATE TABLE transactions_credits (
+CREATE TABLE credit_purchases (
     id              INT PRIMARY KEY,
     uid             INT NOT NULL,
-    payment_krw     INT UNSIGNED NOT NULL,
+    payment_usd     FLOAT UNSIGNED NOT NULL,
     credit          INT UNSIGNED NOT NULL,
     date            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     authorized      BOOLEAN NOT NULL DEFAULT FALSE
@@ -331,6 +366,29 @@ CREATE TABLE donations_kakaopay (
 
 DELIMITER $$
 
+
+/* ----------------------------- User Management ---------------------------- */
+
+CREATE PROCEDURE GetUserByName (
+    IN username_in VARCHAR(30)
+)
+BEGIN
+    SELECT firstname,
+           lastname,
+           username,
+           email,
+           cell,
+           auth_provider,
+           stream_id,
+           status,
+           response
+    FROM   users
+    WHERE  username = username_in;
+END $$
+
+
+
+
 CREATE PROCEDURE GetUserByEmail (
     IN user_email VARCHAR(50)
 )
@@ -351,38 +409,6 @@ END $$
 
 
 
-CREATE PROCEDURE GetUserByUname (
-    IN username_in VARCHAR(30)
-)
-BEGIN
-    SELECT firstname,
-           lastname,
-           username,
-           email,
-           cell,
-           auth_provider,
-           stream_id,
-           status,
-           response
-    FROM   users
-    WHERE  username = username_in;
-END $$
-
-
-
-
-CREATE PROCEDURE GetStreamKey(
-    IN username VARCHAR(30)
-)
-BEGIN
-    SELECT  stream_key
-    FROM    users
-    WHERE   users.username=username;
-END $$
-
-
-
-
 CREATE PROCEDURE GetIdByUsername (
     IN username VARCHAR(60),
     OUT uid_out INT
@@ -397,7 +423,7 @@ END $$
 
 
 
-CREATE PROCEDURE GetExternalUser (
+CREATE PROCEDURE GetUserByOAuthID (
     IN auth_provider ENUM('Google', 'Kakao', 'None'),
     IN id_external VARCHAR(50)
 )
@@ -419,6 +445,111 @@ END $$
 
 
 
+/* ------------------------- E-Commerce Transactions ------------------------ */
+
+CREATE PROCEDURE PurchaseCredits(
+    IN qty_purchased INT,
+    IN uid INT,
+    IN usd_paid FLOAT,
+    OUT result INT
+)
+BEGIN
+    DECLARE current_credits INT DEFAULT 0;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET result = -1;
+    END;
+
+
+    START TRANSACTION;
+
+        SELECT credits
+        INTO current_credits
+        FROM credits
+        WHERE credits.uid = uid
+        FOR UPDATE;
+
+        UPDATE credits
+        SET credits.credits = current_credits + qty_purchased
+        WHERE credits.uid = uid;
+
+        INSERT INTO credit_purchases(uid, payment_usd, credit, authorized)
+        VALUES(uid, usd_paid, qty_purchased, 1);
+
+        COMMIT;
+        SET result = 0;
+END$$
+
+
+
+
+CREATE PROCEDURE PurcahseProduct(
+    IN qty_purchased INT,
+    IN uid INT,
+    IN credits_paid FLOAT,
+    IN product_id INT,
+    OUT result INT
+)
+BEGIN
+
+    DECLARE unit_price_credits FLOAT DEFAULT 0.0;
+    DECLARE current_credits INT DEFAULT 0;
+    DECLARE current_stock INT DEFAULT 0;
+
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET result = -1;
+    END;
+
+    START TRANSACTION;
+        SELECT credits
+        INTO current_credits
+        FROM credits
+        WHERE credits.uid = uid
+        FOR UPDATE;
+
+        SELECT quantity_available
+        INTO current_stock
+        FROM product_stocks
+        WHERE product_stocks.product_id = product_id
+        FOR UPDATE;
+
+        IF (current_stock < qty_purchased) THEN
+            /* Quantity not available */
+            ROLLBACK;
+            SET result= -1 ;
+        ELSEIF (current_credits < (qty_purchased * unit_price_credits)) THEN
+            /* Not enough credits */
+            ROLLBACK;
+            SET result= -1 ;
+        ELSE
+            /* Proceed payment */
+            UPDATE product_stocks
+            SET quantity_available = (SELECT quantity_available
+                                    FROM product_stocks
+                                    WHERE product_stocks.product_id = product_id);
+
+            INSERT INTO product_purchases (uid, product_id, quantity, credits_expended, authorized)
+            VALUES (uid, product_id, qty_purchased, unit_price_usd * qty_purchased, 1);
+
+            UPDATE credits
+            SET credits.credits = current_credits + (qty_purchased * unit_price_credits)
+            WHERE credits.uid = uid;
+            COMMIT;
+            SET result = 0;
+        END IF;
+
+END$$
+
+
+
+
+/* ----------------------- Camera Ownership Management ---------------------- */
+
 CREATE PROCEDURE GetCamOwner (
     IN cam_id INT
 )
@@ -427,14 +558,14 @@ BEGIN
            username
     FROM   users
     WHERE  users.id = ( SELECT owner_uid
-                        FROM   cameras
-                        WHERE  cameras.cam_id = cam_id);
+                        FROM   camera_registered
+                        WHERE  camera_registered.cam_id = cam_id);
 END $$
 
 
 
 
-CREATE PROCEDURE GetCamera (
+CREATE PROCEDURE GetCameraInfo (
     IN username VARCHAR(60)
 )
 BEGIN
@@ -447,22 +578,8 @@ END $$
 
 
 
-/* Todo: Compare Subquery vs Inner Join */
-/*
-CREATE PROCEDURE AuthStream (
-    IN stream_key VARCHAR(32)
-)
-BEGIN
-    SELECT
-        id
-    FROM
-        users
-    WHERE
-        users.stream_key = stream_key;
-END $$
-*/
 
-
+/* --------------------- Guardianship Management Queries -------------------- */
 
 CREATE PROCEDURE GetGuardians (
     IN username VARCHAR(60)
@@ -470,7 +587,10 @@ CREATE PROCEDURE GetGuardians (
 BEGIN
 
 SELECT users.id,
-       users.username
+       users.username,
+       users.image_url,
+       users.cell,
+       users.email
 FROM   users
 WHERE  users.id IN (
                    /* Get guardians' UIDs from their usernames */
@@ -479,8 +599,8 @@ WHERE  users.id IN (
                     WHERE  uid_protected = (SELECT id
                                             FROM   users
                                             WHERE  users.username = username)
-                           AND guardianship.signed_protected IS TRUE
-                           AND guardianship.signed_guardian IS TRUE);
+                           AND guardianship.signed_protected = 'ACCEPTED'
+                           AND guardianship.signed_guardian = 'ACCEPTED');
 END $$
 
 
@@ -493,7 +613,11 @@ BEGIN
 
 SELECT users.id,
        users.username,
-       users.status
+       users.image_url,
+       users.cell,
+       users.email,
+       users.status,
+       users.stream_id
 FROM   users
 WHERE  users.id IN (
                    /* Get guardians' UIDs from their usernames */
@@ -502,8 +626,8 @@ WHERE  users.id IN (
                     WHERE  uid_guardian = (SELECT id
                                            FROM   users
                                            WHERE  users.username = username)
-                           AND guardianship.signed_protected IS TRUE
-                           AND guardianship.signed_guardian IS TRUE);
+                           AND guardianship.signed_protected = 'ACCEPTED'
+                           AND guardianship.signed_guardian = 'ACCEPTED');
 END $$
 
 
@@ -517,50 +641,39 @@ BEGIN
     SELECT *
     FROM   guardianship
     WHERE   ( guardianship.uid_protected = uid
-                AND guardianship.signed_protected IS FALSE )
+                AND guardianship.signed_protected = 'WAITING' )
             OR ( guardianship.uid_guardian = uid
-                AND guardianship.signed_guardian IS FALSE );
+                AND guardianship.signed_guardian = 'WAITING' );
 
 END $$
 
 
 
 
-CREATE PROCEDURE ReportEmergency(
-    IN username VARCHAR(60)
+CREATE PROCEDURE RespondPeerRequest(
+    IN reqID INT,
+    IN uid INT,
+    IN response ENUM('WAITING', 'ACCEPTED', 'DENIED')
 )
 BEGIN
-    UPDATE users
-    SET    status = 'DANGER_URGENT'
-    WHERE  users.username = username;
+    DECLARE id_protected INT;
+    DECLARE id_guardian INT;
 
-    CALL GetIdByUsername(username, @uid);
+    SELECT uid_protected, uid_guardian
+    INTO id_protected, id_guardian
+    FROM guardianship
+    WHERE guardianship.id = reqID;
 
-    SELECT stream_key
-    INTO   @stream_key
-    FROM   users
-    WHERE  users.username = username;
+    IF (uid = id_protected) THEN
+        UPDATE guardianship
+        SET signed_protected = response
+        WHERE guardianship.id = reqID;
 
-    SELECT Group_concat(uid_guardian)
-    INTO   @guardians
-    FROM   guardianship
-    WHERE  uid_protected = @uid;
-
-    INSERT INTO streams
-                (
-                    uid,
-                    status,
-                    response,
-                    stream_key,
-                    responders
-                )
-    VALUES      (
-                    @uid,
-                    'DANGER_URGENT',
-                    'RESPONSE_REQUIRED',
-                    @stream_key,
-                    @guardians
-                );
+    ELSEIF (uid = id_guardian) THEN
+        UPDATE guardianship
+        SET signed_guardian = response
+        WHERE guardianship.id = reqID;
+    END IF;
 
 END $$
 
@@ -636,101 +749,22 @@ BEGIN
                             FROM        guardianship AS parent
                             INNER JOIN  guardianship AS child
                             ON          child.uid_guardian = parent.uid_guardian
-                            WHERE       child.uid_protected = 3
+                            WHERE       child.uid_protected = username
                         );
 END $$
 
 
 
 
-CREATE PROCEDURE StartEmergencyProtocol(
-    IN username VARCHAR(60)
+/* ----------------------- Emergency Streaming Queries ---------------------- */
+
+CREATE PROCEDURE GetStreamKey(
+    IN username VARCHAR(30)
 )
 BEGIN
-    CALL getidbyusername(username, @uid);
-
-    UPDATE streams
-    SET    status = 'DANGER_URGENT',
-           response = 'RESPONSE_REQUIRED'
-    WHERE  streams.uid = @uid;
-END $$
-
-
-
-
-CREATE PROCEDURE StartStream (
-    IN username VARCHAR(60)
-)
-BEGIN
-
-    CALL GetIdByUsername(username, @uid);
-
-    INSERT INTO streams(uid, responders, stream_key)
-    VALUES (
-        (
-            SELECT id
-            FROM   users
-            WHERE  users.username = "user2"
-        ),
-        (
-            SELECT Group_concat(uid_guardian)
-            FROM   guardianship
-            WHERE  uid_protected = 3
-        ),
-        (
-            SELECT stream_key
-            FROM   users
-            WHERE  users.username = "user2"
-        )
-    );
-
-    SELECT  id
-    FROM    streams
-    WHERE   streams.uid=@uid;
-END $$
-
-
-
-
-CREATE PROCEDURE CloseStream(
-    IN username VARCHAR(60)
-)
-BEGIN
-    CALL GetIdByUsername(username, @uid);
-    DELETE FROM streams WHERE streams.uid = @uid;
-END $$
-
-
-
-
-explain INSERT INTO streams(uid, responders, stream_key)
-VALUES (
-    (
-        SELECT id
-        FROM   users
-        WHERE  users.username = "user2"
-    ),
-    (
-        SELECT Group_concat(uid_guardian)
-        FROM   guardianship
-        WHERE  uid_protected = 11
-    ),
-    (
-        SELECT stream_key
-        FROM   users
-        WHERE  users.username = "user2"
-    )
-);
-
-
-
-
-/* Todo */
-CREATE PROCEDURE SearchPosts (
-    IN keyword VARCHAR(100)
-)
-BEGIN
-
+    SELECT  stream_key
+    FROM    users
+    WHERE   users.username=username;
 END $$
 
 
@@ -759,10 +793,167 @@ END $$
 
 
 
+CREATE PROCEDURE GetJwtWithUname(
+    IN uid_guardian  VARCHAR(60),
+    IN username_protected VARCHAR(60)
+)
+BEGIN
+
+    SELECT token
+    FROM   stream_webtokens
+    WHERE   uid = (  SELECT uid
+                    FROM   users
+                    WHERE  users.username = username_protected)
+            AND uid_guardian = (SELECT uid_guardian
+                                FROM   guardianship
+                                WHERE  guardianship.uid_protected =
+                                        (SELECT uid
+                                        FROM   users
+                                        WHERE  users.username = username_protected)
+                                        AND signed_protected = 'ACCEPTED'
+                                        AND signed_guardian = 'ACCEPTED');
+END $$
+
+
+CREATE PROCEDURE GetMyJwt(
+    IN uid VARCHAR(60)
+)
+BEGIN
+    SELECT  webToken
+    FROM    users
+    WHERE   users.uid = uid;
+END$$
+
+
+
+CREATE PROCEDURE ReportEmergency(
+    IN username VARCHAR(60)
+)
+BEGIN
+    UPDATE users
+    SET    status = 'DANGER_URGENT'
+    WHERE  users.username = username;
+
+    CALL GetIdByUsername(username, @uid);
+
+    SELECT stream_key
+    INTO   @stream_key
+    FROM   users
+    WHERE  users.username = username;
+
+    SELECT Group_concat(uid_guardian)
+    INTO   @guardians
+    FROM   guardianship
+    WHERE  uid_protected = @uid;
+
+    INSERT INTO streams
+                (
+                    uid,
+                    status,
+                    response,
+                    stream_key,
+                    responders
+                )
+    VALUES      (
+                    @uid,
+                    'DANGER_URGENT',
+                    'RESPONSE_REQUIRED',
+                    @stream_key,
+                    @guardians
+                );
+
+END $$
+
+
+
+
+CREATE PROCEDURE StartEmergencyProtocol(
+    IN username VARCHAR(60)
+)
+BEGIN
+    CALL GetIdByUsername(username, @uid);
+
+    UPDATE streams
+    SET    status = 'DANGER_URGENT',
+           response = 'RESPONSE_REQUIRED'
+    WHERE  streams.uid = @uid;
+END $$
+
+
+
+
+CREATE PROCEDURE StopEmergencyProtocol(
+    IN username VARCHAR(60)
+)
+BEGIN
+    CALL GetIdByUsername(username, @uid);
+
+    UPDATE streams
+    SET    status = 'FINE',
+           response = 'RESOLVED'
+    WHERE  streams.uid = @uid;
+END $$
+
+
+
+
+CREATE PROCEDURE StartStream (
+    IN username VARCHAR(60)
+)
+BEGIN
+
+    CALL GetIdByUsername(username, @uid);
+
+    INSERT INTO streams(uid, responders, stream_key)
+    VALUES (
+        (
+            SELECT id
+            FROM   users
+            WHERE  users.username = username
+        ),
+        (
+            SELECT Group_concat(uid_guardian)
+            FROM   guardianship
+            WHERE  uid_protected = @uid
+        ),
+        (
+            SELECT stream_key
+            FROM   users
+            WHERE  users.username = username
+        )
+    );
+END $$
+
+
+
+
+CREATE PROCEDURE CloseStream(
+    IN username VARCHAR(60)
+)
+BEGIN
+    CALL GetIdByUsername(username, @uid);
+    DELETE FROM streams WHERE streams.uid = @uid;
+END $$
+
+
+
+
+/* ------------------------------- Forum CRUD ------------------------------- */
+
+CREATE PROCEDURE SearchPosts (
+    IN keyword VARCHAR(100)
+)
+BEGIN
+    /* @Todo */
+END $$
+
+
+
 
 CREATE PROCEDURE GetTrendingPosts(
 )
 BEGIN
+    /* Get most viewed posts of latest 7 days */
     SELECT id,
            title,
            forum,
@@ -779,6 +970,8 @@ END$$
 CREATE PROCEDURE GetTopPosts(
 )
 BEGIN
+
+    /* Get most viewed posts of all time */
     SELECT id,
            title,
            forum,
@@ -790,4 +983,20 @@ END$$
 
 
 
+
+CREATE PROCEDURE GetPostLikeCount(
+    IN post_id INT
+)
+BEGIN
+    SELECT COUNT(*)
+    FROM post_likes
+    WHERE post_likes.post_id = post_id;
+END$$
+
+
+
 DELIMITER ;
+
+/* -------------------------------------------------------------------------- */
+/*                             /Stored Procedures                             */
+/* -------------------------------------------------------------------------- */

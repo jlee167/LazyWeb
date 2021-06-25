@@ -1,18 +1,121 @@
-.chatbot-container{
+.chatbot-container {
     display: none;
-    width:300px;
-    text-align:center;
-    margin-top:170px;
-    margin-right:auto;
-    margin-left:auto;
+    width: 300px;
+    text-align: center;
+    margin-top: 170px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.searchbar {
+    display: flex;
+    width: 100%;
+    height: 60px;
+    margin-top: 70px;
+    border-bottom: 1px solid #D5D5D5;
+    justify-content: center;
+}
+
+.vertical-center {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+div.search-form {
+    width: 300px;
+    margin-left: 70px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+select.forum-select {
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-left: 15px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 40px;
+    vertical-align: center;
+    border-radius: 5px 5px 5px 5px;
+}
+
+div.forum-background {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #E9E9E9;
+}
+
+div.forum-container {
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100vw;
+}
+
+div.post-list {
+    display: inline-block;
+    margin-top: 60px;
+    margin-left: auto;
+}
+
+.content-label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: bold;
+    font-size: 20;
+}
+
+.posts-and-comments {
+    padding-top: 0px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 900px;
+    margin: auto;
+    margin-bottom: 100px;
+    min-height: 300px;
+    margin-top: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+#forumSideItems {
+    display: inline-block;
+    text-align: center;
+    margin-left: 0px;
+    margin-right: auto;
+}
+
+#commentWriter {
+    margin: auto;
+    margin-top: 100px;
+    width: 100%;
+    height: 80%;
+}
+
+input.no-highlight:focus {
+    outline-width: 0;
+}
+
+#search-btn {
+    background-color: #5E56F0;
+    border-radius: 0 12px 12px 0;
+    border: 2px solid #5E56F0;
+    min-width: 70px;
+    cursor: pointer;
+    display: flex;
 }
 
 .bounce {
     -webkit-animation: bounce 1s infinite;
             animation: bounce 1s infinite;
-    }
+}
 
-    @-webkit-keyframes bounce {
+@-webkit-keyframes bounce {
     0% {
         transform: translateX(0px);
     }
@@ -33,7 +136,7 @@
     }
 }
 
-    @keyframes bounce {
+@keyframes bounce {
     0% {
         transform: translateX(0px);
     }
@@ -54,8 +157,8 @@
     }
 }
 
-@media only screen and (min-width: 1500px){
-    .chatbot-container{
+@media only screen and (min-width: 1500px) {
+    .chatbot-container {
         display: inline-block;
     }
 }

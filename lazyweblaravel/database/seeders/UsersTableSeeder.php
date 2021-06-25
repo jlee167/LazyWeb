@@ -1,7 +1,6 @@
 <?php
 
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -29,18 +28,17 @@ class UsersTableSeeder extends Seeder
         for ($i = 1; $i <= NUM_USERS; $i++) {
             /* Username: user1, user2, user3... */
             $uid = $i;
-            $username = 'user' . strval($i);
+            $username = 'testuser' . strval($i);
 
 
-            /* Insert random users into database */
+            /* User Profiles */
             DB::table('users')->insert([
                 'firstname'         => $faker->firstName(),
                 'lastname'          => $faker->lastName,
                 'username'          => $username,
-                'password'          => Hash::make("secret" . strval($i)),
+                'password'          => Hash::make("password"),
                 'auth_provider'     => Arr::random(['Google', 'Kakao', 'None']),
                 'uid_oauth'         => str_random(10),
-                'faceshot_url'      => str_random(10),
                 'email'             => $faker->unique()->email,
                 'cell'              => '010' . '-' . strval(rand(100, 9999)) . '-' . strval(rand(1000, 9999)),
                 'stream_id'         => str_random(32),
@@ -54,6 +52,7 @@ class UsersTableSeeder extends Seeder
             ]);
 
 
+            /* Camera Registration */
             DB::table('camera_registered')->insert([
                 'model_no'  => $username . strval('1'),
                 'revision'  => strval(1),
@@ -63,17 +62,21 @@ class UsersTableSeeder extends Seeder
 
 
             /* Update current user's credit */
-            DB::table('credit')->insert([
+            DB::table('credits')->insert([
                 'uid' => $uid,
-                'credits' => '0'
+                'credits' => '1000'
             ]);
 
-            DB::table('guardianship')->insert([
-                'uid_protected' => ($uid==2) ? 3 : 2,
-                'uid_guardian'  => ($uid==2) ? 2 : $uid,
-                'signed_protected' => 1,
-                'signed_guardian' => 1
-            ]);
+            if ((intval($uid) % 5) == 4) {
+                for ($iter = 0; $iter < 4; $iter++) {
+                    DB::table('guardianship')->insert([
+                        'uid_protected' => $uid,
+                        'uid_guardian'  => ($uid - ($uid % 5)) + $iter,
+                        'signed_protected' => 'ACCEPTED',
+                        'signed_guardian' => 'ACCEPTED'
+                    ]);
+                }
+            }
 
 
 
@@ -106,13 +109,5 @@ class UsersTableSeeder extends Seeder
             ]);
             */
         }
-
-
-        /*
-        DB::table('friendship')->insert([
-            'uid_user1'        => strval(rand(1, 200)),
-            'uid_user2'        => strval(rand(1, 200))
-        ]);
-        */
     }
 }

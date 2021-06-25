@@ -7,20 +7,27 @@
     <link rel="stylesheet" type="text/css" href="/css/full-page-scroll.css" />
     <link rel="stylesheet" type="text/css" href="/css/main.css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
+
+    <script src="/js/full-page-scroll.js"></script>
+    <script defer src="/js/main.js"></script>
+
     <style type="text/css">
         .scroll-section1 {
             background-color: #121212;
-            border-top:0px;
-            border-bottom:0px;
+            border-top: 0px;
+            border-bottom: 0px;
+            overflow: hidden;
         }
 
         .scroll-section2 {
-            background-color: #282736;
+            background-color: #07080f;
+            overflow: hidden;
         }
 
         .scroll-section3 {
             background-image: url({{asset('/images/tea-time-1080p.jpg')}});
             background-size: cover;
+            overflow: hidden;
         }
 
         .scroll-section4 {
@@ -29,44 +36,6 @@
 
         .scroll-section5 {
             background-color: #121212;
-        }
-
-        .section-center {
-            font-family: "Open Sans";
-            font-style: normal;
-            text-align: center;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .page-container {
-            font-family: "Open Sans";
-            font-style: normal;
-            text-align: center;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .button {
-            background-color: #f2cf66;
-            border-bottom: 5px solid #d1b358;
-            text-shadow: 0px -2px #d1b358;
-            padding: 10px 40px;
-            border-radius: 10px;
-            font-size: 25px;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .overlay-dark {
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.8); /* Black background with opacity */
-            z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
         }
     </style>
 </head>
@@ -77,50 +46,56 @@
 
 
     <div id="main" class="scroll-container">
+
+
         <section class="scroll-section1 section-center">
-            <div class="page-container">
-                <img
-                    class="img-logo"
-                    src="https://img.favpng.com/14/18/5/mustang-pony-cartoon-animation-drawing-png-favpng-eRTaFnQzSSKqTVJNerrQan3dx.jpg"
-                >
-                <h1 class="front-label"> Hi, I'm LazyBoy!</h1>
+            <div class="scrollable-page">
+                <img class="img-logo"
+                    src="https://img.favpng.com/14/18/5/mustang-pony-cartoon-animation-drawing-png-favpng-eRTaFnQzSSKqTVJNerrQan3dx.jpg">
+                <h1 class="front-label"> Welcome to... <br> Lazyboy Industries</h1>
             </div>
         </section>
+
+
         <section class="scroll-section2 section-center">
-            <div class="page-container">
+            <div class="scrollable-page">
                 <div class="contents">
-                    <div class="logo-engineering">
-                        <img class="img-logo" src="https://img.favpng.com/14/18/5/mustang-pony-cartoon-animation-drawing-png-favpng-eRTaFnQzSSKqTVJNerrQan3dx.jpg">
+                    <div class="preface">
+                        <h1 class="header-preface"> Need my expertise? </h1>
+                        <product-card v-bind:company="product1.company" v-bind:name="product1.name"
+                            v-bind:description="product1.description" v-bind:bgColor="product1.bgColor"
+                            v-bind:price="product1.price" v-bind:availability="product1.availability"></product-card>
                     </div>
 
-                    <div style="display:flex; flex-direction:column; justify-content:center; padding-left:30px; padding-right:20px;">
-                        <div class="container-skills">
+                    <div class="container-skills">
+                        <div class="skill-item fade-1s">
                             <img class="img-skills" src="{{asset('/images/RTL.png')}}">
-                            <div style="display:flex; flex-direction:column; justify-content:start; align-items:flex-start;">
-                                <h1 class="header-skills"> Digital Logics</h1>
-                                <p class="desc_skills">
+                            <div class="skill-desc-container">
+                                <h1 class="skill-desc-header"> Digital Logics</h1>
+                                <p class="skill-desc-details">
                                     3 Years of experience in FPGA engineering.<br>
                                     I have experience with some time-critical modules and various protocols.
                                 </p>
                             </div>
                         </div>
 
-                        <div class="container-skills">
+                        <div class="skill-item fade-2s">
+                            <!--div class="img-skills" style="background:url({{asset('/images/HARDWARE.png')}});"></div-->
                             <img class="img-skills" src="{{asset('/images/HARDWARE.png')}}">
-                            <div style="display:flex; flex-direction:column; justify-content:start; align-items:flex-start;">
-                                <h1 class="header-skills"> Hardware</h1>
-                                <p class="desc_skills">
+                            <div class="skill-desc-container">
+                                <h1 class="skill-desc-header"> Hardware</h1>
+                                <p class="skill-desc-details">
                                     I'm from an Electrical Engineering background. (BSEE)<br>
                                     I can design simple digital/analog circuits below 1Ghz.<br>
                                 </p>
                             </div>
                         </div>
 
-                        <div class="container-skills">
+                        <div class="skill-item fade-3s">
                             <img class="img-skills" src="{{asset('/images/SOFTWARE.png')}}">
-                            <div style="display:flex; flex-direction:column; justify-content:start; align-items:flex-start;">
-                                <h1 class="header-skills"> Software</h1>
-                                <p class="desc_skills">
+                            <div class="skill-desc-container">
+                                <h1 class="skill-desc-header"> Software</h1>
+                                <p class="skill-desc-details">
                                     3 Years of experience in FPGA engineering.<br>
                                     I have experience with some time-critical modules and various protocols.
                                 </p>
@@ -130,17 +105,20 @@
                 </div>
             </div>
         </section>
+
+
         <section class="scroll-section3 section-center">
-            <div  class="page-container">
-                <div div style="display:flex; flex-direction:row; justify-content:center; align-items:center;">
-                    <div class="overlay-dark"
-                        style="display:flex; flex-direction:column; justify-content:start; align-items:center; padding: 20px 20px 20px 20px;">
-                        <h1 style="font-family:'Anton', sans-serif !important; color:rgb(252, 252, 252);
-                                font-weight: 500 !important; font-size:35px;"> Study with me! </h1>
-                        <p style="color:white; font-weight:600; font-family: 'Nunito Sans', sans-serif;">
-                            <br>Currently looking for study groups:
-                            <br>React.js, Spring, SQL Cert
-                            <br><br> Contact: lazyboyindustries.main@gmail.com
+            <div class="scrollable-page">
+                <div class="flex-center-vh">
+                    <div class="overlay-dark overlay-box-page3">
+                        <h1 id="offlineGroupHeader"> Group Study Activities </h1>
+                        <p id="offlineGroupDesc">
+                            <br>I'm currently looking for study groups for following subjects:
+                            <br>
+                            <br>React.js, Java, Spring, SQLP
+                            <br>
+                            <br> If you need a studymate for one of the above, shoot me a message!
+                            <br><br> lazyboyindustries.main@gmail.com
                         </p>
                     </div>
                 </div>
@@ -148,20 +126,24 @@
         </section>
     </div>
 
-    @include('includes.layouts.modal')
-
-    <script src="/js/full-page-scroll.js"></script>
-    <script type="text/javascript">
-        /* Page Scroll App */
-        new fullScroll({
-            mainElement: "main",
-            displayDots: true,
-            dotsPosition: "left",
-            animateTime: 0.7,
-            animateFunction: "ease",
-            transitionItems: []
-        });
-    </script>
 </body>
+
+
+<script>
+    app = new Vue({
+        el: "#main",
+        data: {
+            product1:
+                {
+                    company: "Lazyboy Industries",
+                    name: "Lazyboy",
+                    description: "Desc Here",
+                    bgColor: "Pink",
+                    price: 50.00,
+                    availability: true
+                }
+        }
+    });
+</script>
 
 </html>

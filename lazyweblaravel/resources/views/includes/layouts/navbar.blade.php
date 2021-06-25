@@ -16,14 +16,101 @@ Opposite when not authenticated yet.
     use Illuminate\Support\Facades\Auth;
 ?>
 
+<style>
+    .nav-item:hover {
+        /*transform: scale(1.15);*/
+    }
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background-color:#121212 !important;
-                                            width:100vw; height:70px !important; padding: 0 0 0 0 ;">
+    .navbar-default {
+        background-color: #121212 !important;
+        width: 100vw;
+        height: 70px !important;
+        padding: 0 0 0 0;
+    }
+
+    .navbar-toggler {
+        margin: 0 auto;
+    }
+
+    .brand-text {}
+
+    #brand-container{
+        height: 70px !important;
+        margin: auto;
+        margin-right:20px;
+        padding: auto;
+        display:flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .font-username {
+        display: inline-block;
+        color: white;
+        display: inline-block;
+        margin: auto;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+
+    #logout {
+        color: white;
+        display: inline-block;
+        margin: auto;
+        font-size: 12px;
+        margin-left: 5px;
+        vertical-align: middle;
+        margin-right: 20px;
+    }
+
+    #signBtn {
+        width: 100px;
+        height: 45px;
+        line-height: 30px;
+        margin-right: 20px;
+    }
+
+    #profileImage {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin: auto;
+    }
+
+    #logoImage {
+        min-width: 40px;
+        min-height: 40px;
+        margin-right: 10px;
+        margin-left: 15px;
+    }
+
+    #collapsibleNavbar {
+        background-color: #121212 !important;
+        width: 100%;
+    }
+
+    #brand-container {
+        font-family: 'Lobster', cursive !important;
+        margin-left: 15px;
+    }
+
+    #brand-logo {
+        margin:auto;
+        margin-right:5px;
+    }
+
+    .navbar .navbar-collapse {
+        text-align: center;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-default bg-light fixed-top">
     <!-- Brand -->
-    <a class="navbar-brand" style="font-family: 'Lobster', cursive !important;">
-        <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
-            style="min-width:40px; min-height:40px;margin-right:10px; margin-left:15px;"> LazyBoy Industries
-    </a>
+    <div id="brand-container" class="navbar-brand brand-text">
+        <img id="brand-logo" src="{{asset('/images/GitHub-Mark-Light-32px.png')}}">
+        <p style="margin: auto; vertical-align: middle; color:white;">LazyBoy Industries</p>
+    </div>
 
     <!-- Toggler/collapsibe Button -->
     <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"
@@ -32,24 +119,25 @@ Opposite when not authenticated yet.
     </button>
 
     <!-- Navbar links -->
-    <div class="collapse navbar-collapse" id="collapsibleNavbar"
-        style="background-color:#121212 !important; width:100%;">
-
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <!-- Menu -->
         <ul id="menu-links" class="navbar-nav mr-auto">
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Home</a></li>
-            <li class="nav-item"> <a    class="nav-link" onclick="modalApp.showModal=true; document.body.style.overflowY='hidden';"
-                                        style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
+            <li class="nav-item"> <a class="nav-link"
+                    onclick="modalApp.showModal=true; document.body.style.overflowY='hidden';"
+                    style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
             </li>
             <li class="nav-item"> <a class="nav-link" href="/views/products"> Products</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/dashboard?page=1"> Dashboard</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/support"> Support</a></li>
             <li class="nav-item">
-                <a class="nav-link" href="/views/emergency_broadcast">
-                    Emergency
+                <a class="nav-link" href="/views/emergency_broadcast">Emergency</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/views/peers">
+                    <img src="{{asset('/images/peer-icon.svg')}}" style="">
                 </a>
             </li>
-            <li class="nav-item"> <a class="nav-link" onclick="emergency_report();"> Report</a></li>
         </ul>
 
 
@@ -60,27 +148,18 @@ Opposite when not authenticated yet.
 
             <!-------- Display username and logout button if currently logged in ------->
             <?php if (LoginController::get_auth_state()): ?>
-            <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}"
-                style="display:inline-block; width:40px; height:40px; margin:auto; ">
-            <a class="font-username" style="display:inline-block; color:white; display:inline-block; margin:auto;
-                                                margin-left:10px; vertical-align:middle;">
+
+            <img id="profileImage" src="{{asset('/images/GitHub-Mark-Light-32px.png')}}">
+            <a class="font-username">
                 <?php echo trim(Auth::user()["username"]); ?>
             </a>
-            <a style="color:white;
-                    display:inline-block; margin:auto;
-                    font-size:12px;
-                    margin-left:5px;
-                    vertical-align:middle;
-                    margin-right:20px;"
-                href="javascript:logout();">
+            <a id="logout" href="javascript:logout();">
                 (logout)
             </a>
 
-
             <!-------- Display login button if login is required ------->
             <?php else: ?>
-            <a id="signBtn" class="btn btn-outline-light" href="/views/login" role="button"
-                style="width:100px; height:45px; line-height:30px; margin-right:20px;">
+            <a id="signBtn" class="btn btn-outline-light" href="/views/login" role="button">
                 Sign In
             </a>
             <?php endif; ?>
@@ -89,70 +168,7 @@ Opposite when not authenticated yet.
             /                           /Login Button Rendering                        /
             /-------------------------------------------------------------------------->
         </div>
+    </div>
 </nav>
 
-
-<!-------------------------------------------------------------------------- */
-/*                                Resume Modal                               */
-/*             Source: https://vuejs.org/v2/examples/modal.html              */
-/*---------------------------------------------------------------------------->
-
-
-
-<!-- template for the modal component -->
-
-<!-------------------------------------------------------------------------- */
-/*                               /Resume Modal                               */
-/*---------------------------------------------------------------------------->
-
-
-
-<script>
-    /**
-     * Login with username and password
-     *
-     * @param {*} csrf
-     * @param {*} username
-     * @param {*} password
-     */
-    function logout(){
-        var csrf = "{{ csrf_token() }}";
-        var loginRequest = new XMLHttpRequest();
-        loginRequest.open('POST', '/logout', true);
-        loginRequest.setRequestHeader('Content-Type', 'application/json');
-        loginRequest.setRequestHeader('X-CSRF-TOKEN', csrf);
-        loginRequest.onload = function() {
-            console.log(loginRequest.responseText);
-            var response = JSON.parse(loginRequest.responseText);
-
-            //Todo: Some logout verification message...
-
-            console.log("Successfully Logged Out!")
-            window.location.reload();
-        };
-
-        loginRequest.send();
-    }
-
-
-    /**
-     *
-     */
-    function broadcast(){
-        window.open("http://localhost:3001", "Emergency Stream");
-    }
-
-
-    function emergency_report(){
-        var csrf = "{{ csrf_token() }}";
-        var emergencyReport = new XMLHttpRequest();
-        emergencyReport.open('POST', '/emergency/report', true);
-        emergencyReport.setRequestHeader('Content-Type', 'application/json');
-        emergencyReport.setRequestHeader('X-CSRF-TOKEN', csrf);
-        emergencyReport.onload = function() {
-            console.log(emergencyReport.responseText);
-            var response = JSON.parse(emergencyReport.responseText);
-        };
-        emergencyReport.send();
-    }
-</script>
+@include('includes.layouts.modal')

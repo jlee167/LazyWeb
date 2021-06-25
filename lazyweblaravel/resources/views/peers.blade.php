@@ -1,62 +1,71 @@
 <html>
 
-<!-----------------------------------------------------------------------------
-                                     Head
-------------------------------------------------------------------------------->
-
 <head>
     @include('includes.imports.styles_common')
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
+
+    <style>
+        #peer-list-section {
+            overflow-y: visible;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        #peer-page-content {
+            width: 100vw;
+            min-height: 100vh;
+            padding-top: 70px;
+            background-color: rgb(224, 224, 224);
+        }
+    </style>
 </head>
 
-<!-----------------------------------------------------------------------------
-                                     /Head
-------------------------------------------------------------------------------->
 
 
-
-
-<!-----------------------------------------------------------------------------
-                                     Body
-------------------------------------------------------------------------------->
 <body>
     @include('includes.layouts.navbar')
 
-    <div id="peers-view" class="section-contents" style="overflow:visible; display:flex; flex-direction:row;
-        background-color:rgb(250, 202, 246); width:100vw; min-height:100vh;">
-        <peer-list
-            v-bind:contents="contents"
-            v-bind:macro_guardian="macro_guardian"
-            v-bind:macro_protected="macro_protected"
-            v-bind:callback_request_guardian="addGuardianFunc"
-            v-bind:callback_request_protected="addProtectedFunc"
-            v-bind:callback_refresh_ui = "refreshUiFunc"
-        >
-        </peer-list>
+    <div id="peer-page-content" class="section-contents">
+        <div id="peer-list-section">
+            <h1 style="margin:auto; margin-bottom: 50px;"> Peers </h1>
+            <peer-list
+                v-bind:contents="contents"
+                v-bind:macro_guardian="macro_guardian"
+                v-bind:macro_protected="macro_protected"
+                v-bind:callback_request_guardian="addGuardianFunc"
+                v-bind:callback_request_protected="addProtectedFunc"
+                v-bind:callback_refresh_ui="refreshUiFunc"
+                v-bind:callback_respond="respondFunc">
+            </peer-list>
+        </div>
     </div>
     @include('includes.layouts.footer')
-    @include('includes.layouts.modal')
 
     <script>
+        /* ---------------------------- Page UI Settings ---------------------------- */
+        const LABEL_GUARDIAN    = "GUARDIAN";
+        const LABEL_PROTECTED   = "PROTECTED";
+
+
         /* -------------------------------------------------------------------------- */
         /*                                   Vue App                                  */
         /* -------------------------------------------------------------------------- */
 
-        /* Some macros for peer list UI */
-        const LABEL_GUARDIAN    = "GUARDIAN";
-        const LABEL_PROTECTED   = "PROTECTED";
-
         peerApp = new Vue({
-            el: '#peers-view',
+            el: '#peer-list-section',
 
             data: {
-                contents: [],
-                macro_guardian: LABEL_GUARDIAN,
-                macro_protected: LABEL_PROTECTED,
-                addGuardianFunc: addGuardian,
-                addProtectedFunc: addProtected,
-                refreshUiFunc: refreshUI
+                contents:           null,
+                macro_guardian:     LABEL_GUARDIAN,
+                macro_protected:    LABEL_PROTECTED,
+                addGuardianFunc:    addGuardian,
+                addProtectedFunc:   addProtected,
+                respondFunc:        respondPeerRequest,
+                refreshUiFunc:      refreshUI
             },
 
             mounted: function(){
@@ -70,14 +79,14 @@
 
 
 
-
-
         /* -------------------------------------------------------------------------- */
         /*                         Peer data extraction logic                         */
         /* -------------------------------------------------------------------------- */
         const csrf = "{{ csrf_token() }}";
         const URI_GUARDIAN  = "/members/guardian/";
         const URI_PROTECTED = "/members/protected/";
+
+        let sort_mutex = false;
 
         function xhttpRequest(reqType, uri, data, callback){
             var req = new XMLHttpRequest();
@@ -102,11 +111,12 @@
                     echo "var uid = " . Auth::id() . ";";
                 ?>
                 var res = JSON.parse(req.responseText);
-                console.log(res);
+
                 if (res) {
                     for (var iter = 0; iter < res.length; iter++){
                         if (res[iter].uid_guardian == uid)
                             peerApp.contents.push({
+                                requestID:      res[iter].id,
                                 uid:            res[iter].uid_protected,
                                 username:       res[iter].uid_protected,
                                 relationship:   LABEL_PROTECTED,
@@ -115,13 +125,13 @@
                             });
                         else if (res[iter].uid_protected == uid)
                             peerApp.contents.push({
+                                requestID:      res[iter].id,
                                 uid:            res[iter].uid_guardian,
                                 username:       res[iter].uid_guardian,
                                 relationship:   LABEL_GUARDIAN,
                                 status:         'FINE',
                                 authorized:     false
                             });
-                        console.log(res[iter].uid_guardian);
                     }
                 }
             });
@@ -133,12 +143,9 @@
             getGuardiansReq.setRequestHeader('Content-Type', 'application/json');
             getGuardiansReq.setRequestHeader('X-CSRF-TOKEN', csrf);
             getGuardiansReq.onload = function() {
-                console.log(getGuardiansReq.responseText);
                 var guardians = JSON.parse(getGuardiansReq.responseText);
 
                 for (var iter = 0; iter < guardians.length; iter++){
-                    console.log(guardians[iter].id);
-                    console.log(guardians[iter].username);
                     peerApp.contents.push({
                         uid:            guardians[iter].id,
                         username:       guardians[iter].username,
@@ -146,6 +153,35 @@
                         authorized:     true
                     });
                 }
+
+
+                while(true) {
+                    if (!sort_mutex) {
+                        sort_mutex = true;
+                        break;
+                    }
+                }
+
+                peerApp.contents.sort(function(a,b){
+                    return a.uid - b.uid;
+                });
+
+                for (let i = 0; i + 1 < peerApp.contents.length; i ++) {
+                    if ((peerApp.contents[i].uid === peerApp.contents[i+1].uid) &&
+                        peerApp.contents[i].authorized && peerApp.contents[i+1].authorized)
+                    {
+                        peerApp.contents[i].relationship = "DUAL";
+                        peerApp.contents.splice(i+1, 1);
+                    }
+                }
+
+                peerApp.contents.sort(function(a,b){
+                    return Number(a.authorized) - Number(b.authorized);
+                });
+
+                sort_mutex = false;
+
+                console.log(peerApp.contents);
             };
             getGuardiansReq.send();
 
@@ -156,13 +192,9 @@
             getProtecteesReq.setRequestHeader('Content-Type', 'application/json');
             getProtecteesReq.setRequestHeader('X-CSRF-TOKEN', csrf);
             getProtecteesReq.onload = function() {
-                console.log(getProtecteesReq.responseText);
                 var protectees = JSON.parse(getProtecteesReq.responseText);
 
                 for (var iter = 0; iter < protectees.length; iter++){
-                    console.log(protectees[iter].id);
-                    console.log(protectees[iter].username);
-                    console.log(protectees[iter].status);
                     peerApp.contents.push({
                         uid:            protectees[iter].id,
                         username:       protectees[iter].username,
@@ -171,11 +203,41 @@
                         authorized:     true
                     });
                 }
+
+
+                while(true) {
+                    if (!sort_mutex) {
+                        sort_mutex = true;
+                        break;
+                    }
+                }
+
+                peerApp.contents.sort(function(a,b){
+                    return a.uid - b.uid;
+                });
+                for (let i = 0; i + 1 < peerApp.contents.length; i ++) {
+                    if ((peerApp.contents[i].uid === peerApp.contents[i+1].uid) &&
+                        peerApp.contents[i].authorized && peerApp.contents[i+1].authorized)
+                    {
+                        peerApp.contents[i].relationship = "DUAL";
+                        peerApp.contents.splice(i+1, 1);
+                    }
+                }
+                peerApp.contents.sort(function(a,b){
+                    return Number(a.authorized) - Number(b.authorized);
+                });
+
+                console.log(peerApp.contents);
+
+                sort_mutex = false;
             };
             getProtecteesReq.send();
         }
 
+
         refreshUI();
+
+
         /* -------------------------------------------------------------------------- */
         /*                         /Peer data extraction logic                        */
         /* -------------------------------------------------------------------------- */
@@ -198,7 +260,6 @@
                 }
 
                 if (res.hasOwnProperty('id')) {
-                    console.log(res.id);
                     if (callback)
                         callback(res.id);
                     return res.id;
@@ -214,12 +275,11 @@
         function requestGuardianship(peer, uri){
             getUid(peer, function(uid){
                 if (uid) {
-                    console.log('h' + uid);
                     xhttpRequest('POST', uri + uid, null, function(req){
-                        console.log(req.responseText);
                         var res = JSON.parse(req.responseText);
-                        if (res.status == "ok")
-                            console.log("pass");
+                        if (res.status == "ok") {
+                            window.location.reload();
+                        }
                         else
                             console.log(req.responseText);
                     });
@@ -237,6 +297,28 @@
             requestGuardianship(peer, URI_GUARDIAN);
         }
 
+
+        /* Get protecteds list and pass to Vue app */
+        function respondPeerRequest(requestID, response){
+            let peerRequestResponse = new XMLHttpRequest();
+            peerRequestResponse.open('PUT', '/peer_request');
+            peerRequestResponse.setRequestHeader('Content-Type', 'application/json');
+            peerRequestResponse.setRequestHeader('X-CSRF-TOKEN', csrf);
+            peerRequestResponse.onload = function() {
+                console.log(peerRequestResponse.responseText);
+                window.location.reload();
+            };
+            console.log(JSON.stringify({
+                requestID:  requestID,
+                response:   response
+            }));
+            peerRequestResponse.send(JSON.stringify({
+                requestID:  requestID,
+                response:   response
+            }));
+        }
+
+
         /* -------------------------------------------------------------------------- */
         /*                          /Peer Request Functions                           */
         /* -------------------------------------------------------------------------- */
@@ -244,8 +326,5 @@
 
 </body>
 
-<!-----------------------------------------------------------------------------
-                                     /Body
-------------------------------------------------------------------------------->
 
 </html>

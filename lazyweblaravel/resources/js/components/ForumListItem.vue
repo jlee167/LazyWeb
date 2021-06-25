@@ -1,5 +1,6 @@
 <template>
-    <div id="container" class="col-md-4 forum-list-item" onmouseover="" style="cursor: pointer;">
+    <div id="container" class="forum-list-item" onmouseover="" style="cursor: pointer;">
+        <div class="post-status"></div>
         <div class="user-info">
             <img class="profile-image" src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png">
         </div>
@@ -17,12 +18,15 @@
                     </p>
             </div>
 
-            <div style="margin:auto; margin-bottom:10px; margin-left:5%;">
-                <p style="display:inline-block;font-family: 'Poppins', sans-serif; margin:auto; margin-top:10px;"> by {{author}} </p>
-                <img class="profile-image-small"
-                     src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png">
+            <div style="display:flex; flex-direction: row; align-items:center; margin:auto; margin-bottom:10px; margin-left:5%;">
+                <p style="display:inline-block;font-family: 'Poppins', sans-serif; margin:auto; "> by {{author}} </p>
+                <img class="icon-small" src="/images/icon-eye.svg">
+                <p style="display:inline; vertical-align:middle; margin:auto; margin-left: 8px;">{{views}}</p>
+                <img class="icon-small" src="/images/icon-thumbsup.svg">
+                <p style="display:inline; vertical-align:middle; margin:auto; margin-left: 8px;">{{likes}}</p>
             </div>
         </div>
+
 
     </div>
 </template>
@@ -30,7 +34,7 @@
 
 <script>
     export default {
-        props : ['title', 'contents', 'comments', 'author', 'views', 'img-url'],
+        props : ['title', 'contents', 'comments', 'author', 'views', 'img-url', 'likes'],
 
         mounted() {
             console.log('New post item appended')
@@ -49,12 +53,10 @@
         border-radius:50%;
     }
 
-    .profile-image-small{
+    .icon-small{
         width:20px;
         height:20px;
-        margin-left:5px;
-        border-radius:50%;
-        display: none;
+        margin-left:30px;
     }
 
 
@@ -87,6 +89,14 @@
         justify-content: center;
         space-between:20px;
         width:100px;
+        overflow:hidden;
+    }
+
+    .post-status {
+        height:100%;
+        width:7px;
+        background-color: rgb(0, 179, 0);
+        margin-right:22px;
         overflow:hidden;
     }
 
