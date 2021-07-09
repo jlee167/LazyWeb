@@ -1,9 +1,9 @@
 <template>
   <div id="top-continer">
     <div class="list-container">
-      <div class="list" v-for="content in contents" :key="content.id">
+      <div class="list" v-for="(content, index) in contents" :key="content.id">
         <div class="post-item">
-          <img id="userImage" src="/images/peer-icon.svg" />
+          <img id="userImage" v-bind:src="content.image_url" />
 
           <div class="status-container">
             <div class="title">{{ content.username }}</div>
@@ -29,14 +29,25 @@
               </p>
             </div>
 
-            <p
-              v-if="
-                content.relationship === macro_protected &&
-                content.status !== 'FINE'
-              "
-            >
-              Emergency
-            </p>
+            <div>
+              <p
+                v-if="
+                  content.relationship === macro_protected &&
+                  content.status !== 'DANGER_URGENT'
+                "
+              >
+                Emergency
+              </p>
+              <a
+                v-if="
+                  content.relationship === macro_protected &&
+                  content.is_streaming
+                "
+              >
+                Go to stream
+              </a>
+            </div>
+
             <div v-if="content.authorized == false">
               <a
                 class="inline-text pointer btn btn-primary bootstrap-btn"
@@ -55,7 +66,7 @@
           </div>
           <div class="response-view" v-if="content.authorized == false"></div>
         </div>
-        <hr class="item-divider" />
+        <hr v-if="index != contents.length - 1" class="item-divider" />
       </div>
     </div>
 
@@ -118,6 +129,8 @@ export default {
 <style scoped>
 .item-divider {
   width: 90%;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .user-role-icon {
@@ -191,6 +204,8 @@ export default {
   margin: auto;
   margin-right: auto;
   margin-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
   align-items: left;

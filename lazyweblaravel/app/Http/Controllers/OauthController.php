@@ -18,13 +18,13 @@ class OauthController extends BaseController
      * @param  mixed $accessToken   // Google Oauth2 Token
      * @return Array $user          // User Information
      */
-    public static function getGoogleUser($accessToken){
+    public function getGoogleUser($accessToken){
 
         try {
             $user = [];
             $client = new \Google_Client();
-            $client->setClientId('494240878735-c8eo6b0m0t8fhd8vo2lcj0a9v6ena7bp.apps.googleusercontent.com');
-            $client->setClientSecret('fGLi65s6_vDNunavqdCFrZom');
+            $client->setClientId(env('GOOGLE_APP_KEY', ""));
+            $client->setClientSecret(env('GOOGLE_SECRET', ""));
 
             if ($accessToken) {
                 $payload = $client->verifyIdToken($accessToken);
@@ -55,7 +55,7 @@ class OauthController extends BaseController
      * @return Array $user          // User Information
      */
 
-    public static function getKakaoUser($accessToken){
+    public function getKakaoUser($accessToken){
 
         /* Use Kakao's Oauth REST API */
         $authorization = 'Authorization: Bearer ' . $accessToken;

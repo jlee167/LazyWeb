@@ -1,7 +1,7 @@
 <!-- Personal Info -->
 <div style="overflow:hidden; max-width: 80vw; height:80vh;">
     <div style="width:100%; height:100%; display:flex; overflow:hidden;">
-        <div class="resume-sidebar">
+        <article class="resume-sidebar">
             <div style="display:flex; flex-direction:row; justify-content:center; overflow:hidden;">
                 <img src="{{asset('/images/GitHub-Mark-Light-32px.png')}}" style="min-width:120px; min-height:120px;">
             </div>
@@ -20,9 +20,9 @@
             <a class="section-link" href="#software">
                 <h5 class="mb-3"><b>Software</b></h5>
             </a>
-        </div>
+        </article>
 
-        <div class="resume-contents">
+        <article class="resume-contents">
             <div>
                 <section id="profile" class="no-overflow-x">
                     <h2 class="mb-6" style="color:#343032;"> <b> Profile </b></h2>
@@ -140,6 +140,6 @@
                     </div>
                 </section>
             </div>
-        </div>
+        </article>
     </div>
 </div>

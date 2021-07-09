@@ -4,6 +4,7 @@
 
 <head>
     <!-- CSS -->
+    @include('includes.imports.csrf')
     @include('includes.imports.styles_common')
     <link rel="stylesheet" href="/css/login.css">
 
@@ -13,9 +14,9 @@
     <script src="https://apis.google.com/js/api:client.js"></script>
 
     <!-- Page Specific Scripts -->
-    @include('includes.imports.csrf')
+
     <script>
-        let redirectUrl = "{{url()->previous()}}";
+        let redirectUrl = "{{redirect()->intended()->getTargetUrl()}}";
     </script>
 
     <script src="{{ mix('js/login.js') }}"></script>
@@ -28,7 +29,7 @@
     @include('includes.layouts.navbar')
 
     <!--Login Information-->
-    <div id="view-login">
+    <article id="view-login">
         <div id="login-manual" class="login-prompt card">
             <form class="login-form">
                 <div style="margin:0 auto; float:center;">
@@ -84,7 +85,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </article>
 
     @include('includes.layouts.footer')
 </body>

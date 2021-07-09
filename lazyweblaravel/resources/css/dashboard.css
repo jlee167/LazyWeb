@@ -14,6 +14,7 @@
     margin-top: 70px;
     border-bottom: 1px solid #D5D5D5;
     justify-content: center;
+    align-items: center;
 }
 
 .vertical-center {
@@ -21,11 +22,11 @@
     margin-bottom: auto;
 }
 
-div.search-form {
-    width: 300px;
+.search-form {
+    width: auto;
     margin-left: 70px;
-    margin-top: auto;
-    margin-bottom: auto;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 select.forum-select {
@@ -39,7 +40,7 @@ select.forum-select {
     border-radius: 5px 5px 5px 5px;
 }
 
-div.forum-background {
+.forum-background {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -47,7 +48,7 @@ div.forum-background {
     background-color: #E9E9E9;
 }
 
-div.forum-container {
+.forum-container {
     padding-top: 0px !important;
     margin-top: 0px !important;
     margin-bottom: 50px;
@@ -57,10 +58,9 @@ div.forum-container {
     width: 100vw;
 }
 
-div.post-list {
+.post-list {
     display: inline-block;
     margin-top: 60px;
-    margin-left: auto;
 }
 
 .content-label {
@@ -75,7 +75,8 @@ div.post-list {
     flex-direction: column;
     justify-content: flex-start;
     width: 900px;
-    margin: auto;
+    margin-left: 0;
+    margin-right: 0;
     margin-bottom: 100px;
     min-height: 300px;
     margin-top: 40px;
@@ -83,11 +84,28 @@ div.post-list {
     padding-right: 30px;
 }
 
+#forumSearch {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 12px 0 0 12px;
+    border: 2px solid #5E56F0;
+    min-height: 40px;
+}
+
+#forumSelect {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 #forumSideItems {
     display: inline-block;
     text-align: center;
     margin-left: 0px;
-    margin-right: auto;
+    padding-right: 30px;
 }
 
 #commentWriter {
@@ -132,6 +150,18 @@ input.no-highlight:focus {
     }
     100% {
         transform: translateX(-15px);
+    }
+}
+
+@media only screen and (max-width: 520px) {
+    .searchbar {
+        flex-direction: column;
+        height: 130px;
+    }
+    .search-form {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 20px;
     }
 }
 

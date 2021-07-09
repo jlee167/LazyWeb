@@ -1,8 +1,8 @@
 <html>
 
 <head>
-    @include('includes.imports.styles_common')
     @include('includes.imports.csrf')
+    @include('includes.imports.styles_common')
 
     <!------------------ include libraries(jQuery, bootstrap) ------------------>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
@@ -68,8 +68,9 @@
             <!-- Request Section -->
             <section id="request_view" style="padding-top:70px;">
                 <div>
-                    <h3 style="color:#343032"> Make your requests here! </h3>
+                    <h3 style="color:#343032"> Make your requests here! (No Login Needed) </h3>
                     <hr>
+
                     <p>
                         I am currently occupied with work and my own projects. <br>
                         If you need my help in building something, please make your request in the form below!

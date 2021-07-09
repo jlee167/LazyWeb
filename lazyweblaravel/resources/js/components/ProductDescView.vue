@@ -3,9 +3,12 @@
     <div id="overview">
       <!--ref="overview" :style="{backgroundImage:'url(' + bgImgUrl +')'}"-->
       <div id="product-header">
-        <h1 class="overview-header">Introduction</h1>
-        <h3 class="overview-header">Introduction</h3>
-        <h3 class="overview-header">Introduction</h3>
+        <h1 id="overviewHeader1" class="overview-header">USB-CAM</h1>
+        <h4 id="overviewHeader2" class="overview-header">
+          1080p Camera with auxillary recorder powered by Cortex-M7 DSP
+        </h4>
+
+        <a></a>
       </div>
       <img id="image" :src="imgUrl" />
     </div>
@@ -13,24 +16,59 @@
     <div id="summary">
       <h1>TBD</h1>
     </div>
+    <div id="sales-container">
+        <product-sales
+            v-bind:title="title"
+            v-bind:description="salesDesc"
+            v-bind:price="price"
+            v-bind:stock="stock"
+            v-bind:imgUrl="salesImgUrl"
+        >
+        </product-sales>
+    </div>
+
   </div>
 </template>
 
 
 <script>
+import ProductSales from './ProductSales.vue';
+
 export default {
+  components: { ProductSales },
   props: {
     imgUrl: String,
+
+    title: String,
+    salesDesc: String,
+    price: Number,
+    stock: Number,
+    salesImgUrl: String
   },
 };
 </script>
 
 
 <style scoped>
+#sales-container {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom:50px;
+    height:auto;
+}
+
+#overviewHeader1 {
+  font-size: 50px;
+}
+
 #top-container {
   display: block;
   width: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 #overview {
@@ -57,9 +95,12 @@ export default {
   margin-right: auto;
   margin-top: 300px;
   height: 100%;
+  overflow-x: hidden;
 }
 
 #image {
+  width: 354px;
+  height: 705px;
   margin-left: auto;
   margin-right: 15%;
 }
@@ -98,35 +139,6 @@ export default {
   margin-top: 0px;
 }
 
-#contents {
-  display: flex;
-  flex-direction: row;
-  min-height: 600px;
-}
-
-#image-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  max-height: 70%;
-  max-width: 70%;
-  background-color: green;
-}
-
-#image {
-  width: 480px;
-  height: 480px;
-}
-
-#sales {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding-top: 150px;
-  width: 800px;
-  height: 600px;
-  box-shadow: 2px 2px 2px gray;
-}
 
 #price {
   color: rgb(238, 52, 52);

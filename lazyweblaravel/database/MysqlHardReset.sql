@@ -33,14 +33,6 @@
 
 
 
-/* --------------------------------------------------------------------------
-    Funtionality
-        Initialize database to the new schema.
--------------------------------------------------------------------------- */
-
-
-
-
 DROP DATABASE IF EXISTS LazyboyServer;
 CREATE DATABASE LazyboyServer;
 SHOW DATABASES;
@@ -59,12 +51,13 @@ CREATE TABLE users (
     auth_provider   ENUM('Google', 'Kakao', 'None') NOT NULL,
     uid_oauth       VARCHAR(50),
 
+    google2fa_secret   VARCHAR(50) DEFAULT NULL,
+
     image_url       VARCHAR(200) DEFAULT NULL,
     image           LONGBLOB DEFAULT NULL,
 
-    email           VARCHAR(50) UNIQUE DEFAULT NULL,
-    cell            VARCHAR(20) DEFAULT NULL,
-    stream_id       VARCHAR(32) UNIQUE DEFAULT NULL,
+    email           VARCHAR(50) UNIQUE,
+    cell            VARCHAR(20) UNIQUE DEFAULT NULL,
     stream_key      VARCHAR(32) NOT NULL, /* @Todo: Make Bcrypt Hash */
     webToken        VARCHAR(200),
     status          ENUM(
@@ -83,9 +76,10 @@ CREATE TABLE users (
                         'LIMITED',
                         'PUBLIC'
                     ) DEFAULT NULL,
-    proxy_enable    BOOL DEFAULT NULL,
-    password_hint   MEDIUMTEXT DEFAULT NULL,
-    hint_answer     VARCHAR(50) DEFAULT NULL,
+    proxy_enable        BOOL DEFAULT NULL,
+    password_hint       MEDIUMTEXT DEFAULT NULL,
+    hint_answer         VARCHAR(50) DEFAULT NULL,
+    email_verified_at   DATETIME DEFAULT NULL,
 
     CONSTRAINT no_duplicate_oauth UNIQUE (uid_oauth, auth_provider),
     CONSTRAINT UNIQUE (id, status), /* @Todo  -  Why does streams foreign key does not work without this??? */
@@ -106,9 +100,9 @@ CREATE TABLE deleted_users (
 
 
 CREATE TABLE camera_specs (
-    model_no            VARCHAR(20) NOT NULL,
+    model_no            VARCHAR(20) UNIQUE NOT NULL,
     revision            INT NOT NULL,
-    product_name        VARCHAR(60) NOT NULL,
+    product_name        VARCHAR(60) UNIQUE NOT NULL,
     description         MEDIUMTEXT NOT NULL,
     img_url             VARCHAR(200) DEFAULT NULL,
 
@@ -124,7 +118,9 @@ CREATE TABLE camera_registered (
     owner_uid           INT NOT NULL,
     model_no            VARCHAR(20) NOT NULL,
     revision            INT NOT NULL,
-    date_registered     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_registered     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (owner_uid) REFERENCES users(id)
 
     /*CONSTRAINT FOREIGN KEY (model_no, revision) REFERENCES camera_specs(model_no, revision)*/
 ) ENGINE=INNODB;
@@ -137,7 +133,7 @@ CREATE TABLE repair_history (
     description     MEDIUMTEXT,
     date            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (cam_id) REFERENCES camera_registered(cam_id) ON UPDATE CASCADE
+    FOREIGN KEY (cam_id) REFERENCES camera_registered(cam_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=INNODB;
 
 
@@ -146,10 +142,6 @@ CREATE TABLE streams (
     id                  INT AUTO_INCREMENT PRIMARY KEY,
     uid                 INT NOT NULL,
     date_report         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status              ENUM(
-                            'DANGER_URGENT',
-                            'FINE'
-                        ) DEFAULT 'FINE' NOT NULL,
     response            ENUM(
                             'RESPONSE_REQUIRED',
                             'FIRST_RESPONDERS_DISPATCHED',
@@ -162,16 +154,18 @@ CREATE TABLE streams (
     description         MEDIUMTEXT DEFAULT NULL,
 
     CONSTRAINT one_stream_per_user UNIQUE (uid),
-    FOREIGN KEY (uid, status) REFERENCES users(id, status) ON UPDATE CASCADE
+    FOREIGN KEY (uid) REFERENCES users(id) ON UPDATE CASCADE
 ) ENGINE=INNODB;
 
 
 
 
 CREATE TABLE stream_webtokens (
+    id                  INT PRIMARY KEY AUTO_INCREMENT,
     stream_id           INT NOT NULL,
     uid                 INT NOT NULL,
     token               VARCHAR(200) NOT NULL,
+    last_update         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     UNIQUE KEY (stream_id, uid),
     FOREIGN KEY (stream_id) REFERENCES streams(id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -219,7 +213,6 @@ CREATE TABLE post_likes (
 
     PRIMARY KEY (post_id, uid),
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
-    /* FOREIGN KEY (uid) REFERENCES users(uid) ON UPDATE CASCADE */
 ) ENGINE=INNODB;
 
 
@@ -257,7 +250,7 @@ CREATE TABLE guardianship (
 */
 CREATE TABLE products(
     id                  INT PRIMARY KEY,
-    title               VARCHAR(30) NOT NULL,
+    title               VARCHAR(30) UNIQUE NOT NULL,
     description         MEDIUMTEXT,
     price_credits       INT UNSIGNED NOT NULL,
     active              BOOLEAN NOT NULL
@@ -267,7 +260,9 @@ CREATE TABLE products(
 CREATE TABLE warehouses(
     id              INT PRIMARY KEY,
     distributor     VARCHAR(200),
-    location        MEDIUMTEXT NOT NULL
+    location        MEDIUMTEXT NOT NULL,
+
+    CONSTRAINT unique_location UNIQUE (distributor, location)
 ) ENGINE=INNODB;
 
 
@@ -278,6 +273,7 @@ CREATE TABLE product_stocks(
     quantity_available  INT UNSIGNED,
     last_purchase       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+    CONSTRAINT UNIQUE (warehouse_id, product_id),
     CONSTRAINT FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (warehouse_id) REFERENCES warehouses(id) ON UPDATE CASCADE
 ) ENGINE=INNODB;
@@ -344,7 +340,6 @@ CREATE TABLE credit_purchases (
 
 
 
-
 CREATE TABLE donations_kakaopay (
     id                  INT PRIMARY KEY,
     uid                 INT NOT NULL,
@@ -355,8 +350,7 @@ CREATE TABLE donations_kakaopay (
 );
 
 
-
-
+COMMIT;
 
 
 /* -------------------------------------------------------------------------- */
@@ -519,7 +513,7 @@ BEGIN
         FOR UPDATE;
 
         IF (current_stock < qty_purchased) THEN
-            /* Quantity not available */
+            /* Insufficient stock level */
             ROLLBACK;
             SET result= -1 ;
         ELSEIF (current_credits < (qty_purchased * unit_price_credits)) THEN
@@ -560,6 +554,8 @@ BEGIN
     WHERE  users.id = ( SELECT owner_uid
                         FROM   camera_registered
                         WHERE  camera_registered.cam_id = cam_id);
+
+    COMMIT;
 END $$
 
 
@@ -574,6 +570,8 @@ BEGIN
     WHERE  users.id = ( SELECT id
                         FROM   users
                         WHERE  users.username = username);
+
+    COMMIT;
 END $$
 
 
@@ -601,6 +599,7 @@ WHERE  users.id IN (
                                             WHERE  users.username = username)
                            AND guardianship.signed_protected = 'ACCEPTED'
                            AND guardianship.signed_guardian = 'ACCEPTED');
+COMMIT;
 END $$
 
 
@@ -616,8 +615,7 @@ SELECT users.id,
        users.image_url,
        users.cell,
        users.email,
-       users.status,
-       users.stream_id
+       users.status
 FROM   users
 WHERE  users.id IN (
                    /* Get guardians' UIDs from their usernames */
@@ -628,6 +626,8 @@ WHERE  users.id IN (
                                            WHERE  users.username = username)
                            AND guardianship.signed_protected = 'ACCEPTED'
                            AND guardianship.signed_guardian = 'ACCEPTED');
+
+COMMIT;
 END $$
 
 
@@ -638,12 +638,24 @@ CREATE PROCEDURE GetPendingRequests(
 )
 BEGIN
 
-    SELECT *
+    (SELECT guardianship.*, users.username
     FROM   guardianship
+    INNER JOIN users
+    ON guardianship.uid_guardian=users.id
     WHERE   ( guardianship.uid_protected = uid
-                AND guardianship.signed_protected = 'WAITING' )
-            OR ( guardianship.uid_guardian = uid
-                AND guardianship.signed_guardian = 'WAITING' );
+                AND guardianship.signed_protected = 'WAITING' ))
+
+    UNION
+
+    (SELECT guardianship.*, users.username
+    FROM   guardianship
+    INNER JOIN users
+    ON guardianship.uid_protected = users.id
+    WHERE   ( guardianship.uid_guardian = uid
+                AND guardianship.signed_guardian = 'WAITING' ));
+
+    COMMIT;
+
 
 END $$
 
@@ -659,21 +671,24 @@ BEGIN
     DECLARE id_protected INT;
     DECLARE id_guardian INT;
 
-    SELECT uid_protected, uid_guardian
-    INTO id_protected, id_guardian
-    FROM guardianship
-    WHERE guardianship.id = reqID;
-
-    IF (uid = id_protected) THEN
-        UPDATE guardianship
-        SET signed_protected = response
+    START TRANSACTION;
+        SELECT uid_protected, uid_guardian
+        INTO id_protected, id_guardian
+        FROM guardianship
         WHERE guardianship.id = reqID;
 
-    ELSEIF (uid = id_guardian) THEN
-        UPDATE guardianship
-        SET signed_guardian = response
-        WHERE guardianship.id = reqID;
-    END IF;
+        IF (uid = id_protected) THEN
+            UPDATE guardianship
+            SET signed_protected = response
+            WHERE guardianship.id = reqID;
+
+        ELSEIF (uid = id_guardian) THEN
+            UPDATE guardianship
+            SET signed_guardian = response
+            WHERE guardianship.id = reqID;
+        END IF;
+
+    COMMIT;
 
 END $$
 
@@ -693,19 +708,6 @@ BEGIN
                                             FROM   users
                                             WHERE  username = username_i)
             AND users.status = "DANGER_URGENT";
-/*
-    SELECT  users.id,
-            users.username
-    FROM    users
-    WHERE   users.id IN (SELECT guardianship.uid_protected
-                        FROM    guardianship
-                        WHERE   guardianship.uid_guardian = (SELECT users.id
-                                                            FROM   users
-                                                            WHERE
-                                users.username = username
-                                                        ))
-            AND users.status = "danger_urgent";
-*/
 END $$
 
 
@@ -716,31 +718,6 @@ CREATE PROCEDURE GetEndangeredPeers (
     IN username VARCHAR(60)
 )
 BEGIN
-    /*
-    SELECT  users.id, users.username
-    FROM    users
-    WHERE   users.id IN (
-                            SELECT  uid_protected
-                            FROM    guardianship
-                            WHERE   uid_guardian IN (
-                                                        SELECT  uid_guardian
-                                                        FROM    guardianship
-                                                        WHERE   uid_protected = 2
-                                                    )
-                            AND     uid_protected !=
-                        );
-
-
-    SELECT  users.id, users.username
-    FROM    users
-    WHERE   users.id IN (
-                            SELECT      parent.uid_protected
-                            FROM        guardianship AS parent
-                            INNER JOIN  guardianship AS child
-                            ON          child.uid_guardian = parent.uid_guardian
-                            WHERE       child.uid_protected = 3
-                        );
-     */
 
     SELECT  users.id, users.username
     FROM    users
@@ -776,43 +753,41 @@ CREATE PROCEDURE RegisterWebTokens(
     IN jwt          VARCHAR(200)
 )
 BEGIN
-
-    SELECT id
-    INTO @uid
-    FROM users
-    WHERE users.username=username;
-
-
-    INSERT INTO stream_webtokens(stream_id, uid, token)
-    VALUES (
-        stream_id_i,
-        @uid,
-        jwt
-    );
+    START TRANSACTION;
+        INSERT INTO stream_webtokens(stream_id, uid, token)
+        VALUES (
+            stream_id_i,
+            (
+                SELECT id
+                FROM users
+                WHERE users.username=username
+            ),
+            jwt
+        );
+    COMMIT;
 END $$
 
 
 
-CREATE PROCEDURE GetJwtWithUname(
-    IN uid_guardian  VARCHAR(60),
+
+CREATE PROCEDURE GetStreamJwt(
+    IN uid_guardian INT,
     IN username_protected VARCHAR(60)
 )
 BEGIN
-
-    SELECT token
-    FROM   stream_webtokens
-    WHERE   uid = (  SELECT uid
-                    FROM   users
-                    WHERE  users.username = username_protected)
-            AND uid_guardian = (SELECT uid_guardian
-                                FROM   guardianship
-                                WHERE  guardianship.uid_protected =
-                                        (SELECT uid
-                                        FROM   users
-                                        WHERE  users.username = username_protected)
-                                        AND signed_protected = 'ACCEPTED'
-                                        AND signed_guardian = 'ACCEPTED');
+    START TRANSACTION;
+        SELECT token
+        FROM   stream_webtokens
+        WHERE  uid = uid_guardian
+            AND stream_id = (SELECT id
+                            FROM   streams
+                            WHERE  uid = ( SELECT id
+                                            FROM   users
+                                            WHERE  username = uname_protected));
+    COMMIT;
 END $$
+
+
 
 
 CREATE PROCEDURE GetMyJwt(
@@ -826,41 +801,51 @@ END$$
 
 
 
+
 CREATE PROCEDURE ReportEmergency(
     IN username VARCHAR(60)
 )
 BEGIN
-    UPDATE users
-    SET    status = 'DANGER_URGENT'
-    WHERE  users.username = username;
 
-    CALL GetIdByUsername(username, @uid);
+    /* Transaction Exception Handler */
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
 
-    SELECT stream_key
-    INTO   @stream_key
-    FROM   users
-    WHERE  users.username = username;
 
-    SELECT Group_concat(uid_guardian)
-    INTO   @guardians
-    FROM   guardianship
-    WHERE  uid_protected = @uid;
+    START TRANSACTION;
+        CALL GetIdByUsername(username, @uid);
+        SELECT stream_key
+        INTO   @stream_key
+        FROM   users
+        WHERE  users.uid = @uid;
 
-    INSERT INTO streams
-                (
-                    uid,
-                    status,
-                    response,
-                    stream_key,
-                    responders
-                )
-    VALUES      (
-                    @uid,
-                    'DANGER_URGENT',
-                    'RESPONSE_REQUIRED',
-                    @stream_key,
-                    @guardians
-                );
+        SELECT Group_concat(uid_guardian)
+        INTO   @guardians
+        FROM   guardianship
+        WHERE  uid_protected = @uid;
+
+        UPDATE users
+        SET    status = 'DANGER_URGENT'
+        WHERE  users.uid = @uid;
+
+        INSERT INTO streams
+                    (
+                        uid,
+                        status,
+                        response,
+                        stream_key,
+                        responders
+                    )
+        VALUES      (
+                        @uid,
+                        'DANGER_URGENT',
+                        'RESPONSE_REQUIRED',
+                        @stream_key,
+                        @guardians
+                    );
+    COMMIT;
 
 END $$
 
@@ -871,12 +856,20 @@ CREATE PROCEDURE StartEmergencyProtocol(
     IN username VARCHAR(60)
 )
 BEGIN
-    CALL GetIdByUsername(username, @uid);
+    /* Transaction Exception Handler */
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
 
-    UPDATE streams
-    SET    status = 'DANGER_URGENT',
-           response = 'RESPONSE_REQUIRED'
-    WHERE  streams.uid = @uid;
+    START TRANSACTION;
+        CALL GetIdByUsername(username, @uid);
+
+        UPDATE streams
+        SET    status = 'DANGER_URGENT',
+            response = 'RESPONSE_REQUIRED'
+        WHERE  streams.uid = @uid;
+    COMMIT;
 END $$
 
 
@@ -886,12 +879,20 @@ CREATE PROCEDURE StopEmergencyProtocol(
     IN username VARCHAR(60)
 )
 BEGIN
-    CALL GetIdByUsername(username, @uid);
+    /* Transaction Exception Handler */
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
 
-    UPDATE streams
-    SET    status = 'FINE',
-           response = 'RESOLVED'
-    WHERE  streams.uid = @uid;
+    START TRANSACTION;
+        CALL GetIdByUsername(username, @uid);
+
+        UPDATE streams
+        SET    status = 'FINE',
+            response = 'RESOLVED'
+        WHERE  streams.uid = @uid;
+    COMMIT;
 END $$
 
 
@@ -902,26 +903,33 @@ CREATE PROCEDURE StartStream (
 )
 BEGIN
 
-    CALL GetIdByUsername(username, @uid);
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
 
-    INSERT INTO streams(uid, responders, stream_key)
-    VALUES (
-        (
-            SELECT id
-            FROM   users
-            WHERE  users.username = username
-        ),
-        (
-            SELECT Group_concat(uid_guardian)
-            FROM   guardianship
-            WHERE  uid_protected = @uid
-        ),
-        (
-            SELECT stream_key
-            FROM   users
-            WHERE  users.username = username
-        )
-    );
+    START TRANSACTION;
+        CALL GetIdByUsername(username, @uid);
+
+        INSERT INTO streams(uid, responders, stream_key)
+        VALUES (
+            (
+                SELECT id
+                FROM   users
+                WHERE  users.username = username
+            ),
+            (
+                SELECT Group_concat(uid_guardian)
+                FROM   guardianship
+                WHERE  uid_protected = @uid
+            ),
+            (
+                SELECT stream_key
+                FROM   users
+                WHERE  users.username = username
+            )
+        );
+    COMMIT;
 END $$
 
 
@@ -931,8 +939,17 @@ CREATE PROCEDURE CloseStream(
     IN username VARCHAR(60)
 )
 BEGIN
-    CALL GetIdByUsername(username, @uid);
-    DELETE FROM streams WHERE streams.uid = @uid;
+
+    /* Transaction Exception Handler */
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+        CALL GetIdByUsername(username, @uid);
+        DELETE FROM streams WHERE streams.uid = @uid;
+    COMMIT;
 END $$
 
 
@@ -962,6 +979,8 @@ BEGIN
     WHERE  date BETWEEN ( Now() - INTERVAL 7 day ) AND Now()
     ORDER  BY view_count DESC
     LIMIT  10;
+
+    COMMIT;
 END$$
 
 
@@ -979,6 +998,8 @@ BEGIN
     FROM   posts
     ORDER  BY view_count DESC
     LIMIT  10;
+
+    COMMIT;
 END$$
 
 
@@ -991,6 +1012,8 @@ BEGIN
     SELECT COUNT(*)
     FROM post_likes
     WHERE post_likes.post_id = post_id;
+
+    COMMIT;
 END$$
 
 
@@ -1000,3 +1023,5 @@ DELIMITER ;
 /* -------------------------------------------------------------------------- */
 /*                             /Stored Procedures                             */
 /* -------------------------------------------------------------------------- */
+
+COMMIT;

@@ -4,28 +4,31 @@
       <div id="image-container">
         <img id="image" :src="imgUrl" />
       </div>
-
       <div id="product-details">
-        <h1 id="title">{{ title }}</h1>
-        <star-rating
-          id="rating"
-          v-bind:read-only="true"
-          v-bind:rating="3.35"
-          v-bind:increment="0.5"
-          v-bind:star-size="15"
-        />
-        <h3 id="price">${{ price }}</h3>
+        <div class="details-margin">
+          <h1 id="title">{{ title }}</h1>
+          <star-rating
+            id="rating"
+            v-bind:read-only="true"
+            v-bind:rating="3.35"
+            v-bind:increment="0.5"
+            v-bind:star-size="15"
+          />
+          <h3 id="price">${{ price }}</h3>
 
-        <pre id="description">{{ description }}</pre>
+          <pre id="description">{{ description }}</pre>
 
-        <span id="purchase">
-          <h4 class="d-inline align-middle vertical-middle">Qty</h4>
-          <input class="quantity" placeholder="0" />
+          <span id="purchase">
+            <h4 class="d-inline align-middle vertical-middle">Qty</h4>
+            <input class="quantity" placeholder="0" />
 
-          <p id="stock-level" class="vertical-middle">({{ stock }} in stock)</p>
-        </span>
+            <p id="stock-level" class="vertical-middle">
+              ({{ stock }} in stock)
+            </p>
+          </span>
 
-        <button class="btn btn-add-cart" type="submit">Buy now</button>
+          <button class="btn btn-add-cart" type="submit">Buy now</button>
+        </div>
       </div>
     </div>
   </div>
@@ -40,7 +43,7 @@ export default {
     description: String,
     price: Number,
     stock: Number,
-    bgImgUrl: String,
+    imgUrl: String,
   },
 
   components: {
@@ -50,12 +53,124 @@ export default {
   computed: {},
 
   mounted() {
-    //this.$refs.overview.style.setProperty('--background-image', this.bgImgUrl);
+    //this.$refs.overview.style.setProperty('--background-image', this.imgUrl);
   },
 };
 </script>
 
 <style scoped>
+#image {
+  object-fit: contain;
+  width: 200px;
+  height: 400px;
+  object-fit: contain;
+  margin-left: auto;
+  margin-right: 15%;
+}
+
+#summary {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(236, 236, 236);
+  margin-top: 100px;
+  opacity: 0.7;
+  width: 100%;
+  height: 350px;
+}
+
+.btn-add-cart {
+  background-color: #e6176de3 !important;
+  border-color: #e6176de3 !important;
+  border-radius: 20px;
+  width: 200px;
+  color: white;
+}
+
+.vertical-middle {
+  margin-right: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#stock-level {
+  margin-left: 20px;
+}
+
+#rating {
+  margin-top: 0px;
+}
+
+#contents {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  margin: 0 0 0 0;
+}
+
+#image-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgb(255, 223, 155);
+  padding: 80px 80px 80px 80px;
+}
+
+#sales {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: auto;
+  box-shadow: 2px 2px 2px gray;
+}
+
+#price {
+  color: rgb(238, 52, 52);
+  margin-top: 20px;
+}
+
+#product-details {
+  font-family: "Anton", sans-serif !important;
+  display: flex;
+  flex-direction: row;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  padding-top: 80px;
+  padding-bottom: 80px;
+  padding-left: 40px;
+  padding-right: 80px;
+}
+
+#title {
+  font-family: "Anton", sans-serif !important;
+  margin-bottom: 0px;
+}
+
+#description {
+  font-family: "Anton", sans-serif !important;
+  color: gray;
+  text-overflow: ellipsis;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre-line;
+  margin-top: 30px;
+}
+
+#purchase {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.quantity {
+  width: 40px;
+}
 </style>
 
 

@@ -147,6 +147,12 @@ THE SOFTWARE.
             margin-top:30px;
             margin-bottom:20px;
         }
+
+        @media only screen and (max-width: 768px) {
+            .resume-sidebar {
+                display: none;
+            }
+        }
 </style>
 
 

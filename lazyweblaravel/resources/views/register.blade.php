@@ -4,6 +4,7 @@
 
 <head>
     <!-- Login -->
+    @include('includes.imports.csrf')
     @include('includes.imports.styles_common')
     <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="/css/register.css">
@@ -23,23 +24,23 @@
 
     <!--------------------------------- login form --------------------------------->
     <div id="view-login">
-        <div class="card register-prompt">
+        <article class="card register-prompt">
             <form class="login-form">
                 <div style="margin:0 auto; float:center;">
-                    <p class="login-label">ID</p>
+                    <div><p class="login-label">ID</p></div>
                     <input class="form-control login-form-input" id="input_account" type="text"
                         placeholder="Enter username" aria-describedby="search-btn">
 
-                    <p class="login-label">Email</p>
+                    <div><p class="login-label">Email</p></div>
                     <input class="form-control login-form-input" id="input_email" type="text" placeholder="Enter Email"
                         aria-describedby="search-btn">
                     <!--disabled-->
 
-                    <p class="login-label">Password</p>
+                    <div><p class="login-label">Password</p></div>
                     <input class="form-control login-form-input" id="input_password" type="password"
                         placeholder="Enter password" aria-describedby="search-btn">
 
-                    <p class="login-label">Confirm Password</p>
+                    <div><p class="login-label">Confirm Password</p></div>
                     <input class="form-control login-form-input" id="confirm_password" type="password"
                         placeholder="Confirm password" aria-describedby="search-btn">
 
@@ -65,13 +66,25 @@
                         </div>
                     </div>
                     <div id="name"></div>
+
+                    <div id="progressSpinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                        <h6>Registering...</h6>
+                        </div>
+
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+
                     <script>
                         startApp();
                     </script>
 
                 </div>
             </form>
-        </div>
+        </article>
     </div>
 
     @include('includes.layouts.footer')

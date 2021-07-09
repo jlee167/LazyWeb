@@ -112,7 +112,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 1100px) {
+@media only screen and (min-width: 1200px) {
   .list-container {
     display: flex;
     width: 400px;

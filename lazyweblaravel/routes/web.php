@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\StreamController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +41,12 @@ Route::get('/views/login', function () {
         return redirect()->intended();
     else
         return view('login');
-})->name('login');
+})->middleware('xss')->name('login');
+
+
+Route::get('/views/google2fa', function () {
+    return view('google2fa');
+})->middleware(['xss', 'auth', 'verified'])->name('2fa');
 
 
 Route::get('/views/register', function () {
@@ -48,13 +54,36 @@ Route::get('/views/register', function () {
         return redirect()->intended();
     else
         return view('register');
-})->name('register');
+})->middleware('xss')->name('register');
 
 
 Route::post('/logout',      [LoginController::class, 'logout']);
-Route::post('/auth',        [LoginController::class, 'authenticate']);
-route::post('/auth/kakao',  [LoginController::class, 'authWithKakao']);
-route::post('/auth/google', [LoginController::class, 'authWithGoogle']);
+Route::post('/auth',        [LoginController::class, 'authenticate'])->middleware('xss');
+Route::post('/auth/kakao',  [LoginController::class, 'authWithKakao'])->middleware('xss');
+Route::post('/auth/google', [LoginController::class, 'authWithGoogle'])->middleware('xss');
+
+
+Route::get('/members/2fa-key', [UserController::class, 'enable2FA'])->middleware(['xss', 'auth', 'verified']);
+Route::delete('/members/2fa-key', [UserController::class, 'disable2FA'])->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::put('/members/password', [UserController::class, 'changePassword'])->middleware(['xss', 'auth', 'verified', '2fa']);
+
+Route::post('/auth/2fa', [LoginController::class, 'authWithGoogle2FA'])->middleware(['xss', 'auth', 'verified']);
+
+
+Route::get('/email/resend', [UserController::class, 'resendEmail'])
+    ->middleware(['xss', 'auth', 'throttle:6,1'])->name('verification.send');
+
+
+Route::get('/email/verify', function () {
+    return view('verify-email');
+})->name('verification.notice');
+
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/views/main');
+})->middleware(['auth'])->name('verification.verify');
+
 
 
 /* -------------------------------------------------------------------------- */
@@ -71,22 +100,22 @@ route::post('/auth/google', [LoginController::class, 'authWithGoogle']);
 
 Route::get('/views/broadcast', function () {
     return view('broadcast');
-})->middleware('auth');
+})->middleware(['xss', 'auth', 'verified', '2fa']);
 
 
 Route::get('/views/emergency_broadcast', function () {
     return view('emergency_broadcast');
-})->middleware('auth');
+})->middleware(['xss', 'auth', 'verified', '2fa']);
 
 
 Route::get('/views/createpost', function () {
     return view('createpost');
-})->middleware('auth');
+})->middleware(['xss', 'auth', 'verified', '2fa']);
 
 
 Route::get('/views/peers', function () {
     return view('peers');
-})->middleware('auth');
+})->middleware(['xss', 'auth', 'verified', '2fa']);
 
 
 /* Routes for views that do not require authentication */
@@ -103,7 +132,7 @@ Route::get('/views/{php_view_file}', function ($php_view_file) {
 
 
 /* -------------------------------------------------------------------------- */
-/*                               Rest API Routes                              */
+/*                               REST API Routes                              */
 /* -------------------------------------------------------------------------- */
 
 
@@ -114,10 +143,10 @@ Route::get('/ping', function () {
 
 
 /* -------------------------- User information CRUD ------------------------- */
-Route::get('/members/{username}', [UserController::class, 'getUser'])->middleware('auth');
+Route::get('/members/{username}', [UserController::class, 'getUser'])->middleware(['xss', 'auth', 'verified', '2fa']);
 Route::post('/members/{username}', [UserController::class, 'registerUser']);
-Route::put('/members/{username}', [UserController::class, 'updateUser'])->middleware('auth');
-Route::delete('/members/{username}', [UserController::class, 'deleteUser'])->middleware('auth');
+Route::put('/members', [UserController::class, 'updateUser'])->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::delete('/members', [UserController::class, 'deleteUser'])->middleware(['xss', 'auth']);
 
 Route::get(
     '/self/uid',
@@ -126,32 +155,25 @@ Route::get(
             return null;
         return Auth::id();
     }
-)->middleware('auth');
+)->middleware(['auth', 'verified']);
 
-Route::get(
-    '/self',
-    function () {
-        if (!Auth::check())
-            return null;
-        return json_encode(Auth::user());
-    }
-)->middleware('auth');;
+Route::get('/self', [UserController::class, 'getMyInfo'])->middleware(['auth', 'verified']);
 
-Route::get('/members/uid/{username}', [UserController::class, 'getUserId'])->middleware('auth');
+Route::get('/members/uid/{username}', [UserController::class, 'getUserId'])->middleware(['auth', 'verified']);
 
 
 
 /* ------------------------------- Forum CRUD ------------------------------- */
-Route::get('/forum/{forum_name}/post/{post_id}',  [ForumController::class, 'retrievePost']);
-Route::post('/forum/{forum_name}/post',            [ForumController::class, 'createPost']);
-Route::put('/forum/{forum_name}/post/{post_id}',  [ForumController::class, 'updatePost']);
-Route::delete('/forum/{forum_name}/post/{post_id}',  [ForumController::class, 'deletePost']);
+Route::get('/forum/{forum_name}/post/{post_id}',        [ForumController::class, 'getPost']);
+Route::post('/forum/{forum_name}/post',                 [ForumController::class, 'createPost'])->middleware('xss-soft');
+Route::put('/forum/{forum_name}/post/{post_id}',        [ForumController::class, 'updatePost']);
+Route::delete('/forum/{forum_name}/post/{post_id}',     [ForumController::class, 'deletePost']);
 
-Route::post('/forum/{forum_name}/post/{post_id}/like',  [ForumController::class, 'toggleLike']);
+Route::post('/forum/{forum_name}/post/{post_id}/like',  [ForumController::class, 'togglePostLike']);
 
-Route::post('/forum/comment',                      [ForumController::class, 'postComment'])->middleware('auth');
-Route::put('/forum/comment/{comment_id}',         [ForumController::class, 'updateComment'])->middleware('auth');
-Route::delete('/forum/comment/{comment_id}',         [ForumController::class, 'deleteComment'])->middleware('auth');
+Route::post('/forum/comment',                   [ForumController::class, 'postComment'])->middleware(['xss-soft', 'auth', 'verified', '2fa']);
+Route::put('/forum/comment/{comment_id}',       [ForumController::class, 'updateComment'])->middleware(['xss-soft', 'auth', 'verified', '2fa']);
+Route::delete('/forum/comment/{comment_id}',    [ForumController::class, 'deleteComment'])->middleware(['xss-soft', 'auth', 'verified', '2fa']);
 
 Route::get('/forum/{forum_name}/page/{page}/{keyword}',   [ForumController::class, 'getPage']);
 Route::get('/forum/all_forums/top_posts',                 [ForumController::class, 'getTopPosts']);
@@ -159,26 +181,27 @@ Route::get('/forum/all_forums/trending_posts',            [ForumController::clas
 
 
 /* ---------------------------- Support requests ---------------------------- */
-Route::post('/support_request',    [SupportController::class, 'requestSupport']);
+Route::post('/support_request',    [SupportController::class, 'requestSupport'])->middleware('xss-soft');
 
 
 /* ----------------------- Guardianship Management API ---------------------- */
-Route::get('/members/guardian/all',       [UserController::class, 'getGuardians'])->middleware('auth');
-Route::post('/members/guardian/{uid}',     [UserController::class, 'addGuardian'])->middleware('auth');
-Route::put('/members/guardian/{uid}',     [UserController::class, 'acceptGuardian'])->middleware('auth');
-Route::delete('/members/guardian/{uid}',     [UserController::class, 'deleteGuardian'])->middleware('auth');
-Route::get('/members/protected/all',      [UserController::class, 'getProtecteds'])->middleware('auth');
-Route::post('/members/protected/{uid}',    [UserController::class, 'addProtected'])->middleware('auth');
-Route::put('/members/protected/{uid}',    [UserController::class, 'acceptProtected'])->middleware('auth');
-Route::delete('/members/protected/{uid}',    [UserController::class, 'deleteProtected'])->middleware('auth');
-Route::put('/peer_request',               [UserController::class, 'respondPeerRequest'])->middleware('auth');
-Route::get('/pending_requests',           [UserController::class, 'getPendingRequests'])->middleware('auth');
+Route::get('/members/guardian/all',         [UserController::class, 'getGuardians'])        ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::post('/members/guardian/{uid}',      [UserController::class, 'addGuardian'])         ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::put('/members/guardian/{uid}',       [UserController::class, 'acceptGuardian'])      ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::delete('/members/guardian/{uid}',    [UserController::class, 'deleteGuardian'])      ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::get('/members/protected/all',        [UserController::class, 'getProtecteds'])       ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::post('/members/protected/{uid}',     [UserController::class, 'addProtected'])        ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::put('/members/protected/{uid}',      [UserController::class, 'acceptProtected'])     ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::delete('/members/protected/{uid}',   [UserController::class, 'deleteProtected'])     ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::put('/peer_request',                 [UserController::class, 'respondPeerRequest'])  ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::get('/pending_requests',             [UserController::class, 'getPendingRequests'])  ->middleware(['xss', 'auth', 'verified', '2fa']);
 
 
 /* ---------------------------- Emergency Actions --------------------------- */
-Route::post('/emergency/report',               [UserController::class, 'emergency_report'])->middleware('auth');
-Route::get('/emergency/{username}/status',         [UserController::class, 'getStatus'])->middleware('auth');
-Route::get('/emergency/{username}/web_token',   [StreamController::class, 'getWebToken'])->middleware('auth');
+Route::post('/emergency/report',                    [UserController::class,   'emergencyReport'])   ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::get('/emergency/{username}/status',          [UserController::class,   'getStatus'])         ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::get('/stream/{username_protected}/web_token',          [StreamController::class, 'getWebToken'])       ->middleware(['xss', 'auth', 'verified', '2fa']);
+Route::get('/stream/{uid_protected}',                         [StreamController::class, 'getStream'])         ->middleware(['xss', 'auth', 'verified', '2fa']);
 
 
 /* -------------------------------------------------------------------------- */

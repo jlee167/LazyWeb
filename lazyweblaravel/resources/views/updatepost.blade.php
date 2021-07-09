@@ -2,6 +2,7 @@
 
 <head>
     <meta charset="utf-8">
+    @include('includes.imports.csrf')
     @include('includes.imports.styles_common')
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,7 +79,6 @@
 
 
     <script>
-        let csrf = "{{ csrf_token() }}";
         const urlParams=new URLSearchParams(window.location.search);
         const postId = urlParams.get("post_id");
         const forum = urlParams.get("forum");

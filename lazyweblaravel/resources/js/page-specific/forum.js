@@ -46,6 +46,7 @@ forumApp = new Vue({
         likes: null,
         myLike: null,
         comments: [],
+        imageUrl: null,
 
         toggleLike: function () {
             let likeRequest = new XMLHttpRequest();
@@ -114,15 +115,17 @@ forumApp = new Vue({
 
     methods: {
         getNewPage: function (idx) {
-            forum_name = document.getElementById('forum_name').value.trim();
-            current_page = idx;
-            getPage(forum_name, current_page, this.search_keyword);
+            forumApp.forum_name = document.getElementById('forum_name').value.trim();
+            forumApp.current_page = idx;
+            getPage(forumApp.forum_name, forumApp.current_page, this.search_keyword);
         }
     }
 });
 
 
-
+/**
+ * Transition from post view to page view
+ */
 function transToForum() {
     forumApp.show_post = false;
     setTimeout(function () {
@@ -139,7 +142,12 @@ function redirectAuth() {
 
 
 
-
+/**
+ * Transition from page view to post view
+ *
+ * @param {*} post_id
+ * @param {*} forum
+ */
 function transToPost(post_id, forum = null) {
     if (!forum) {
         forum = document.getElementById('forum_name').value.trim();
@@ -150,14 +158,16 @@ function transToPost(post_id, forum = null) {
         null,
 
         function (req) {
-            //console.log(req.responseText);
             let resp = JSON.parse(req.responseText);
+            console.log(resp);
             forumApp.original_post = resp.post[0];
             forumApp.comments = resp.comments;
             forumApp.likes = resp.likes;
             forumApp.myLike = resp.myLike;
             forumApp.show_forum = false;
             forumApp.post_id = post_id;
+            forumApp.imageUrl = resp.imageUrl;
+            console.log(forumApp.imageUrl);
             setTimeout(function () {
                 forumApp.show_post = true;
             }, 500);
@@ -179,6 +189,7 @@ function getPage(forum, page, keyword) {
         function (req) {
             //console.log(req.responseText)
             let res = JSON.parse(req.responseText);
+            console.log(res);
             forumApp.posts = [];
             for (post in res.posts) {
                 forumApp.posts.push(
@@ -193,14 +204,33 @@ function getPage(forum, page, keyword) {
 
 
 function pagenate(itemCount) {
+    /* Fix current page in center of 10 items in page list */
     forumApp.page_count = Math.ceil(itemCount / PAGINATION_CAPACITY);
-    let head = forumApp.current_page - Math.ceil(PAGINATION_CAPACITY / 2 - 1);
-    let tail = forumApp.current_page + Math.floor(PAGINATION_CAPACITY / 2);
+    if (forumApp.page_count === 0)
+        return;
 
-    if (head < 1)
+    let pagesLeft;
+    let head, tail;
+
+    if (forumApp.page_count < PAGINATION_CAPACITY)
+        pagesLeft = forumApp.page_count - 1;
+    else
+        pagesLeft = PAGINATION_CAPACITY - 1;
+
+    head = forumApp.current_page - Math.ceil(PAGINATION_CAPACITY / 2 - 1);
+    tail = forumApp.current_page + Math.floor(PAGINATION_CAPACITY / 2);
+
+    /* Check upper & lower bounds */
+    if (head < 1) {
+        let overflow = (1 - head);
         head = 1;
-    if (tail > forumApp.page_count)
+        tail = head + pagesLeft;
+    }
+    if (tail > forumApp.page_count) {
+        let overflow = tail - forumApp.page_count;
         tail = forumApp.page_count;
+        head = tail-pagesLeft;
+    }
 
     forumApp.page_index = [];
 

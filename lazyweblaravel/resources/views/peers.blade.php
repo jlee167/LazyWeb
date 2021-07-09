@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    @include('includes.imports.csrf')
     @include('includes.imports.styles_common')
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
@@ -30,7 +31,7 @@
     @include('includes.layouts.navbar')
 
     <div id="peer-page-content" class="section-contents">
-        <div id="peer-list-section">
+        <article id="peer-list-section">
             <h1 style="margin:auto; margin-bottom: 50px;"> Peers </h1>
             <peer-list
                 v-bind:contents="contents"
@@ -41,7 +42,11 @@
                 v-bind:callback_refresh_ui="refreshUiFunc"
                 v-bind:callback_respond="respondFunc">
             </peer-list>
-        </div>
+        </article>
+
+        <article>
+
+        </article>
     </div>
     @include('includes.layouts.footer')
 
@@ -82,7 +87,6 @@
         /* -------------------------------------------------------------------------- */
         /*                         Peer data extraction logic                         */
         /* -------------------------------------------------------------------------- */
-        const csrf = "{{ csrf_token() }}";
         const URI_GUARDIAN  = "/members/guardian/";
         const URI_PROTECTED = "/members/protected/";
 
@@ -118,7 +122,7 @@
                             peerApp.contents.push({
                                 requestID:      res[iter].id,
                                 uid:            res[iter].uid_protected,
-                                username:       res[iter].uid_protected,
+                                username:       res[iter].username,
                                 relationship:   LABEL_PROTECTED,
                                 status:         'FINE',
                                 authorized:     false
@@ -127,7 +131,7 @@
                             peerApp.contents.push({
                                 requestID:      res[iter].id,
                                 uid:            res[iter].uid_guardian,
-                                username:       res[iter].uid_guardian,
+                                username:       res[iter].username,
                                 relationship:   LABEL_GUARDIAN,
                                 status:         'FINE',
                                 authorized:     false
@@ -149,6 +153,7 @@
                     peerApp.contents.push({
                         uid:            guardians[iter].id,
                         username:       guardians[iter].username,
+                        image_url:      guardians[iter].image_url,
                         relationship:   LABEL_GUARDIAN,
                         authorized:     true
                     });
@@ -198,6 +203,7 @@
                     peerApp.contents.push({
                         uid:            protectees[iter].id,
                         username:       protectees[iter].username,
+                        image_url:      protectees[iter].image_url,
                         relationship:   LABEL_PROTECTED,
                         status:         protectees[iter].status,
                         authorized:     true

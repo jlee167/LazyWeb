@@ -14,6 +14,7 @@ Opposite when not authenticated yet.
     use App\Http\Controllers\LoginController;
     use App\Http\Controllers\UserController;
     use Illuminate\Support\Facades\Auth;
+    use App\Models\User;
 ?>
 
 <style>
@@ -103,13 +104,20 @@ Opposite when not authenticated yet.
     .navbar .navbar-collapse {
         text-align: center;
     }
+
+    #brand-name {
+        margin: auto;
+        margin-left:10px;
+        vertical-align: middle;
+        color:white;
+    }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-light navbar-default bg-light fixed-top">
     <!-- Brand -->
     <div id="brand-container" class="navbar-brand brand-text">
         <img id="brand-logo" src="{{asset('/images/GitHub-Mark-Light-32px.png')}}">
-        <p style="margin: auto; vertical-align: middle; color:white;">LazyBoy Industries</p>
+        <p id="brand-name">LazyBoy Industries</p>
     </div>
 
     <!-- Toggler/collapsibe Button -->
@@ -123,9 +131,13 @@ Opposite when not authenticated yet.
         <!-- Menu -->
         <ul id="menu-links" class="navbar-nav mr-auto">
             <li class="nav-item"> <a class="nav-link" href="/views/main"> Home</a></li>
-            <li class="nav-item"> <a class="nav-link"
-                    onclick="modalApp.showModal=true; document.body.style.overflowY='hidden';"
-                    style="white-space: nowrap; cursor: pointer;" onmouseover="">My Resume</a>
+            <li class="nav-item">
+                <a  class="nav-link"
+                    onclick=  " modalApp.showModal=true;
+                                document.body.style.overflowY='hidden';"
+                    style="white-space: nowrap; cursor: pointer;"
+                    onmouseover=""
+                >My Resume</a>
             </li>
             <li class="nav-item"> <a class="nav-link" href="/views/products"> Products</a></li>
             <li class="nav-item"> <a class="nav-link" href="/views/dashboard?page=1"> Dashboard</a></li>
@@ -141,27 +153,38 @@ Opposite when not authenticated yet.
         </ul>
 
 
-        <div class="my-2 my-lg-0">
+        <div class="my-2 my-lg-0 d-flex flex-row align-items-center">
             <!-------------------------------------------------------------------------/
             /                           Login Button Rendering                         /
             /-------------------------------------------------------------------------->
 
             <!-------- Display username and logout button if currently logged in ------->
-            <?php if (LoginController::get_auth_state()): ?>
+            <?php if (LoginController::getAuthState()):
+                $linkTag = '<a href="/views/user-info" style="margin:0 0 0 0; margin-right:5px; padding: 0 0 0 0;">';
+                $imgTag = '<img id="profileImage" style="box-shadow: 0px 0px 4px 2px rgba(0, 174, 255, 0.753);" src="' . User::DEFAULT_IMAGE_URL . '">';
+                //echo $imgTag;
+                echo $linkTag . $imgTag . '</a>';
+            ?>
 
-            <img id="profileImage" src="{{asset('/images/GitHub-Mark-Light-32px.png')}}">
-            <a class="font-username">
-                <?php echo trim(Auth::user()["username"]); ?>
-            </a>
-            <a id="logout" href="javascript:logout();">
-                (logout)
-            </a>
+                <a class="font-username" href="/views/user-info">
+                    <?php //echo trim(Auth::user()["username"]); ?>
+                </a>
+                <a id="logout" href="javascript:logout();" >
+                    <div style="margin-top: auto; margin-bottom:auto;">
+                        <img src="{{asset('/images/icon-power.svg')}}" style="width:25px; height:25px;">
+                        <p class="mb-0">logout</p>
+                    </div>
+                </a>
+
 
             <!-------- Display login button if login is required ------->
             <?php else: ?>
-            <a id="signBtn" class="btn btn-outline-light" href="/views/login" role="button">
-                Sign In
-            </a>
+                <a id="signBtn" class="btn btn-outline-light" href="/views/login" role="button">
+                    Sign In
+                </a>
+
+
+
             <?php endif; ?>
 
             <!-------------------------------------------------------------------------/

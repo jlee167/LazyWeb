@@ -7577,7 +7577,6 @@ var validator = __webpack_require__(/*! validator */ "./node_modules/validator/i
 /* ------------------------- Registration Functions ------------------------- */
 
 
-var csrf = "{{ csrf_token() }}";
 var ERR_USERNAME_EMPTY = "Please enter username";
 var ERR_PASSWORD_EMPTY = "Please enter password";
 var ERR_EMAIL_INVALID = "Invalid email. Please check your email format!";
@@ -7585,9 +7584,9 @@ var ERR_CONFIRM_EMPTY = "Please confirm password";
 var ERR_PASSWORD_MISMATCH = "Password mismatch! Check your password inputs";
 var ERR_FIRST_CHAR = "First character of username should be lowercase alphabet";
 var ERR_PASSWORD_SHORT = "Password must be at least 8 characters";
-var ERR_USERNAME_SHORT = "Username must be at least 6 characters";
+var ERR_USERNAME_SHORT = "Username must be at least 8 characters";
 var ERR_USERNAME_INVALID = "Username should contain only alphabets and numbers";
-var MIN_LEN_USERNAME = 6;
+var MIN_LEN_USERNAME = 8;
 var MIN_LEN_PASSWORD = 8;
 
 function getRegInfo(user) {
@@ -7599,48 +7598,58 @@ function getRegInfo(user) {
 
 function inputSanityCheck(user) {
   var passwordConfirm = String(document.getElementById('confirm_password').value);
+  /* ------------------------- Check Input Validity ------------------------ */
 
   if (user.username.length == 0) {
+    /* Empty Username */
     window.alert(ERR_USERNAME_EMPTY);
     return false;
   }
 
   if (user.username.length < MIN_LEN_USERNAME) {
+    /* Username too short */
     window.alert(ERR_USERNAME_SHORT);
     return false;
   }
 
   if (user.password.length == 0) {
+    /* Empty password */
     window.alert(ERR_PASSWORD_EMPTY);
     return false;
   }
 
   if (user.password.length < MIN_LEN_PASSWORD) {
+    /* Password too short */
     window.alert(ERR_PASSWORD_SHORT);
     return false;
   }
 
   if (passwordConfirm.length == 0) {
+    /* Password confirmation input is empty */
     window.alert(ERR_CONFIRM_EMPTY);
     return false;
   }
 
   if (user.password !== passwordConfirm) {
+    /* Password matches password confirmation input */
     window.alert(ERR_PASSWORD_MISMATCH);
     return false;
   }
 
   if (!user.username.charAt(0).match(/[a-z]/)) {
+    /* First letter should be lowercaes alphabets */
     window.alert(ERR_FIRST_CHAR);
     return false;
   }
 
-  if (user.username.match(/[^a-z^0-9]/)) {
+  if (user.username.match(/[^a-z^A-Z^0-9]/)) {
+    /* Only alphabets and numbers */
     window.alert(ERR_USERNAME_INVALID);
     return false;
   }
 
   if (!validator.isEmail(user.email)) {
+    /* Email Address Validation */
     window.alert(ERR_EMAIL_INVALID);
     return false;
   }
@@ -7683,7 +7692,7 @@ window.register = function (auth_provider, accessToken) {
 
   user.auth_provider = auth_provider;
   user.accessToken = accessToken;
-  sendRegisterRequest(csrf, user, "/views/login");
+  sendRegisterRequest(user, "/views/login");
 };
 /* ---------------------------- Google OAuth Setup --------------------------- */
 
@@ -7704,7 +7713,6 @@ window.startApp = function () {
 };
 
 window.attachSignin = function (element) {
-  console.log(element.id);
   auth2.attachClickHandler(element, {}, function (googleUser) {
     //document.getElementById('name').innerText = "Signed in: " +
     //    googleUser.getBasicProfile().getName();
@@ -7724,7 +7732,6 @@ window.loginWithKakao = function () {
   Kakao.Auth.login({
     success: function success(authObj) {
       var token_kakao = Kakao.Auth.getAccessToken();
-      console.log(token_kakao);
       register('Kakao', token_kakao);
     },
     fail: function fail(err) {

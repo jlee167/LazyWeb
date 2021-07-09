@@ -102,6 +102,30 @@ new fullScroll({
   animateFunction: "ease",
   transitionItems: []
 });
+/* ------------------------ Page 2 Animation Trigger ------------------------ */
+
+var animationToggleFlag = false;
+
+var onIntersectionCallback = function onIntersectionCallback(entries, observer) {
+  entries.forEach(function (entry) {
+    if (entry.isIntersecting) {
+      if (!animationToggleFlag) {
+        animationToggleFlag = true;
+        document.getElementById('skill1').classList.add('fade-1s');
+        document.getElementById('skill2').classList.add('fade-2s');
+        document.getElementById('skill3').classList.add('fade-3s');
+      }
+    }
+  });
+};
+
+var pageOnViewDetector = new IntersectionObserver(onIntersectionCallback, {
+  root: document.querySelector(null),
+  rootMargin: '0px',
+  threshold: 0.3
+});
+var target = document.querySelector('#skillContainer');
+pageOnViewDetector.observe(target);
 
 /***/ }),
 

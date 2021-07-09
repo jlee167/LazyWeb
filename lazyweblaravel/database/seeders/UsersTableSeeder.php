@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +25,7 @@ class UsersTableSeeder extends Seeder
 
         $faker = Faker::create();
 
-        define("NUM_USERS", 5000000);
+        define("NUM_USERS", 500000);
 
         for ($i = 1; $i <= NUM_USERS; $i++) {
             /* Username: user1, user2, user3... */
@@ -39,16 +41,17 @@ class UsersTableSeeder extends Seeder
                 'password'          => Hash::make("password"),
                 'auth_provider'     => Arr::random(['Google', 'Kakao', 'None']),
                 'uid_oauth'         => str_random(10),
+                'image_url'         => "/images/users/profile/profile-default.jpg",
                 'email'             => $faker->unique()->email,
                 'cell'              => '010' . '-' . strval(rand(100, 9999)) . '-' . strval(rand(1000, 9999)),
-                'stream_id'         => str_random(32),
                 'stream_key'        => str_random(32),
                 'status'            => 'FINE',
                 'response'          => 'RESOLVED',
                 'privacy'           => 'PRIVATE',
                 'proxy_enable'      => true,
                 'password_hint'     => 'my hint',
-                'hint_answer'       => 'my answer'
+                'hint_answer'       => 'my answer',
+                'email_verified_at' => Carbon::now()->toDateTimeString()
             ]);
 
 
@@ -77,6 +80,14 @@ class UsersTableSeeder extends Seeder
                     ]);
                 }
             }
+
+
+            DB::table('posts')->insert([
+                'forum' => 'general',
+                'title' => 'test posting' . $uid,
+                'author' => $username,
+                'contents' => 'Testing'
+            ]);
 
 
 

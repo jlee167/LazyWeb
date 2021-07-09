@@ -13,9 +13,6 @@ window.submit_request = function() {
     var text = document.getElementById("summernote").value;
     var contact = document.getElementById("email").value;
 
-    /* Acquire CSRF Token from server */
-    var csrf = "{{ csrf_token() }}";
-
     /*  Submit support request with AJAX.
         This Javascript routine was used instead of form due to unnecessary page refresh. */
     var xmlRequest = new XMLHttpRequest();

@@ -102,21 +102,21 @@
 }
 
 .fade-1s {
-    animation-delay: 0.4s;
+    animation-delay: 0.3s;
     animation-duration: 1s;
     animation-name: fade;
     animation-fill-mode: forwards;
 }
 
 .fade-2s {
-    animation-delay: 0.8s;
+    animation-delay: 0.6s;
     animation-duration: 1s;
     animation-name: fade;
     animation-fill-mode: forwards;
 }
 
 .fade-3s {
-    animation-delay: 1.2s;
+    animation-delay: 0.9s;
     animation-duration: 1s;
     animation-name: fade;
     animation-fill-mode: forwards;

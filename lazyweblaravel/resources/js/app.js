@@ -27,6 +27,7 @@ Vue.component('user-list-display', require('./components/UserListDisplay.vue').d
 Vue.component('skill-bar', require('./components/SkillBar.vue').default);
 Vue.component('peer-list', require('./components/PeerList.vue').default);
 Vue.component('product-desc-view', require('./components/ProductDescView.vue').default);
+Vue.component('product-sales', require('./components/ProductSales.vue').default);
 Vue.component('video-js', require('./components/VideoJs.vue').default);
 Vue.component('forum-post-list', require('./components/ForumPostList.vue').default);
 Vue.component('trending-posts', require('./components/TrendingPosts.vue').default);

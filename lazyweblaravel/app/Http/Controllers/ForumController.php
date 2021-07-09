@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ForumComment;
 use App\Models\ForumPost;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+
 
 class ForumController extends Controller
 {
@@ -23,12 +26,12 @@ class ForumController extends Controller
      *  Page Size = 10 (Fixed)
      *
      * @Todo
-     *  Parametrize Page Size (Need to change DB Procedure too!)
+     *  - Parametrize Page Size
      *
-     * @param  string   $forum_name     // forum name
-     * @param  int      $page           // page number
-     * @param  string   $keyword        // search keyword (search all posts if 'all' or empty string)
-     * @return JSON     {$posts, $itemcount}    // posts and items in search result
+     * @param  string   $forum_name             // forum name
+     * @param  int      $page                   // page index
+     * @param  string   $keyword                // search keyword (search all posts if 'all' or empty string)
+     * @return JSON     {$posts, $itemcount}    // post contents and number of posts in tis page
      *
      */
     public static function getPage(string $forum_name, int $page, string $keyword)
@@ -37,6 +40,7 @@ class ForumController extends Controller
         try {
             DB::beginTransaction();
 
+            /* Get posts */
             if (($keyword === "all") || empty($keyword)) {
                 $itemCount = ForumPost::where('forum', '=', $forum_name)
                     ->count();
@@ -57,11 +61,17 @@ class ForumController extends Controller
                     ->get();
             }
 
+            /* Get post likes and user images */
             foreach ($posts as $post) {
                 $likes = DB::table('post_likes')
                     ->where('post_id', '=', intval($post["id"]))
                     ->count();
+                $imageUrl = DB::table('users')
+                    ->where('username', '=', $post['author'])
+                    ->get('image_url')->first()
+                    ->image_url;
                 $post['likes'] = $likes;
+                $post['image_url'] = $imageUrl;
             }
 
             DB::commit();
@@ -70,14 +80,14 @@ class ForumController extends Controller
                 'itemCount' => $itemCount,
                 'posts' => $posts,
             ]);
-        } catch (Exception $e) {
+        } catch (QueryException | Exception $e) {
             DB::rollBack();
             return (string) $e;
         }
     }
 
     /**
-     * Get 10 mostly viewed posts of all time.
+     * Get 10 most viewed posts of all time.
      *
      * @param  Request $request
      * @return void
@@ -92,7 +102,7 @@ class ForumController extends Controller
     }
 
     /**
-     * Get 10 mostly viewed posts of most recent week (7 days).
+     * Get 10 most viewed posts of most recent 7 days.
      *
      * @param  mixed $request
      * @return void
@@ -111,10 +121,10 @@ class ForumController extends Controller
     /* -------------------------------------------------------------------------- */
 
     /**
-     * createPost
+     * Register a new post.
      *
-     * @param  Request  $request        // Request body contains contents of the post
-     * @param  string   $forum_name     // Forum to insert current post
+     * @param  Request  $request
+     * @param  string   $forum_name
      * @return void
      */
     public function createPost(Request $request, string $forum_name)
@@ -133,14 +143,15 @@ class ForumController extends Controller
     }
 
     /**
-     * Retrieve the post specified by post ID and forum name.
+     * Get and return specified post.
      *
      * @param  string   $forum_name     // Forum where the post belongs to
      * @param  string   $post_id        // Post's unique reference ID
      * @return JSON     {$post, $comments}  // Contents of the post and its comments
      */
-    public function retrievePost(string $forum_name, string $post_id)
+    public function getPost(string $forum_name, string $post_id)
     {
+        DB::beginTransaction();
         try {
             $post = ForumPost::where('id', '=', intval($post_id))
                 ->where('forum', '=', $forum_name)
@@ -151,6 +162,12 @@ class ForumController extends Controller
             $likes = DB::table('post_likes')
                 ->where('post_id', '=', intval($post_id))
                 ->count();
+            $userImgUrl = DB::table('users')
+                ->where('username', '=', $post[0]['author'])
+                ->get('image_url')
+                ->first()
+                ->image_url;
+
             if (Auth::check()) {
                 $myLike = (boolean) DB::table('post_likes')
                     ->where('post_id', '=', intval($post_id))
@@ -159,11 +176,15 @@ class ForumController extends Controller
             } else {
                 $myLike = false;
             }
+
+            ForumPost::where('id', '=', intval($post_id))
+                ->increment('view_count');
         } catch (Exception $e) {
+            DB::rollback();
             return $e;
         }
-        ForumPost::where('id', '=', intval($post_id))
-            ->increment('view_count');
+
+        DB::commit();
 
         return json_encode(
             [
@@ -171,6 +192,7 @@ class ForumController extends Controller
                 'comments' => $comments,
                 'likes' => $likes,
                 'myLike' => $myLike,
+                'imageUrl' => $userImgUrl,
             ]
         );
 
@@ -302,7 +324,7 @@ class ForumController extends Controller
     /*                               /CRUD Functions                              */
     /* -------------------------------------------------------------------------- */
 
-    public function toggleLike(string $forum_name, string $post_id)
+    public function togglePostLike(string $forum_name, string $post_id)
     {
         /* Need to login to like a post */
         if (!Auth::check()) {

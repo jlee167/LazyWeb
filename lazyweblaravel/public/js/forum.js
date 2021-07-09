@@ -135,6 +135,7 @@ forumApp = new Vue({
     likes: null,
     myLike: null,
     comments: [],
+    imageUrl: null,
     toggleLike: function toggleLike() {
       var likeRequest = new XMLHttpRequest();
       likeRequest.open("POST", "/forum/" + forumApp.original_post.forum + "/post/" + forumApp.original_post.id + "/like", true);
@@ -194,12 +195,15 @@ forumApp = new Vue({
   },
   methods: {
     getNewPage: function getNewPage(idx) {
-      forum_name = document.getElementById('forum_name').value.trim();
-      current_page = idx;
-      getPage(forum_name, current_page, this.search_keyword);
+      forumApp.forum_name = document.getElementById('forum_name').value.trim();
+      forumApp.current_page = idx;
+      getPage(forumApp.forum_name, forumApp.current_page, this.search_keyword);
     }
   }
 });
+/**
+ * Transition from post view to page view
+ */
 
 function transToForum() {
   forumApp.show_post = false;
@@ -211,6 +215,13 @@ function transToForum() {
 function redirectAuth() {
   window.location.href = "http://www.lazyweb.com/views/login";
 }
+/**
+ * Transition from page view to post view
+ *
+ * @param {*} post_id
+ * @param {*} forum
+ */
+
 
 function transToPost(post_id) {
   var forum = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -220,14 +231,16 @@ function transToPost(post_id) {
   }
 
   xhttpRequest('GET', '/forum/' + forum + '/post/' + String(post_id).trim(), null, function (req) {
-    //console.log(req.responseText);
     var resp = JSON.parse(req.responseText);
+    console.log(resp);
     forumApp.original_post = resp.post[0];
     forumApp.comments = resp.comments;
     forumApp.likes = resp.likes;
     forumApp.myLike = resp.myLike;
     forumApp.show_forum = false;
     forumApp.post_id = post_id;
+    forumApp.imageUrl = resp.imageUrl;
+    console.log(forumApp.imageUrl);
     setTimeout(function () {
       forumApp.show_post = true;
     }, 500);
@@ -244,6 +257,7 @@ function getPage(forum, page, keyword) {
   }), function (req) {
     //console.log(req.responseText)
     var res = JSON.parse(req.responseText);
+    console.log(res);
     forumApp.posts = [];
 
     for (post in res.posts) {
@@ -255,11 +269,29 @@ function getPage(forum, page, keyword) {
 }
 
 function pagenate(itemCount) {
+  /* Fix current page in center of 10 items in page list */
   forumApp.page_count = Math.ceil(itemCount / PAGINATION_CAPACITY);
-  var head = forumApp.current_page - Math.ceil(PAGINATION_CAPACITY / 2 - 1);
-  var tail = forumApp.current_page + Math.floor(PAGINATION_CAPACITY / 2);
-  if (head < 1) head = 1;
-  if (tail > forumApp.page_count) tail = forumApp.page_count;
+  if (forumApp.page_count === 0) return;
+  var pagesLeft;
+  var head, tail;
+  if (forumApp.page_count < PAGINATION_CAPACITY) pagesLeft = forumApp.page_count - 1;else pagesLeft = PAGINATION_CAPACITY - 1;
+  head = forumApp.current_page - Math.ceil(PAGINATION_CAPACITY / 2 - 1);
+  tail = forumApp.current_page + Math.floor(PAGINATION_CAPACITY / 2);
+  /* Check upper & lower bounds */
+
+  if (head < 1) {
+    var overflow = 1 - head;
+    head = 1;
+    tail = head + pagesLeft;
+  }
+
+  if (tail > forumApp.page_count) {
+    var _overflow = tail - forumApp.page_count;
+
+    tail = forumApp.page_count;
+    head = tail - pagesLeft;
+  }
+
   forumApp.page_index = [];
 
   for (var i = head; i <= tail; i++) {

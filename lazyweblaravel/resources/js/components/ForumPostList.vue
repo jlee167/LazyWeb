@@ -22,6 +22,7 @@
           v-bind:author="post.author"
           v-bind:views="post.view_count"
           v-bind:likes="post.likes"
+          v-bind:image_url="post.image_url"
         >
         </forum-list-item>
       </div>
@@ -42,7 +43,7 @@ export default {
     forum_name: String,
     posts: Array,
     num_items: Number,
-    onclick_callback: Function,
+    onclick_callback: Function
   },
 
   data() {

@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+        @include('includes.imports.csrf')
         @include('includes.imports.styles_common')
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -93,7 +94,6 @@
 			});
 
             function submitPost(){
-                let csrf = "{{ csrf_token() }}";
                 var postRequest = new XMLHttpRequest();
                 var forum_name = document.getElementById('forum_name').value;
                 postRequest.open('POST', '/forum/' + forum_name + '/post');

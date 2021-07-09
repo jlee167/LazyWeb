@@ -25,7 +25,7 @@
         padding-top: 50px;
     }
 
-    #footer-skills {
+    #tech-stacks {
         display: flex;
         flex-direction: column;
         padding-right: 50px;
@@ -57,21 +57,25 @@
         white-space: nowrap;
     }
 
-    .footer-skill-item {
+    .tech-stack-item {
         display: flex;
         flex-direction: row;
         padding-right: 50px;
     }
 
-    .footer-skill-label {
+    .tech-stack-label {
         color: white;
         padding-left: 15px;
         white-space: nowrap;
+        vertical-align: middle;
+        margin-top:auto;
+        margin-bottom:auto;
     }
 
-    .footer-skill-imgsize {
-        width: 32px;
-        height: 32px;
+    .tech-stack-imgsize {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
     }
 
     .footer-contanct-icon {
@@ -100,50 +104,50 @@
     }
 
     @media only screen and (max-width: 600px) {
-        #footer-skills {
+        #tech-stacks {
             display: none;
         }
     }
 </style>
 
-<div id="footer-container">
+<article id="footer-container">
     <div id="footer-contents">
-        <div id="footer-skills">
+        <div id="tech-stacks">
             <p class="footer-column-header">Built With</p>
-            <div class="footer-skill-item">
-                <a class="footer-skill-imgsize">
-                    <img class="footer-skill-imgsize" src="{{asset('/images/php_logo.png')}}" />
+            <section class="tech-stack-item">
+                <a class="tech-stack-imgsize">
+                    <img class="tech-stack-imgsize" src="{{asset('/images/php_logo.png')}}" />
                 </a>
-                <p class="footer-skill-label">PHP 7.3</p>
-            </div>
-            <div class="footer-skill-item">
-                <a class="footer-skill-imgsize">
-                    <img class="footer-skill-imgsize" src="{{asset('/images/laravel_logo.png')}}" />
+                <p class="tech-stack-label">PHP 7.3</p>
+            </section>
+            <section class="tech-stack-item">
+                <a class="tech-stack-imgsize">
+                    <img class="tech-stack-imgsize" src="{{asset('/images/laravel_logo.png')}}" />
                 </a>
-                <p class="footer-skill-label">Laravel 8</p>
-            </div>
-            <div class="footer-skill-item">
-                <a class="footer-skill-imgsize">
-                    <img class="footer-skill-imgsize" src="{{asset('/images/vue_logo.png')}}" />
+                <p class="tech-stack-label">Laravel 8</p>
+            </section>
+            <section class="tech-stack-item">
+                <a class="tech-stack-imgsize">
+                    <img class="tech-stack-imgsize" src="{{asset('/images/vue_logo.png')}}" />
                 </a>
-                <p class="footer-skill-label">Vue.js 2.6</p>
-            </div>
+                <p class="tech-stack-label">Vue.js 2.6</p>
+            </section>
         </div>
 
         <div id="footer-contact">
             <p class="footer-column-header">Contact</p>
-            <div style="margin-bottom:10px;">
+            <section style="margin-bottom:10px;">
                 <img class="footer-contanct-icon" src="/images/icon-building.svg" />
                 <p class="footer-contact-label">LazyBoy Co.Ltd</p>
-            </div>
-            <div style="margin-bottom:10px;">
+            </section>
+            <section style="margin-bottom:10px;">
                 <img class="footer-contanct-icon" src="/images/icon-mail.svg" />
                 <p class="footer-contact-label">lazyboyindustries.main@gmail.com</p>
-            </div>
-            <div style="margin-bottom:10px;">
+            </section>
+            <section style="margin-bottom:10px;">
                 <img class="footer-contanct-icon" src="/images/icon-phone.svg" />
                 <p class="footer-contact-label">010-xxxx-xxxx</p>
-            </div>
+            </section>
 
             <div style="margin-top:20px;">
                 <a href="https://github.com/jlee167" style="width:25px; height:25px;">
@@ -173,4 +177,4 @@
             Copyright 2021 Lazyboy Industry CO.Limitied All Rights Reserved
         </p>
     </div>
-</div>
+</article>

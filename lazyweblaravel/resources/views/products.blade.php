@@ -4,6 +4,7 @@
 
 
 <head>
+    @include('includes.imports.csrf')
     @include('includes.imports.styles_common')
 
     <!------------------ include libraries(jQuery, bootstrap) ------------------>
@@ -21,10 +22,11 @@
             v-bind:title="title"
             v-bind:description="description"
             v-bind:price="price"
+            v-bind:stock="stock"
             v-bind:img-url="imgUrl"
-            v-bind:bg-color="bgColor"
-            v-bind:bg-img-url="bgImgUrl"
-        ></product-desc-view>
+            v-bind:sales-img-url="salesImgUrl"
+            v-bind:bg-color="bgColor">
+        </product-desc-view>
     </div>
 
     @include('includes.layouts.footer')
@@ -38,9 +40,10 @@
             title       : "USB Camera",
             description : "subHead",
             price       : 99.99,
-            imgUrl      : "{{asset('/images/RTL.png')}}",
+            stock       : 40,
+            imgUrl      : "{{asset('/images/test/usb_product.png')}}",
             bgColor     : String("bisque"),
-            bgImgUrl    : "{{asset('/images/product_background.svg')}}",
+            salesImgUrl    : "{{asset('/images/test/usb_product.png')}}",
             product1    :   {
                                 company: "Lazyboy Industries",
                                 name: "Lazyboy",

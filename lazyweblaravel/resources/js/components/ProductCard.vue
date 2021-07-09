@@ -33,7 +33,7 @@ export default {
 #container {
   width: 270px;
   height: 470px;
-  border-radius: 10px;
+  border-radius: 17px;
   display: flex;
   flex-direction: column;
   align-items: center;

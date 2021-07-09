@@ -106,7 +106,7 @@ begin
         SELECT id, MIN(hops) as hops
         FROM   orig
         GROUP BY id;
-    COMMIT
+    COMMIT;
 
 END $$
 delimiter ;

@@ -8,6 +8,7 @@
 
 <head>
     <!-- Braodcast -->
+    @include('includes.imports.csrf')
     @include('includes.imports.styles_common')
 
     <!-- Page Specific Stylesheet -->
@@ -42,7 +43,7 @@
         src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fcbc674142c20da29ab5dfe6d1aae93f&libraries=services,clusterer,drawing">
     </script>
 
-    @include('includes.imports.csrf')
+
 
 
 

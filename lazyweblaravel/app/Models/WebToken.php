@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ForumLike extends Model
+class WebToken extends Model
 {
+    public $id;
+    public $last_update;
     protected $fillable = [
-        'post_id',
-        'uid'
+        'stream_id',
+        'uid',
+        'token'
     ];
 
-    protected $table = 'post_likes';
+    protected $table = 'stream_webtokens';
     protected $primaryKey = 'id';
     public $timestamps = false;
 }
-

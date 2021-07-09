@@ -2,7 +2,7 @@
   <div class="post-container">
     <div class="container-info">
       <img
-        src="https://cdn.pixabay.com/photo/2012/04/13/01/23/moon-31665_960_720.png"
+        v-bind:src="imageUrl"
         class="user-img"
       />
       <p class="font-info">{{ post.author }}</p>
@@ -41,6 +41,7 @@
         margin: auto;
         margin-left: 30px;
         margin-bottom: 15px;
+        margin-top:30px;
       "
     >
       <img
@@ -70,6 +71,7 @@ export default {
     likes: Number,
     myLike: Boolean,
     toggleLike: Function,
+    imageUrl: String
   },
 
   data() {
@@ -132,7 +134,7 @@ export default {
             "http://www.lazyweb.com/views/dashboard?page=1";
         } else {
           window.alert(
-            "Post deletion failed. Please try againa andseek support if this issue persists."
+            "Post deletion failed. Please try again and seek support if this issue persists."
           );
         }
       };
@@ -154,9 +156,13 @@ export default {
   margin-right: 10px;
 }
 
+#main-section {
+    min-height: 300px;
+}
+
 .post-container {
   width: 100%;
-  min-height: 300px;
+  height: auto;
   margin-top: 40px;
   margin-bottom: 10px;
   margin-right: 0px;
@@ -196,6 +202,7 @@ export default {
   width: 90%;
   height: auto;
   margin-left: 30px;
+  margin-right: 20px;
   margin-top: 20px;
   display: flex;
   flex-direction: row;
@@ -208,6 +215,7 @@ export default {
   width: 90%;
   height: auto;
   margin-left: 30px;
+  margin-right: 20px;
   margin-top: 20px;
   display: flex;
   flex-direction: row;
